@@ -1,10 +1,21 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/)
 
-set(SRC
-    ${SRCROOT}
-    PARENT_SCOPE)
+set(SRC 
+    ${SRCROOT}/main.cpp)
 
-set(INC
-    ${INCROOT}
-    PARENT_SCOPE)
+add_subdirectory(Ecs)
+add_subdirectory(Network)
+
+set(TARGET_NAME r-type_server)
+
+add_executable(${TARGET_NAME} ${SRC})
+
+target_link_libraries(${TARGET_NAME} Network)
+target_link_libraries(${TARGET_NAME} Ecs)
+
+add_custom_command(
+  TARGET ${TARGET_NAME}
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${TARGET_NAME}>
+          ${PROJECT_SOURCE_DIR})
