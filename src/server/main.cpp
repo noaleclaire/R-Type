@@ -8,9 +8,13 @@
 #include "Ecs/ecs.hpp"
 #include "Network/network.hpp"
 
-int main(void)
+int main(int ac, char **av)
 {
-    my_ecs();
-    my_network();
-    return (1);
+    if (ac == 2) {
+        Network net(std::atoi(av[1]));
+        net.init_network();
+        net.process_network();
+    } else
+        return (84);
+    return (0);
 }
