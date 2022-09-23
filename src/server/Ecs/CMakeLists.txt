@@ -3,7 +3,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs)
 
 set(SRC
     ${SRCROOT}/ecs.cpp
-    ${INCROOT}/ecs.cpp
+    ${INCROOT}/ecs.hpp
     )
 
 set(INCDIRS ${INCROOT})

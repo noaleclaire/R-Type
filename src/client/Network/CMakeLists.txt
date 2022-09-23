@@ -3,7 +3,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/Network/)
 
 set(SRC
     ${SRCROOT}/network.cpp
-    ${INCROOT}/network.cpp
+    ${INCROOT}/network.hpp
     )
 
 set(INCDIRS ${INCROOT})

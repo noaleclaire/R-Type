@@ -3,7 +3,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/Sfml)
 
 set(SRC
     ${SRCROOT}/window.cpp
-    ${INCROOT}/window.cpp
+    ${INCROOT}/window.hpp
     )
 
 set(INCDIRS ${INCROOT})
