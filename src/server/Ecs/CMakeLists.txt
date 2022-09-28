@@ -3,10 +3,11 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs)
 
 set(SRC
     ${SRCROOT}/ecs.cpp
-    ${SRCROOT}/Entity.cpp
+    ${SRCROOT}/ecs.hpp
+    ${SRCROOT}/Registry.hpp
     )
 
-set(INCDIRS ${INCROOT})
+add_subdirectory(Systems)
 
 source_group("" FILES ${SRC})
 
