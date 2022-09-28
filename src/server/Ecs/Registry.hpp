@@ -22,6 +22,8 @@
 
 namespace ecs
 {
+    enum Scenes { MENU, PAUSE, SETTINGS, GAME, WIN };
+
     class Registry {
         public:
             template <class Component>
@@ -105,45 +107,54 @@ namespace ecs
                     _dead_entities.pop_back();
                     break;
                 }
-                for (std::size_t i = 0; i < _entities.size(); i++) {
-                    if (_entities.at(i).get_label().compare(label) == 0)
+                for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
+                    if (_entities.at(_actual_scene).at(i).get_label().compare(label) == 0)
                         throw ExceptionEntityLabelExists("An entity with this label already exists", "Entity &spawn_entity(std::string label)");
                 }
                 Entity entity(id);
                 entity.set_label(label);
-                _entities.push_back(entity);
-                return (_entities.back());
+                _entities.at(_actual_scene).push_back(entity);
+                return (_entities.at(_actual_scene).back());
             };
             void kill_entity(Entity &entity)
             {
                 _dead_entities.push_back(entity.get_id());
                 for (auto &it : _components_arrays)
                     it.erase(entity);
-                for (std::size_t i = 0; i < _entities.size(); i++) {
-                    if (_entities.at(i).get_label().compare(entity.get_label()) == 0)
-                        _entities.erase(std::next(_entities.begin(), i));
+                for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
+                    if (_entities.at(_actual_scene).at(i).get_label().compare(entity.get_label()) == 0)
+                        _entities.at(_actual_scene).erase(std::next(_entities.at(_actual_scene).begin(), i));
                 }
                 entity.set_label("");
             };
             Entity &get_entity_by_label(std::string label)
             {
-                for (std::size_t i = 0; i < _entities.size(); i++) {
-                    if (_entities.at(i).get_label().compare(label) == 0)
-                        return (_entities.at(i));
+                for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
+                    if (_entities.at(_actual_scene).at(i).get_label().compare(label) == 0)
+                        return (_entities.at(_actual_scene).at(i));
                 }
                 throw ExceptionEntityUnobtainable("Cannot find an entity with this label", "Entity &get_entity_by_label(std::string label)");
-            }
+            };
             Entity &get_entity_by_id(std::size_t id)
             {
-                for (std::size_t i = 0; i < _entities.size(); i++) {
-                    if (_entities.at(i).get_id() == id)
-                        return (_entities.at(i));
+                for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
+                    if (_entities.at(_actual_scene).at(i).get_id() == id)
+                        return (_entities.at(_actual_scene).at(i));
                 }
                 throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &get_entity_by_id(std::size_t id)");;
+            };
+            void set_actual_scene(ecs::Scenes scene)
+            {
+                _actual_scene = scene;
+            }
+            ecs::Scenes get_actual_scene() const
+            {
+                return (_actual_scene);
             }
         private:
             std::unordered_map<std::type_index, SparseArray<std::any>> _components_arrays;
-            std::vector<Entity> _entities;
+            std::unordered_map<ecs::Scenes, std::vector<Entity>> _entities;
             std::vector<std::size_t> _dead_entities;
+            ecs::Scenes _actual_scene;
     };
 }

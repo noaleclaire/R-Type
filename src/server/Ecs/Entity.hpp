@@ -22,8 +22,6 @@ namespace ecs
             std::string get_label() const;
             static std::size_t _idCount;
 
-        protected:
-
         private:
             std::size_t _id;
             std::string _label;
