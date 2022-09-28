@@ -21,5 +21,5 @@ int main(void)
         std::cerr << e.what() << std::endl;
         std::cerr << e.where() << std::endl;
     }
-    return (1);
+    return (0);
 }
