@@ -23,4 +23,4 @@ namespace component {
         private:
             int _angle;
     };
-};
+}

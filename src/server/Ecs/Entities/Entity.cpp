@@ -21,7 +21,7 @@ namespace ecs
         }
     }
 
-    Entity::~Entity() {};
+    Entity::~Entity() {}
 
     Entity::operator std::size_t()
     {

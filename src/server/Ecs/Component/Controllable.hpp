@@ -15,4 +15,4 @@ namespace component {
             ~Controllable() = default;
             Controllable &operator=(const Controllable &other) = default;
     };
-};
+}

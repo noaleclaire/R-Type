@@ -15,4 +15,4 @@ namespace component {
             ~Drawable() = default;
             Drawable &operator=(const Drawable &other) = default;
     };
-};
+}

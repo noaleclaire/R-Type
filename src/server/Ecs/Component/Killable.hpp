@@ -15,4 +15,4 @@ namespace component {
             ~Killable() = default;
             Killable &operator=(const Killable &other) = default;
     };
-};
+}

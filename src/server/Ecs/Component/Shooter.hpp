@@ -15,4 +15,4 @@ namespace component {
             ~Shooter() = default;
             Shooter &operator=(const Shooter &other) = default;
     };
-};
+}

@@ -1,3 +1,11 @@
+/*
+** EPITECH PROJECT, 2022
+** SparseArray
+** File description:
+** SparseArray
+*/
+
+#pragma once
 #include <vector>
 #include <optional>
 #include <iostream>
@@ -6,13 +14,10 @@
 
 namespace ecs
 {
-    template <typename Component, typename Allocator = std::allocator<Component>>
+    template <typename Component>
     class SparseArray {
         public:
             using value_type            = std::optional<Component>; // optional component type
-            using allocator_type        = Allocator;
-            using pointer               = typename std::allocator_traits<Allocator>::pointer;
-            using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
             using reference_type        = value_type &;
             using const_reference_type  = value_type const &;
             using container_t           = std::vector<value_type>;

@@ -27,4 +27,4 @@ namespace component {
             float _x;
             float _y;
     };
-};
+}

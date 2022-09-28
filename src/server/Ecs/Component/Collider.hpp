@@ -15,4 +15,4 @@ namespace component {
             ~Collider() = default;
             Collider &operator=(const Collider &other) = default;
     };
-};
+}
