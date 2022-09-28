@@ -7,7 +7,6 @@
 
 #include "Entity.hpp"
 
-
 namespace ecs
 {
     std::size_t Entity::_idCount = 0;

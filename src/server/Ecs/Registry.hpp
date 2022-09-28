@@ -7,17 +7,16 @@
 
 #pragma once
 
-#include "SparseArray.hpp"
-#include "Entity.hpp"
-#include "ExceptionIndexComponent.hpp"
-#include "ExceptionSparseArrayUnobtainable.hpp"
-#include "ExceptionEntityUnobtainable.hpp"
-#include "ExceptionEntityLabelExists.hpp"
+#include "Component/SparseArray.hpp"
+#include "Entities/Entity.hpp"
+#include "Exceptions/ExceptionIndexComponent.hpp"
+#include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
+#include "Exceptions/ExceptionEntityUnobtainable.hpp"
+#include "Exceptions/ExceptionEntityLabelExists.hpp"
 #include <unordered_map>
 #include <any>
 #include <vector>
 #include <typeindex>
-#include <functional>
 #include <optional>
 
 namespace ecs
@@ -141,20 +140,24 @@ namespace ecs
                     if (_entities.at(_actual_scene).at(i).get_id() == id)
                         return (_entities.at(_actual_scene).at(i));
                 }
-                throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &get_entity_by_id(std::size_t id)");;
+                throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &get_entity_by_id(std::size_t id)");
+            };
+            std::vector<Entity> get_entities() const
+            {
+                return (_entities.at(_actual_scene));
             };
             void set_actual_scene(ecs::Scenes scene)
             {
                 _actual_scene = scene;
-            }
+            };
             ecs::Scenes get_actual_scene() const
             {
                 return (_actual_scene);
-            }
+            };
         private:
             std::unordered_map<std::type_index, SparseArray<std::any>> _components_arrays;
             std::unordered_map<ecs::Scenes, std::vector<Entity>> _entities;
             std::vector<std::size_t> _dead_entities;
-            ecs::Scenes _actual_scene;
+            ecs::Scenes _actual_scene = ecs::Scenes::MENU;
     };
 }

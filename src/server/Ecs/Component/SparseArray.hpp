@@ -1,8 +1,8 @@
 #include <vector>
 #include <optional>
 #include <iostream>
-#include "ExceptionIndexComponent.hpp"
-#include "ExceptionComponentNull.hpp"
+#include "../Exceptions/ExceptionIndexComponent.hpp"
+#include "../Exceptions/ExceptionComponentNull.hpp"
 
 namespace ecs
 {
