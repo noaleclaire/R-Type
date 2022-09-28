@@ -8,6 +8,9 @@ set(SRC
     )
 
 add_subdirectory(Systems)
+add_subdirectory(Exceptions)
+add_subdirectory(Entities)
+add_subdirectory(Component)
 
 source_group("" FILES ${SRC})
 
