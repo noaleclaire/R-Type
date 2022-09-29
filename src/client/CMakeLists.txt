@@ -1,8 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/client/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/)
 
-set(SRC 
-    ${SRCROOT}/main.cpp)
+set(SRC ${SRCROOT}/main.cpp)
 
 add_subdirectory(Sfml)
 add_subdirectory(Network)

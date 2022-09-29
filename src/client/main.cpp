@@ -8,7 +8,6 @@
 #include "Network/network.hpp"
 #include "Sfml/window.hpp"
 
-
 int main(int ac , char **av)
 {
     if (ac == 2) {
