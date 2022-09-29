@@ -28,6 +28,6 @@ void Network::process_network(std::string in)
     socket.open(boost::asio::ip::udp::v4());
     boost::system::error_code err;
     socket.send_to(boost::asio::buffer(in), remote_endpoint, 0, err);
-    socket.close();
+    //socket.close();
     printf("Sending Payload --- \n");
 }
