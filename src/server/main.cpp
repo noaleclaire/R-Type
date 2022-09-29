@@ -5,7 +5,6 @@
 ** main
 */
 
-
 #include <ctime>
 #include <iostream>
 #include <string>
@@ -25,7 +24,7 @@ int main()
 {
   try
   {
-    boost::asio::io_context io_context;
+    boost::asio::io_context io_context(1/*nb de thread simultanés*/);
 
     udp::socket socket(io_context, udp::endpoint(udp::v4(), 13));
 
