@@ -7,18 +7,21 @@
 
 #include "Shootable.hpp"
 
-component::Shootable::Shootable(int angle) : _angle(angle)
+namespace component
 {
-}
+    Shootable::Shootable(int angle) : _angle(angle)
+    {
+    }
 
-/* Getter */
-int component::Shootable::getAngle() const
-{
-    return _angle;
-}
+    /* Getter */
+    int Shootable::getAngle() const
+    {
+        return _angle;
+    }
 
-/* Setter */
-void component::Shootable::setAngle(int angle)
-{
-    _angle = angle;
-}
+    /* Setter */
+    void Shootable::setAngle(int angle)
+    {
+        _angle = angle;
+    }
+} // namespace component
