@@ -5,8 +5,8 @@
 ** main
 */
 
-#include "Sfml/window.hpp"
 #include "Network/network.hpp"
+#include "Sfml/window.hpp"
 
 int main(void)
 {
