@@ -14,6 +14,6 @@ namespace ecs
 {
     class Systems {
       public:
-        static void SystemDrawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
+        static void Drawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
     };
 } // namespace ecs

@@ -9,7 +9,7 @@
 
 namespace ecs
 {
-    void Systems::SystemDrawable(Registry &registry, SparseArray<component::Drawable> const &drawable)
+    void Systems::Drawable(Registry &registry, SparseArray<component::Drawable> const &drawable)
     {
         // registry.get_entities();
     }
