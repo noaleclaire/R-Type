@@ -7,35 +7,29 @@
 
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/array.hpp>
+#include <boost/bind.hpp>
+#include <thread>
 #include <iostream>
-#include <string.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
 #include "shared.hpp"
+
+#define IPADDRESS "127.0.0.1"
+#define SRVR_UDP_PORT  10251
+
+using boost::asio::ip::udp;
+using boost::asio::ip::address;
 
 class network_player
 {
 public:
-    network_player(int port);
+    network_player();
     ~network_player();
     void init_player(void);
     void process_player(shared_memory_t *shr);
-    void handle_message(int fd, shared_memory_t *shr);
-    void get_info_pokemon(char *input, shared_memory_t *s);
-    void get_damage_pokemon(char *input, shared_memory_t *s);
-    void get_name_pokemon(char *input, shared_memory_t *s);
-    void get_info_stat_pokemon(std::string tmp, char *input, \
-    shared_memory_t *s);
-    char *get_input(int fd);
-    bool get_start(void) const;
-    int get_fd(void) const;
 private:
     int _port;
     int _sock;

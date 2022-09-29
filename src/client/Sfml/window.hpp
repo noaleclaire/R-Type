@@ -8,5 +8,15 @@
 #pragma once
 
 #include <cstdio>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include "../Network/shared.hpp"
 
-int my_window(void);
+class window
+{
+    public:
+        window();
+        ~window();
+        int launch_window(shared_memory_t *s);
+    private:
+};

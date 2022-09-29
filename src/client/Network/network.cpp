@@ -7,83 +7,39 @@
 
 #include "network.hpp"
 
-network_player::network_player(int port)
+using boost::asio::ip::udp;
+using boost::asio::ip::address;
+
+boost::array<char, 1024> recv_buffer;
+
+network_player::network_player()
 {
-    this->_port = port;
 }
 
 network_player::~network_player()
 {
 }
 
-void network_player::init_player(void)
+void handle_receive(const boost::system::error_code& error, size_t bytes_transferred)
 {
-    this->_sock = socket(PF_INET, SOCK_STREAM, 0);
-    this->addr.sin_family = AF_INET;
-    this->addr.sin_port = htons(this->_port);
-    this->addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    if (connect(this->_sock, (struct sockaddr*)&this->addr, \
-    sizeof(this->addr)) < 0) {
-        exit(84);
-    }
-}
-
-char *network_player::get_input(int fd)
-{
-    char *buffer = new char [256];
-    char *c = new char [1];
-    int size = 0;
-
-    if (fd < 0 || buffer == NULL)
-        return NULL;
-    while (c[0] != '\n') {
-        c[0] = '\0';
-        read(fd, c, 1);
-        if (c[0] != '\n') {
-            buffer[size] = c[0];
-            size++;
-        }
-    }
-    buffer[size] = '\0';
-    return buffer;
-}
-
-void network_player::handle_message(int fd, shared_memory_t *s)
-{
-    char *input = get_input(fd);
-
-    if (input[0] == 'I') {
-        _id = input[3] - '0';
-        dprintf(this->_sock, "READY\n");
-    }
-    if (input[0] == 'S') {
-        _start = true;
-        s->_st = true;
-        s->wait = 0;
-    }
+    std::cout << "Received: '" << std::string(recv_buffer.begin(), recv_buffer.begin()+bytes_transferred) << "'\n";
 }
 
 void network_player::process_player(shared_memory_t *shr)
 {
-    dprintf(this->_sock, "ID\n");
-    FD_ZERO(&this->read_fd_registered);
-    FD_SET(this->_sock, &this->read_fd_registered);
-    while (1) {
-        read_fd_copy = read_fd_registered;
-        if (select(FD_SETSIZE, &read_fd_copy, NULL, NULL, NULL) < 0)
-            exit(84);
-        else if (FD_ISSET(this->_sock, &this->read_fd_copy)) {
-            handle_message(this->_sock, shr);
-        }
+    while(1)
+    {
+        boost::asio::io_service io_service;
+        boost::asio::ip::udp::socket socket(io_service);
+        boost::asio::ip::udp::endpoint remote_endpoint;
+
+        socket.open(udp::v4());
+        socket.bind(udp::endpoint(address::from_string(IPADDRESS), SRVR_UDP_PORT));
+        socket.async_receive_from(boost::asio::buffer(recv_buffer),
+            remote_endpoint,
+            boost::bind(handle_receive, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));                                    
+        std::cout << "Receiving\n";
+        io_service.run();
+        std::cout << "Receiver exit\n";
     }
-}
-
-bool network_player::get_start(void) const
-{
-    return (_start);
-}
-
-int network_player::get_fd(void) const
-{
-    return (this->_sock);
 }
