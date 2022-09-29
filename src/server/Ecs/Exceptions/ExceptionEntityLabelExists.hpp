@@ -11,11 +11,11 @@
 namespace ecs
 {
     class ExceptionEntityLabelExists : public Exception {
-        public:
-            ExceptionEntityLabelExists(const std::string &message, const std::string &location) : Exception(message, location) {};
-            ~ExceptionEntityLabelExists() = default;
+      public:
+        ExceptionEntityLabelExists(const std::string &message, const std::string &location) : Exception(message, location){};
+        ~ExceptionEntityLabelExists() = default;
 
-        protected:
-        private:
+      protected:
+      private:
     };
-}
+} // namespace ecs

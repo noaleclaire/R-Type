@@ -7,12 +7,13 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Drawable {
-        public:
-            Drawable() = default;
-            Drawable(const Drawable &other) = default;
-            ~Drawable() = default;
-            Drawable &operator=(const Drawable &other) = default;
+      public:
+        Drawable() = default;
+        Drawable(const Drawable &other) = default;
+        ~Drawable() = default;
+        Drawable &operator=(const Drawable &other) = default;
     };
-}
+} // namespace component

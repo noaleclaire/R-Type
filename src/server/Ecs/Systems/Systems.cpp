@@ -13,4 +13,4 @@ namespace ecs
     {
         // registry.get_entities();
     }
-}
+} // namespace ecs

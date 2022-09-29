@@ -7,12 +7,13 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Killable {
-        public:
-            Killable() = default;
-            Killable(const Killable &other) = default;
-            ~Killable() = default;
-            Killable &operator=(const Killable &other) = default;
+      public:
+        Killable() = default;
+        Killable(const Killable &other) = default;
+        ~Killable() = default;
+        Killable &operator=(const Killable &other) = default;
     };
-}
+} // namespace component

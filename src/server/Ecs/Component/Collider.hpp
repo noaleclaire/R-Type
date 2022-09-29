@@ -7,12 +7,13 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Collider {
-        public:
-            Collider() = default;
-            Collider(const Collider &other) = default;
-            ~Collider() = default;
-            Collider &operator=(const Collider &other) = default;
+      public:
+        Collider() = default;
+        Collider(const Collider &other) = default;
+        ~Collider() = default;
+        Collider &operator=(const Collider &other) = default;
     };
-}
+} // namespace component

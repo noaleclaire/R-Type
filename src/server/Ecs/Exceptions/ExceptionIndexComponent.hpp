@@ -11,11 +11,11 @@
 namespace ecs
 {
     class ExceptionIndexComponent : public Exception {
-        public:
-            ExceptionIndexComponent(const std::string &message, const std::string &location) : Exception(message, location) {};
-            ~ExceptionIndexComponent() = default;
+      public:
+        ExceptionIndexComponent(const std::string &message, const std::string &location) : Exception(message, location){};
+        ~ExceptionIndexComponent() = default;
 
-        protected:
-        private:
+      protected:
+      private:
     };
-}
+} // namespace ecs

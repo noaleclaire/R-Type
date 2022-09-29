@@ -21,9 +21,16 @@ namespace ecs
         }
     }
 
-    Entity::~Entity() {}
+    Entity::~Entity()
+    {
+    }
 
     Entity::operator std::size_t()
+    {
+        return (_id);
+    }
+
+    Entity::operator std::size_t() const
     {
         return (_id);
     }
@@ -42,4 +49,4 @@ namespace ecs
     {
         return (_label);
     }
-}
+} // namespace ecs

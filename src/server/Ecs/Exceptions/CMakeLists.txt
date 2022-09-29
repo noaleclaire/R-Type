@@ -9,11 +9,8 @@ set(SRC
     ${INCROOT}/ExceptionEntityUnobtainable.hpp
     ${INCROOT}/ExceptionIndexComponent.hpp
     ${INCROOT}/ExceptionSparseArrayUnobtainable.hpp
-    PARENT_SCOPE
-    )
+    PARENT_SCOPE)
 
-SET(INCDIRS
-    ${INCDIRS}
-    ${INCROOT}
-    PARENT_SCOPE
-)
+set(INCDIRS
+    ${INCDIRS} ${INCROOT}
+    PARENT_SCOPE)

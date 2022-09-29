@@ -15,11 +15,8 @@ set(SRC
     ${INCROOT}/SparseArray.hpp
     ${INCROOT}/Velocity.hpp
     ${SRCROOT}/Velocity.cpp
-    PARENT_SCOPE
-    )
+    PARENT_SCOPE)
 
-SET(INCDIRS
-    ${INCDIRS}
-    ${INCROOT}
-    PARENT_SCOPE
-)
+set(INCDIRS
+    ${INCDIRS} ${INCROOT}
+    PARENT_SCOPE)

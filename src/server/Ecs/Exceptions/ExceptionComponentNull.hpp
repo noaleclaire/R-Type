@@ -11,11 +11,11 @@
 namespace ecs
 {
     class ExceptionComponentNull : public Exception {
-        public:
-            ExceptionComponentNull(const std::string &message, const std::string &location) : Exception(message, location) {};
-            ~ExceptionComponentNull() = default;
+      public:
+        ExceptionComponentNull(const std::string &message, const std::string &location) : Exception(message, location){};
+        ~ExceptionComponentNull() = default;
 
-        protected:
-        private:
+      protected:
+      private:
     };
-}
+} // namespace ecs

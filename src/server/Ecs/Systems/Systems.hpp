@@ -6,14 +6,14 @@
 */
 
 #pragma once
-#include "../Registry.hpp"
-#include "../Component/SparseArray.hpp"
 #include "../Component/Drawable.hpp"
+#include "../Component/SparseArray.hpp"
+#include "../Registry.hpp"
 
 namespace ecs
 {
     class Systems {
-        public:
-            static void SystemDrawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
+      public:
+        static void SystemDrawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
     };
-}
+} // namespace ecs

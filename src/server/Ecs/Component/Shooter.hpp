@@ -7,12 +7,13 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Shooter {
-        public:
-            Shooter();
-            Shooter(const Shooter &other) = default;
-            ~Shooter() = default;
-            Shooter &operator=(const Shooter &other) = default;
+      public:
+        Shooter();
+        Shooter(const Shooter &other) = default;
+        ~Shooter() = default;
+        Shooter &operator=(const Shooter &other) = default;
     };
-}
+} // namespace component

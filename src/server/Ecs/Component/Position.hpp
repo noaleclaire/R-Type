@@ -7,24 +7,25 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Position {
-        public:
-            Position(float x, float y);
-            Position(const Position &other) = default;
-            ~Position() = default;
-            Position &operator=(const Position &other) = default;
+      public:
+        Position(float x, float y);
+        Position(const Position &other) = default;
+        ~Position() = default;
+        Position &operator=(const Position &other) = default;
 
-            /* Getter */
-            float getXPosition() const;
-            float getYPosition() const;
+        /* Getter */
+        float getXPosition() const;
+        float getYPosition() const;
 
-            /* Setter */
-            void setXPosition(float x);
-            void setYPosition(float y);
+        /* Setter */
+        void setXPosition(float x);
+        void setYPosition(float y);
 
-        private:
-            float _x;
-            float _y;
+      private:
+        float _x;
+        float _y;
     };
-}
+} // namespace component

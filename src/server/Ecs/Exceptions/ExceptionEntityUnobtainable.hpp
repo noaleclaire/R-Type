@@ -11,11 +11,11 @@
 namespace ecs
 {
     class ExceptionEntityUnobtainable : public Exception {
-        public:
-            ExceptionEntityUnobtainable(const std::string &message, const std::string &location) : Exception(message, location) {};
-            ~ExceptionEntityUnobtainable() = default;
+      public:
+        ExceptionEntityUnobtainable(const std::string &message, const std::string &location) : Exception(message, location){};
+        ~ExceptionEntityUnobtainable() = default;
 
-        protected:
-        private:
+      protected:
+      private:
     };
-}
+} // namespace ecs

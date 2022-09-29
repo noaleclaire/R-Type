@@ -11,11 +11,11 @@
 namespace ecs
 {
     class ExceptionSparseArrayUnobtainable : public Exception {
-        public:
-            ExceptionSparseArrayUnobtainable(const std::string &message, const std::string &location) : Exception(message, location) {};
-            ~ExceptionSparseArrayUnobtainable() = default;
+      public:
+        ExceptionSparseArrayUnobtainable(const std::string &message, const std::string &location) : Exception(message, location){};
+        ~ExceptionSparseArrayUnobtainable() = default;
 
-        protected:
-        private:
+      protected:
+      private:
     };
-}
+} // namespace ecs

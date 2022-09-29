@@ -1,8 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/)
 
-set(SRC 
-    ${SRCROOT}/main.cpp)
+set(SRC ${SRCROOT}/main.cpp)
 
 add_subdirectory(Ecs)
 add_subdirectory(Network)

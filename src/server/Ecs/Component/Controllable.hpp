@@ -7,12 +7,13 @@
 
 #pragma once
 
-namespace component {
+namespace component
+{
     class Controllable {
-        public:
-            Controllable() = default;
-            Controllable(const Controllable &other) = default;
-            ~Controllable() = default;
-            Controllable &operator=(const Controllable &other) = default;
+      public:
+        Controllable() = default;
+        Controllable(const Controllable &other) = default;
+        ~Controllable() = default;
+        Controllable &operator=(const Controllable &other) = default;
     };
-}
+} // namespace component
