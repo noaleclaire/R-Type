@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++20 -Wextra -Wshadow -Wpointer-arith -lsfml-graphics -lsfml-system -lsfml-window -lpthread -O3 -DNDEBUG CMakeFiles/r-type_server.dir/main.cpp.o -o r-type_server  Network/libNetwork.a Ecs/libEcs.a 

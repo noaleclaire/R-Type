@@ -1,0 +1,2 @@
+/usr/bin/ar qc libEcs.a CMakeFiles/Ecs.dir/ecs.cpp.o
+/usr/bin/ranlib libEcs.a
