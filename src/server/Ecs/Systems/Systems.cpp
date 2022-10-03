@@ -11,7 +11,7 @@ namespace ecs
 {
     void Systems::Drawable(Registry &registry, SparseArray<component::Drawable> const &drawable)
     {
-        for (auto &it : registry.get_entities()) {
+        for (auto &it : registry.getEntities()) {
             if (drawable.at(it))
                 ; // dessine entity
         }

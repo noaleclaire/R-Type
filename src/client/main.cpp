@@ -9,7 +9,9 @@
 #include <iostream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
+#include "Network/network.hpp"
 #include "ParserYaml.hpp"
+#include "Sfml/window.hpp"
 #include "SpritesManager.hpp"
 
 bool assetsFolderExists()
@@ -24,20 +26,19 @@ bool assetsFolderExists()
         throw ExceptionDirectoryNotFound("directory /font not found in /assets", "bool assetsFolderExists()");
 }
 
-int main(int ac , char **av)
+int main(int ac, char **av)
 {
     if (ac == 2) {
         try {
-          assetsFolderExists();
-          graphics::SpritesManager sprites_manager;
-          ParserYaml::ParseSpritesConfig(sprites_manager);
+            assetsFolderExists();
+            graphics::SpritesManager sprites_manager;
+            ParserYaml::ParseSpritesConfig(sprites_manager);
         } catch (const Exception &e) {
-          std::cerr << e.what() << std::endl;
-          std::cerr << e.where() << std::endl;
-          return (84);
+            std::cerr << e.what() << std::endl;
+            std::cerr << e.where() << std::endl;
+            return (84);
         }
-        shared_memory_t *shr = \
-        (shared_memory_t *)malloc(sizeof(shared_memory_t));
+        shared_memory_t *shr = (shared_memory_t *)malloc(sizeof(shared_memory_t));
         network_player net;
         shr->name = av[1];
         std::thread f(&network_player::process_player, &net, shr);
