@@ -18,13 +18,10 @@ bool assetsFolderExists()
         throw ExceptionDirectoryNotFound("directory /assets not found", "bool assetsFolderExists()");
     if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sprites"))
         throw ExceptionDirectoryNotFound("directory /sprites not found in /assets", "bool assetsFolderExists()");
-    ;
     if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sounds"))
         throw ExceptionDirectoryNotFound("directory /sounds not found in /assets", "bool assetsFolderExists()");
-    ;
     if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/font"))
         throw ExceptionDirectoryNotFound("directory /font not found in /assets", "bool assetsFolderExists()");
-    ;
 }
 
 int main(void)
