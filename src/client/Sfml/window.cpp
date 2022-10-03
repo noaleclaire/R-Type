@@ -21,14 +21,13 @@ int window::launch_window(shared_memory_t *s)
 
     _window.setFramerateLimit(60);
     while (_window.isOpen()) {
-       sf::Event event;
-       while (_window.pollEvent(event))
-       {
-           if (event.type == sf::Event::Closed)
-               _window.close();
-       }
-       _window.setActive();
-       _window.display();
+        sf::Event event;
+        while (_window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                _window.close();
+        }
+        _window.setActive();
+        _window.display();
     }
     return 0;
 }

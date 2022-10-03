@@ -7,30 +7,30 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <boost/array.hpp>
+#include <boost/asio.hpp>
 #include <boost/bind.hpp>
-#include <thread>
-#include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <string>
+#include <thread>
 #include "shared.hpp"
 
-#define IPADDRESS "127.0.0.1"
-#define SRVR_UDP_PORT  10251
+#define IPADDRESS     "127.0.0.1"
+#define SRVR_UDP_PORT 10251
 
-using boost::asio::ip::udp;
 using boost::asio::ip::address;
+using boost::asio::ip::udp;
 
-class network_player
-{
-public:
+class network_player {
+  public:
     network_player();
     ~network_player();
     void init_player(void);
     void process_player(shared_memory_t *shr);
-private:
+
+  private:
     int _port;
     int _sock;
     int _id;

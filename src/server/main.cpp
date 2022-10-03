@@ -7,7 +7,7 @@
 
 #include "Network/network.hpp"
 
-int main(int ac , char **av)
+int main(int ac, char **av)
 {
     if (ac == 2) {
         Network net;

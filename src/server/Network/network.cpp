@@ -6,11 +6,10 @@
 */
 
 #include "network.hpp"
-using boost::asio::ip::udp;
 using boost::asio::ip::address;
+using boost::asio::ip::udp;
 
 boost::array<char, 1024> recv_buffer;
-
 
 Network::Network()
 {

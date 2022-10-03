@@ -7,16 +7,16 @@
 
 #pragma once
 
-#include <cstdio>
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <cstdio>
 #include "../Network/shared.hpp"
 
-class window
-{
-    public:
-        window();
-        ~window();
-        int launch_window(shared_memory_t *s);
-    private:
+class window {
+  public:
+    window();
+    ~window();
+    int launch_window(shared_memory_t *s);
+
+  private:
 };
