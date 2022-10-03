@@ -5,12 +5,38 @@
 ** main
 */
 
-#include "Network/network.hpp"
-#include "Sfml/window.hpp"
+#include <filesystem>
+#include <iostream>
+#include "Exceptions/Exception.hpp"
+#include "Exceptions/ExceptionDirectoryNotFound.hpp"
+#include "ParserYaml.hpp"
+#include "SpritesManager.hpp"
+
+bool assetsFolderExists()
+{
+    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets"))
+        throw ExceptionDirectoryNotFound("directory /assets not found", "bool assetsFolderExists()");
+    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sprites"))
+        throw ExceptionDirectoryNotFound("directory /sprites not found in /assets", "bool assetsFolderExists()");
+    ;
+    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sounds"))
+        throw ExceptionDirectoryNotFound("directory /sounds not found in /assets", "bool assetsFolderExists()");
+    ;
+    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/font"))
+        throw ExceptionDirectoryNotFound("directory /font not found in /assets", "bool assetsFolderExists()");
+    ;
+}
 
 int main(void)
 {
-    my_window();
-    my_network();
-    return (1);
+    try {
+        assetsFolderExists();
+        graphics::SpritesManager sprites_manager;
+        ParserYaml::ParseSpritesConfig(sprites_manager);
+    } catch (const Exception &e) {
+        std::cerr << e.what() << std::endl;
+        std::cerr << e.where() << std::endl;
+        return (84);
+    }
+    return (0);
 }

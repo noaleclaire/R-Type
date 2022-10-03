@@ -6,12 +6,10 @@
 */
 
 #pragma once
+#include <string>
+#include "SpritesManager.hpp"
 
 class ParserYaml {
   public:
-    ParserYaml();
-    ~ParserYaml();
-
-  protected:
-  private:
+    static void ParseSpritesConfig(graphics::SpritesManager &manager);
 };
