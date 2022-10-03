@@ -18,9 +18,9 @@ namespace ecs
         operator std::size_t();
         operator std::size_t() const;
 
-        std::size_t get_id() const;
-        void set_label(std::string label);
-        std::string get_label() const;
+        std::size_t getId() const;
+        void setLabel(std::string label);
+        std::string getLabel() const;
         static std::size_t _idCount;
 
       private:

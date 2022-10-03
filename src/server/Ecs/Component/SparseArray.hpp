@@ -117,7 +117,6 @@ namespace ecs
         };
         reference_type insert_at(size_type idx, Component const &compo)
         {
-            std::cout << "oui" << std::endl;
             if (idx >= size())
                 _data.resize((size() + 1) + (idx - size()));
             erase(idx);
@@ -130,7 +129,6 @@ namespace ecs
         };
         reference_type insert_at(size_type idx, Component &&compo)
         {
-            std::cout << "non" << std::endl;
             if (idx >= size())
                 _data.resize((size() + 1) + (idx - size()));
             try {
@@ -142,7 +140,6 @@ namespace ecs
         };
         template <class... Params> reference_type emplace_at(size_type idx, Params &&...args)
         {
-            std::cout << "lol" << std::endl;
             if (idx >= size())
                 _data.resize((size() + 1) + (idx - size()));
             try {
