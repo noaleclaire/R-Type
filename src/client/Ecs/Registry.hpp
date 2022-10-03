@@ -65,6 +65,17 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
         }
+        template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)
+        {
+            try {
+                _components_arrays.at(std::type_index(typeid(Component)));
+                _components_arrays.at(std::type_index(typeid(Component))).insert_at(to, c);
+            } catch (const std::out_of_range &e) {
+                throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
+                    "template <typename Component> typename SparseArray<Component>::reference_type add_component(Entity const &to, Component &c)");
+            }
+            return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
+        }
         template <typename Component, typename... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...args)
         {
             try {
