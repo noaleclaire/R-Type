@@ -19,6 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Create build dir
+      run: mkdir build
+
     - name: Configure
       run: cmake -B ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
