@@ -12,8 +12,6 @@ source_group("" FILES ${SRC})
 
 set(LIB_NAME Ecs)
 
-add_library(Ecs ${SRC})
-
 target_include_directories(${LIB_NAME} PRIVATE ${INCDIRS})
 target_include_directories(${LIB_NAME} PUBLIC ${INCROOT})
 target_include_directories(Ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
