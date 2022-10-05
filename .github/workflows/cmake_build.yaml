@@ -19,11 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Create build dir
-      run: mkdir build
-
     - name: Configure
-      run: cmake -S . -B ${{ github.workspace }}/build -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+      run: cmake -B ${{ github.workspace }}/build -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
       run: cmake --build ${{ github.workspace }}/build --target all --config ${{ env.BUILD_TYPE }}
