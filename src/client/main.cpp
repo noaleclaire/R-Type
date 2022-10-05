@@ -35,8 +35,8 @@ int main(int ac, char **av)
             ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
             sprites_manager.printSpritesData();
         } catch (const Exception &e) {
-            std::cout << e.what() << std::endl;
-            std::cout << e.where() << std::endl;
+            std::cerr << e.what() << std::endl;
+            std::cerr << e.where() << std::endl;
             return (84);
         }
         // shared_memory_t *shr = (shared_memory_t *)malloc(sizeof(shared_memory_t));

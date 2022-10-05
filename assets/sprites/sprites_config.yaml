@@ -1,0 +1,32 @@
+# spritesheet: name_of_the_spritesheet
+#   {type_of_the_sprite}: id_of_the_sprite
+#     anim: id_of_the_animation
+#       rect_x: ... (optional)
+#       rect_y: ... (optional)
+#       rect_width: ... (optional)
+#       rect_height: ... (optional)
+#       nb_anim: ... (optional)
+#       next_anim: ... (optional)
+#       ...
+#     ...
+#
+# {type_of_the_sprite} is : spaceship, monster
+#
+# Example:
+#
+#spritesheet: r-typesheet42.gif
+# spaceship: 0
+#  anim: 0
+#   rect_x: 1
+#   rect_y: 1
+#   rect_width: 32
+#   rect_height: 17
+#   nb_anim: 5
+#   next_anim: 1
+#  anim: 1
+#   rect_x: 2
+#   rect_y: 2
+#   rect_width: 42
+#   rect_height: 27
+#   nb_anim: 15
+#   next_anim: 0
