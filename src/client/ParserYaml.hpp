@@ -7,9 +7,12 @@
 
 #pragma once
 #include <string>
-#include "SpritesManager.hpp"
+#include "IYamlConfig.hpp"
 
 class ParserYaml {
   public:
-    static void ParseSpritesConfig(graphics::SpritesManager &manager);
+    static void parseYaml(IYamlConfig &manager, const std::string filename);
+
+  private:
+    static int getNbTabStartOfLine(std::string &line);
 };

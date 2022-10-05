@@ -6,13 +6,15 @@
 */
 
 #pragma once
-#include <functional>
+#include <iostream>
 #include <optional>
 #include <string>
 #include <vector>
+#include "AYamlConfig.hpp"
+#include "MapMemberFunctionPointer.hpp"
 #include <unordered_map>
 
-#define NB_ANIM_ATTRIBUTES (5)
+#define NB_ANIM_ATTRIBUTES (6)
 
 namespace graphics
 {
@@ -20,42 +22,47 @@ namespace graphics
     enum SpriteTypeAttributes { anim };
     enum SpriteAnimAttributes { rect_x, rect_y, rect_width, rect_height, nb_anim, next_anim };
 
-    class SpritesManager {
+    class SpritesManager : public AYamlConfig {
       public:
         SpritesManager();
         ~SpritesManager();
 
-        bool isSpriteTypes(std::string &sprite_type);
-        bool isSpriteTypeAttributes(std::string &sprite_type_attribute);
-        bool isSpriteAnimAttributes(std::string &sprite_anim_attribute);
+        void executeMapMemberFunctionPointer(std::string &sprite_config_word, std::string &value);
+
         graphics::SpriteTypes getSpriteType(std::string &sprite_type) const;
+        std::string const getSpriteType(graphics::SpriteTypes sprite_type) const;
+
         graphics::SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
+        std::string const getSpriteTypeAttribute(graphics::SpriteTypeAttributes sprite_type_attribute) const;
+
         graphics::SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
-        void addTexturePath(std::string &texture_path);
-        void addSpriteData1(std::string &spritesheet, std::string &sprite_type, std::string &sprite_type_id);
-        void addSpriteData2(std::string &sprite_type, std::string &sprite_type_id, std::string &anim_id);
-        void addSpriteData3(
-            std::string &sprite_type, std::string &sprite_type_id, std::string &anim_id, std::string &anim_attribute_type, std::string &anim_attribute_value);
+        std::string const getSpriteAnimAttribute(graphics::SpriteAnimAttributes sprite_anim_attribute) const;
+
+        void addTexturePath(std::string &key_word, std::string &texture_path);
+        void addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id);
+        void addSpriteAnim(std::string &sprite_type_anim, std::string &sprite_type_anim_id);
+        void addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value);
+
+        std::vector<std::string> const getTexturePath() const;
+        void printSpritesData();
 
       protected:
       private:
-        struct SpriteAttributes {
+        typedef void (SpritesManager::*MAP_FPTR)(std::string &, std::string &);
+        MapMemberFunctionPointer<MAP_FPTR> _map_fptr;
+        void initMapFunctionPointer();
+
+        struct SpriteData {
             std::string _spritesheet;
             std::pair<graphics::SpriteTypes, std::size_t> _sprite_type_and_id;
             std::unordered_map<std::size_t, std::vector<std::optional<std::size_t>>> _animations;
         };
+        std::vector<SpriteData> _sprites_data;
         std::vector<std::string> _textures_path;
-        std::vector<SpriteAttributes> _sprites_data;
 
-        std::unordered_map<std::string, graphics::SpriteTypes> _matching_string_with_sprite_types{
-            {"spaceship", graphics::SpriteTypes::spaceship}, {"monster", graphics::SpriteTypes::monster}};
-
-        std::unordered_map<std::string, graphics::SpriteTypeAttributes> _matching_string_with_sprite_type_attributes{
-            {"anim", graphics::SpriteTypeAttributes::anim}};
-
-        std::unordered_map<std::string, graphics::SpriteAnimAttributes> _matching_string_with_sprite_anim_attributes{
-            {"rect_x", graphics::SpriteAnimAttributes::rect_x}, {"rect_y", graphics::SpriteAnimAttributes::rect_y},
-            {"rect_width", graphics::SpriteAnimAttributes::rect_width}, {"rect_height", graphics::SpriteAnimAttributes::rect_height},
-            {"nb_anim", graphics::SpriteAnimAttributes::nb_anim}, {"next_anim", graphics::SpriteAnimAttributes::next_anim}};
+        std::string _spritesheet_tmp = "";
+        graphics::SpriteTypes _sprite_type_tmp;
+        long unsigned int _sprite_type_id_tmp;
+        long unsigned int _sprite_type_anim_id_tmp;
     };
 } // namespace graphics
