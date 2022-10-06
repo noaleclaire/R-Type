@@ -7,13 +7,15 @@
 
 #pragma once
 
+#include "IComponent.hpp"
+
 namespace component
 {
-    class Position {
+    class Position : public IComponent {
       public:
         Position(float x, float y);
         Position(const Position &other) = default;
-        ~Position() = default;
+        ~Position() override = default;
         Position &operator=(const Position &other) = default;
 
         /* Getter */

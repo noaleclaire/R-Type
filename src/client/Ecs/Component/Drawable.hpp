@@ -7,13 +7,15 @@
 
 #pragma once
 
+#include "IComponent.hpp"
+
 namespace component
 {
-    class Drawable {
+    class Drawable : public IComponent {
       public:
         Drawable() = default;
         Drawable(const Drawable &other) = default;
-        ~Drawable() = default;
+        ~Drawable() override = default;
         Drawable &operator=(const Drawable &other) = default;
     };
 } // namespace component
