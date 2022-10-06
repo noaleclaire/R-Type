@@ -13,4 +13,4 @@ namespace component
       public:
         virtual ~IComponent() = default;
     };
-}; // namespace component
+} // namespace component

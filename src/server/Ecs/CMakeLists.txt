@@ -12,7 +12,7 @@ source_group("" FILES ${SRC})
 
 set(LIB_NAME Ecs)
 
-add_library(Ecs ${SRC})
+# add_library(Ecs ${SRC})
 
 target_include_directories(${LIB_NAME} PRIVATE ${INCDIRS})
 target_include_directories(${LIB_NAME} PUBLIC ${INCROOT})
