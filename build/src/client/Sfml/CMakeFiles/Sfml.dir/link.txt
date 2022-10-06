@@ -1,2 +1,0 @@
-/usr/bin/ar qc libSfml.a CMakeFiles/Sfml.dir/window.cpp.o
-/usr/bin/ranlib libSfml.a
