@@ -6,11 +6,8 @@
 */
 
 #include "network.hpp"
+
 using boost::asio::ip::udp;
-using boost::asio::ip::address;
-
-boost::array<char, 1024> recv_buffer;
-
 
 Network::Network()
 {
@@ -20,14 +17,27 @@ Network::~Network()
 {
 }
 
-void Network::process_network(std::string in)
+std::string Network::make_daytime_string()
 {
-    boost::asio::io_service io_service(2);
-    boost::asio::ip::udp::socket socket(io_service);
-    boost::asio::ip::udp::endpoint remote_endpoint = udp::endpoint(address::from_string(IPADDRESS), SRVR_UDP_PORT);
-    socket.open(boost::asio::ip::udp::v4());
-    boost::system::error_code err;
-    socket.send_to(boost::asio::buffer(in), remote_endpoint, 0, err);
-    //socket.close();
-    printf("Sending Payload --- \n");
+  using namespace std;
+  time_t now = time(0);
+  return ctime(&now);
+}
+
+void Network::process_network()
+{
+    boost::asio::io_context io_context;
+    udp::socket socket(io_context, udp::endpoint(udp::v4(), 13251));
+
+    for (;;) {
+      boost::array<char, 1> recv_buf;
+      udp::endpoint remote_endpoint;
+      socket.receive_from(boost::asio::buffer(recv_buf), remote_endpoint);
+
+      std::string message = make_daytime_string();
+
+      boost::system::error_code ignored_error;
+      socket.send_to(boost::asio::buffer(message),
+          remote_endpoint, 0, ignored_error);
+    }
 }

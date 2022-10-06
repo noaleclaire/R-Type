@@ -21,14 +21,12 @@
 #define SRVR_UDP_PORT  10251
 
 using boost::asio::ip::udp;
-using boost::asio::ip::address;
 
 class network_player
 {
 public:
     network_player();
     ~network_player();
-    void init_player(void);
     void process_player(shared_memory_t *shr);
 private:
     int _port;

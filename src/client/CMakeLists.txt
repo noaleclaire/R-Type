@@ -12,6 +12,8 @@ add_executable(${TARGET_NAME} ${SRC})
 
 target_link_libraries(${TARGET_NAME} Client)
 target_link_libraries(${TARGET_NAME} Sfml)
+target_link_libraries(${TARGET_NAME} Ecs)
+
 
 add_custom_command(
   TARGET ${TARGET_NAME}
