@@ -6,11 +6,12 @@
 */
 
 #include "network.hpp"
+#include <atomic>
+#include <csignal>
+#include <iostream>
+#include <string>
 
-using boost::asio::ip::address;
 using boost::asio::ip::udp;
-
-boost::array<char, 1024> recv_buffer;
 
 network_player::network_player()
 {
@@ -20,24 +21,20 @@ network_player::~network_player()
 {
 }
 
-void handle_receive(const boost::system::error_code &error, size_t bytes_transferred)
+void network_player::process_player(std::shared_ptr<void()> s)
 {
-    std::cout << "Received: '" << std::string(recv_buffer.begin(), recv_buffer.begin() + bytes_transferred) << "'\n";
-}
-
-void network_player::process_player(shared_memory_t *shr)
-{
-    while (1) {
-        boost::asio::io_service io_service;
-        boost::asio::ip::udp::socket socket(io_service);
-        boost::asio::ip::udp::endpoint remote_endpoint;
-
-        socket.open(udp::v4());
-        socket.bind(udp::endpoint(address::from_string(IPADDRESS), SRVR_UDP_PORT));
-        socket.async_receive_from(boost::asio::buffer(recv_buffer), remote_endpoint,
-            boost::bind(handle_receive, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
-        std::cout << "Receiving\n";
-        io_service.run();
-        std::cout << "Receiver exit\n";
+    (void)s;
+    boost::asio::io_context io_context;
+    udp::resolver resolver(io_context);
+    udp::endpoint receiver_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 13251);
+    udp::socket socket(io_context);
+    socket.open(udp::v4());
+    for (;;) {
+        boost::array<char, 1> send_buf = {{0}};
+        socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
+        boost::array<char, 128> recv_buf;
+        udp::endpoint sender_endpoint;
+        size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
+        std::cout.write(recv_buf.data(), len);
     }
 }

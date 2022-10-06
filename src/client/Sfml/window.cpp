@@ -15,8 +15,9 @@ window::~window()
 {
 }
 
-int window::launch_window(shared_memory_t *s)
+int window::launch_window(std::shared_ptr<void()> s)
 {
+    (void)s;
     sf::RenderWindow _window(sf::VideoMode(520, 800), "My _window");
 
     _window.setFramerateLimit(60);
