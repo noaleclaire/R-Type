@@ -1,5 +1,5 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Exceptions)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Exceptions)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Exceptions)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Exceptions)
 
 set(SRC
     ${SRC}

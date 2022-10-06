@@ -1,5 +1,5 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Component)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Component)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Component)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Component)
 
 set(SRC
     ${SRC}

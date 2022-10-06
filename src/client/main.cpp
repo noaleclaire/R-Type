@@ -30,21 +30,21 @@ int main(int ac, char **av)
 {
     (void)av;
     (void)ac;
-     try {
-            // assetsFolderExists();
-          std::shared_ptr<void()> s;
-          network_player net;
-          std::thread f(&network_player::process_player, &net, s);
-          window win;
-          win.launch_window(s);
-          graphics::SpritesManager sprites_manager;
-          ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-          sprites_manager.printSpritesData();
-          f.join();
-     } catch (const Exception &e) {
-            std::cerr << e.what() << std::endl;
-            std::cerr << e.where() << std::endl;
-            return (84);
-     }
+    try {
+        // assetsFolderExists();
+        std::shared_ptr<void()> s;
+        network_player net;
+        std::thread f(&network_player::process_player, &net, s);
+        window win;
+        win.launch_window(s);
+        graphics::SpritesManager sprites_manager;
+        ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
+        sprites_manager.printSpritesData();
+        f.join();
+    } catch (const Exception &e) {
+        std::cerr << e.what() << std::endl;
+        std::cerr << e.where() << std::endl;
+        return (84);
+    }
     return (0);
 }

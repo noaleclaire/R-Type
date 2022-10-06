@@ -30,5 +30,6 @@ class Network {
     void process_network();
     std::string make_daytime_string();
     void process_network(std::string mes);
+
   private:
 };
