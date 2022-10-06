@@ -1,5 +1,5 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Systems)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs/Systems)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Systems)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Systems)
 
 set(SRC
     ${SRC} ${SRCROOT}/Systems.cpp ${INCROOT}/Systems.hpp

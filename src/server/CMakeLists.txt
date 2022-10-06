@@ -3,7 +3,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/)
 
 set(SRC ${SRCROOT}/main.cpp)
 
-add_subdirectory(Ecs)
 add_subdirectory(Network)
 
 set(TARGET_NAME r-type_server)

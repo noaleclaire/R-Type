@@ -25,5 +25,6 @@ class window {
     window();
     ~window();
     int launch_window(std::shared_ptr<void()> s);
+
   private:
 };

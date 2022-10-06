@@ -4,7 +4,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/)
 set(SRC ${SRCROOT}/main.cpp ${SRCROOT}/ParserYaml.cpp
         ${SRCROOT}/SpritesManager.cpp ${SRCROOT}/AYamlConfig.cpp)
 
-add_subdirectory(Ecs)
 add_subdirectory(Sfml)
 add_subdirectory(Network)
 

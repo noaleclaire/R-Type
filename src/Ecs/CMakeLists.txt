@@ -1,5 +1,5 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Ecs)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 
 set(SRC ${SRCROOT}/ecs.cpp ${SRCROOT}/ecs.hpp ${SRCROOT}/Registry.hpp)
 
@@ -12,7 +12,7 @@ source_group("" FILES ${SRC})
 
 set(LIB_NAME Ecs)
 
-# add_library(Ecs ${SRC})
+add_library(${LIB_NAME} ${SRC})
 
 target_include_directories(${LIB_NAME} PRIVATE ${INCDIRS})
 target_include_directories(${LIB_NAME} PUBLIC ${INCROOT})
