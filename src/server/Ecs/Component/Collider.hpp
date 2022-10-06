@@ -7,13 +7,15 @@
 
 #pragma once
 
+#include "IComponent.hpp"
+
 namespace component
 {
-    class Collider {
+    class Collider : public IComponent {
       public:
         Collider() = default;
         Collider(const Collider &other) = default;
-        ~Collider() = default;
+        ~Collider() override = default;
         Collider &operator=(const Collider &other) = default;
     };
 } // namespace component

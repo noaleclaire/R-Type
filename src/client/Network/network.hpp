@@ -30,12 +30,4 @@ class network_player {
     void process_player(std::shared_ptr<void()> s);
 
   private:
-    int _port;
-    int _sock;
-    int _id;
-    fd_set read_fd_copy;
-    fd_set read_fd_registered;
-    struct sockaddr_in addr;
-    bool _start;
-    shared_memory_t *_s;
 };

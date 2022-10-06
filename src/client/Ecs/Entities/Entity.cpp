@@ -35,17 +35,17 @@ namespace ecs
         return (_id);
     }
 
-    std::size_t Entity::get_id() const
+    std::size_t Entity::getId() const
     {
         return (_id);
     }
 
-    void Entity::set_label(std::string label)
+    void Entity::setLabel(std::string label)
     {
         _label = label;
     }
 
-    std::string Entity::get_label() const
+    std::string Entity::getLabel() const
     {
         return (_label);
     }

@@ -20,6 +20,7 @@
 #define IPADDRESS     "127.0.0.1"
 #define SRVR_UDP_PORT 55000
 
+using boost::asio::ip::address;
 using boost::asio::ip::udp;
 
 class Network {
@@ -28,10 +29,6 @@ class Network {
     ~Network();
     void process_network();
     std::string make_daytime_string();
-    // void handleSend(std::shared_ptr<std::string> message,
-    //             const boost::system::error_code& ec,
-    //             std::size_t bytes_transferred);
-    // void handleReceive(const boost::system::error_code& error,
-    //                    std::size_t bytes_transferred);
+    void process_network(std::string mes);
   private:
 };
