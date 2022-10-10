@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "IComponent.hpp"
+#include "AComponent.hpp"
 
 namespace component
 {
-    class Velocity : public IComponent {
+    class Velocity : public AComponent {
       public:
         Velocity(float x, float y);
         Velocity(const Velocity &other) = default;
-        ~Velocity() override = default;
+        ~Velocity() = default;
         Velocity &operator=(const Velocity &other) = default;
 
         /* Getter */

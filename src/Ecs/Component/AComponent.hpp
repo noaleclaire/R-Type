@@ -1,16 +1,17 @@
 /*
 ** EPITECH PROJECT, 2022
-** IComponent.hpp
+** AComponent.hpp
 ** File description:
-** IComponent.hpp
+** AComponent.hpp
 */
 
 #pragma once
 
 namespace component
 {
-    class IComponent {
+    class AComponent {
       public:
-        virtual ~IComponent() = default;
+        AComponent() = default;
+        ~AComponent() = default;
     };
 } // namespace component
