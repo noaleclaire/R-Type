@@ -10,8 +10,8 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "AYamlConfig.hpp"
-#include "MapMemberFunctionPointer.hpp"
+#include "../AYamlConfig.hpp"
+#include "../MapMemberFunctionPointer.hpp"
 #include <unordered_map>
 
 #define NB_ANIM_ATTRIBUTES (6)

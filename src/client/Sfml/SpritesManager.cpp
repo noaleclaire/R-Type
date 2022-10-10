@@ -8,8 +8,8 @@
 #include "SpritesManager.hpp"
 #include <algorithm>
 #include <iostream>
-#include "Exceptions/ExceptionBadAnyCast.hpp"
-#include "Exceptions/ExceptionNotAnInteger.hpp"
+#include "../Exceptions/ExceptionBadAnyCast.hpp"
+#include "../Exceptions/ExceptionNotAnInteger.hpp"
 
 namespace graphics
 {

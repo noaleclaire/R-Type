@@ -12,7 +12,7 @@
 #include "Network/network.hpp"
 #include "ParserYaml.hpp"
 #include "Sfml/window.hpp"
-#include "SpritesManager.hpp"
+#include "Sfml/SpritesManager.hpp"
 
 void assetsFolderExists()
 {
