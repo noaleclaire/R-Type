@@ -7,6 +7,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
 #include "Network/network.hpp"
@@ -30,6 +31,7 @@ int main(int ac, char **av)
 {
     (void)av;
     (void)ac;
+    std::ofstream errorLogsFile("ErrorLogs.txt");
     try {
         // assetsFolderExists();
         graphics::SpritesManager sprites_manager;
@@ -43,8 +45,9 @@ int main(int ac, char **av)
         game.launchLoop(s);
         f.join();
     } catch (const Exception &e) {
-        std::cerr << e.what() << std::endl;
-        std::cerr << e.where() << std::endl;
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile << e.where() << std::endl;
+        errorLogsFile.close();
         return (84);
     }
     return (0);

@@ -28,24 +28,24 @@ namespace ecs
         SparseArray(){}; // You can add more constructors.
         SparseArray(SparseArray const &other)
         {
-            for (size_type i = 0; i < size(); i++)
-                other._data.push_back(_data.at(i));
+            for (size_type i = 0; i < other.size(); i++)
+                _data.push_back(other._data.at(i));
         }; // copy constructor
         SparseArray(SparseArray &&other) noexcept
         {
-            for (size_type i = 0; i < size(); i++)
-                other._data.push_back(std::move(_data.at(i)));
+            for (size_type i = 0; i < other.size(); i++)
+                _data.push_back(std::move(other._data.at(i)));
         }; // move constructor
         ~SparseArray() = default;
         SparseArray &operator=(SparseArray const &other)
         {
-            for (size_type i = 0; i < size(); i++)
-                other._data.push_back(_data.at(i));
+            for (size_type i = 0; i < other.size(); i++)
+                _data.push_back(other._data.at(i));
         }; // copy assignment operator
         SparseArray &operator=(SparseArray &&other) noexcept
         {
-            for (size_type i = 0; i < size(); i++)
-                other._data.push_back(std::move(_data.at(i)));
+            for (size_type i = 0; i < other.size(); i++)
+                _data.push_back(std::move(other._data.at(i)));
         }; // move assignment operator
         reference_type operator[](size_t idx)
         {
