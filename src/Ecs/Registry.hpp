@@ -11,13 +11,21 @@
 #include <optional>
 #include <typeindex>
 #include <vector>
+#include <unordered_map>
 #include "Component/SparseArray.hpp"
+#include "Component/Collider.hpp"
+#include "Component/Controllable.hpp"
+#include "Component/Drawable.hpp"
+#include "Component/Killable.hpp"
+#include "Component/Position.hpp"
+#include "Component/Shootable.hpp"
+#include "Component/Shooter.hpp"
+#include "Component/Velocity.hpp"
 #include "Entities/Entity.hpp"
 #include "Exceptions/ExceptionEntityLabelExists.hpp"
 #include "Exceptions/ExceptionEntityUnobtainable.hpp"
 #include "Exceptions/ExceptionIndexComponent.hpp"
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
-#include <unordered_map>
 
 namespace ecs
 {
@@ -25,6 +33,18 @@ namespace ecs
 
     class Registry {
       public:
+        Registry()
+        {
+            registerComponents<component::Collider>();
+            registerComponents<component::Controllable>();
+            registerComponents<component::Drawable>();
+            registerComponents<component::Killable>();
+            registerComponents<component::Position>();
+            registerComponents<component::Shootable>();
+            registerComponents<component::Shooter>();
+            registerComponents<component::Velocity>();
+        };
+        ~Registry() = default;
         template <class Component> SparseArray<Component> &registerComponents()
         {
             try {
@@ -123,8 +143,14 @@ namespace ecs
         void killEntity(Entity &entity)
         {
             _dead_entities.push_back(entity.getId());
-            for (auto &it : _components_arrays)
-                it.second.erase(entity);
+            for (auto &it : _components_arrays) {
+                try {
+                    it.second.erase(entity);
+                } catch (const ExceptionIndexComponent &e)
+                {
+                    continue;
+                }
+            }
             for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
                 if (_entities.at(_actual_scene).at(i).getLabel().compare(entity.getLabel()) == 0)
                     _entities.at(_actual_scene).erase(std::next(_entities.at(_actual_scene).begin(), i));
