@@ -8,11 +8,15 @@ add_subdirectory(Network)
 
 set(TARGET_NAME r-type_client)
 
+include(${PROJECT_SOURCE_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
 add_executable(${TARGET_NAME} ${SRC})
 
 target_link_libraries(${TARGET_NAME} Client)
 target_link_libraries(${TARGET_NAME} Sfml)
 target_link_libraries(${TARGET_NAME} Ecs)
+target_link_libraries(${TARGET_NAME} ${CONAN_LIBS})
 
 add_custom_command(
   TARGET ${TARGET_NAME}

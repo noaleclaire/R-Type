@@ -12,6 +12,9 @@ on Linux:
 # Create the build directory
 mkdir build && cd build
 
+# Install Conan
+conan install . --build missing
+
 # Configure the project
 cmake .. -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
 
