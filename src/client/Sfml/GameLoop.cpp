@@ -1,21 +1,21 @@
 /*
 ** EPITECH PROJECT, 2022
-** ecs
+** GameLoop
 ** File description:
-** ecs
+** GameLoop
 */
 
-#include "window.hpp"
+#include "GameLoop.hpp"
 
-window::window()
+GameLoop::GameLoop()
 {
 }
 
-window::~window()
+GameLoop::~GameLoop()
 {
 }
 
-int window::launch_window(std::shared_ptr<void()> s)
+int GameLoop::launchLoop(std::shared_ptr<void()> s)
 {
     (void)s;
     sf::RenderWindow _window(sf::VideoMode(520, 800), "My _window");

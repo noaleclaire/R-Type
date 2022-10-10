@@ -11,7 +11,7 @@
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
 #include "Network/network.hpp"
 #include "ParserYaml.hpp"
-#include "Sfml/window.hpp"
+#include "Sfml/GameLoop.hpp"
 #include "Sfml/SpritesManager.hpp"
 
 void assetsFolderExists()
@@ -39,8 +39,8 @@ int main(int ac, char **av)
         std::shared_ptr<void()> s;
         network_player net;
         std::thread f(&network_player::process_player, &net, s);
-        window win;
-        win.launch_window(s);
+        GameLoop game;
+        game.launchLoop(s);
         f.join();
     } catch (const Exception &e) {
         std::cerr << e.what() << std::endl;

@@ -1,9 +1,9 @@
 
 /*
 ** EPITECH PROJECT, 2022
-** net
+** GameLoop
 ** File description:
-** net
+** GameLoop
 */
 
 #pragma once
@@ -20,11 +20,11 @@
 #include <thread>
 #include "../Network/shared.hpp"
 
-class window {
+class GameLoop {
   public:
-    window();
-    ~window();
-    int launch_window(std::shared_ptr<void()> s);
+    GameLoop();
+    ~GameLoop();
+    int launchLoop(std::shared_ptr<void()> s);
 
   private:
 };
