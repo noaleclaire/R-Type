@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "IComponent.hpp"
+#include "AComponent.hpp"
 
 namespace component
 {
-    class Shootable : public IComponent {
+    class Shootable : public AComponent {
       public:
         Shootable(int angle);
         Shootable(const Shootable &other) = default;
-        ~Shootable() override = default;
+        ~Shootable() = default;
         Shootable &operator=(const Shootable &other) = default;
 
         /* Getter */

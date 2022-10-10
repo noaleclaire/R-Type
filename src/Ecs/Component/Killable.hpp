@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "IComponent.hpp"
+#include "AComponent.hpp"
 
 namespace component
 {
-    class Killable : public IComponent {
+    class Killable : public AComponent {
       public:
         Killable() = default;
         Killable(const Killable &other) = default;
-        ~Killable() override = default;
+        ~Killable() = default;
         Killable &operator=(const Killable &other) = default;
     };
 } // namespace component

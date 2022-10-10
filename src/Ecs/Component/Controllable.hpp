@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "IComponent.hpp"
+#include "AComponent.hpp"
 
 namespace component
 {
-    class Controllable : public IComponent {
+    class Controllable : public AComponent {
       public:
         Controllable() = default;
         Controllable(const Controllable &other) = default;
-        ~Controllable() override = default;
+        ~Controllable() = default;
         Controllable &operator=(const Controllable &other) = default;
     };
 } // namespace component
