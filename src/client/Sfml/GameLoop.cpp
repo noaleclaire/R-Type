@@ -23,7 +23,6 @@ void GameLoop::createWindow(int height, int width, std::string name)
 int GameLoop::launchLoop(std::shared_ptr<void()> s)
 {
     (void)s;
-    sf::RenderWindow _window(sf::VideoMode(520, 800), "My _window");
 
     createWindow(520, 800);
     _window.setFramerateLimit(60);
