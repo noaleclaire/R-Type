@@ -119,7 +119,6 @@ namespace ecs
         {
             if (idx >= size())
                 _data.resize((size() + 1) + (idx - size()));
-            erase(idx);
             try {
                 _data.at(idx).emplace(compo);
                 return (_data.at(idx));
