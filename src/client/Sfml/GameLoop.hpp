@@ -24,7 +24,10 @@ class GameLoop {
   public:
     GameLoop();
     ~GameLoop();
+
+    void createWindow(int height, int width, std::string name = "Window");
     int launchLoop(std::shared_ptr<void()> s);
 
   private:
+    sf::RenderWindow _window;
 };
