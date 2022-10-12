@@ -21,7 +21,7 @@ jobs:
 
     - name: Install Conan
       run: |
-        sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+        sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget libudev-dev 
         pip install conan
         conan install . --build missing
 
@@ -42,7 +42,7 @@ jobs:
 
     - name: Install Conan
       run: |
-        sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+        sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget libudev-dev 
         pip install conan
         conan install . --build missing
 
