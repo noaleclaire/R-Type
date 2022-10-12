@@ -21,7 +21,8 @@ jobs:
 
     - name: Install Conan
       run: |
-        sudo apt-get install conan
+        sudo apt install python
+        pip install conan
         conan install . --build missing
 
     - name: Configure
@@ -41,6 +42,7 @@ jobs:
 
     - name: Install Conan
       run: |
+        sudo apt install python
         pip install conan
         conan install . --build missing
 
