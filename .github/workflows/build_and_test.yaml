@@ -25,17 +25,17 @@ jobs:
     - name: Build
       run: cmake --build ${{ github.workspace }}/build
 
-    windows_build:
-      runs-on: windows-latest
-      
-      steps:
-      - uses: actions/checkout@v2
+  windows_build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v2
 
-      - name: Create build
-        run: mkdir build && cd build
+    - name: Create build
+      run: mkdir build && cd build
 
-      - name: Configure
-        run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+    - name: Configure
+      run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
-      - name: Build
-        run: cmake --build ${{ github.workspace }}/build
+    - name: Build
+      run: cmake --build ${{ github.workspace }}/build
