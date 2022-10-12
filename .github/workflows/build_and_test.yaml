@@ -20,8 +20,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      id: conan
-      uses: turtlebrowser/get-conan@main
+      run: pip install conan
 
     - name: Start Conan
       run: conan install . --build missing
@@ -42,8 +41,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      id: conan
-      uses: turtlebrowser/get-conan@main
+      run: pip install conan
 
     - name: Start Conan
       run: conan install . --build missing
