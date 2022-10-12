@@ -20,7 +20,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      run: sudo pip install conan -y
+      run: sudo pip install conan
 
     - name: Start Conan
       run: conan install . -c tools.system.package_manager:mode=install && conan install . --build missing
