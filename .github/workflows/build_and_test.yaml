@@ -19,6 +19,9 @@ jobs:
     - name: Create build
       run: mkdir build && cd build
 
+    - name: Install Conan
+      run: conan install . --build missing
+
     - name: Configure
       run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}
 
@@ -33,6 +36,9 @@ jobs:
 
     - name: Create build
       run: mkdir build && cd build
+
+    - name: Install Conan
+      run: conan install . --build missing
 
     - name: Configure
       run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
