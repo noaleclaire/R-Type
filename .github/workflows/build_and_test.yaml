@@ -20,12 +20,13 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      run: sudo pip install conan
-      run: export CONAN_USER_HOME="/tmp/conan"
-      run: export CONAN_SYSREQUIRES_MODE="enabled"
-      run: conanexport CONAN_SYSREQUIRES_SUDO="1"
-      run: conan remove --system-reqs "*" 
-      run: conan install . -c tools.system.package_manager:mode=install
+      run: |
+        sudo pip install conan
+        export CONAN_USER_HOME="/tmp/conan"
+        export CONAN_SYSREQUIRES_MODE="enabled"
+        conanexport CONAN_SYSREQUIRES_SUDO="1"
+        conan remove --system-reqs "*" 
+        conan install . -c tools.system.package_manager:mode=install
 
     - name: Configure
       run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}
@@ -43,12 +44,13 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      run: pip install conan
-      run: $env:CONAN_USER_HOME="C:\conan"
-      run: $env:CONAN_SYSREQUIRES_MODE="enabled"
-      run: $env:CONAN_SYSREQUIRES_SUDO="1"
-      run: conan remove --system-reqs "*" 
-      run: conan install . --build missing
+      run: |
+        pip install conan
+        $env:CONAN_USER_HOME="C:\conan"
+        $env:CONAN_SYSREQUIRES_MODE="enabled"
+        $env:CONAN_SYSREQUIRES_SUDO="1"
+        conan remove --system-reqs "*" 
+        conan install . --build missing
 
     - name: Configure
       run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
