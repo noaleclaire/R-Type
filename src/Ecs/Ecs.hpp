@@ -11,11 +11,14 @@
 
 namespace ecs
 {
+    enum EntityTypes { SPACESHIP, MONSTER, SHOT, BUTTON, WALL, BACKGROUND };
+
     class Ecs {
-        public:
-            Ecs();
-            ~Ecs();
-        private:
-            Registry _registry;
+      public:
+        Ecs();
+        ~Ecs();
+
+      private:
+        Registry _registry;
     };
-}
+} // namespace ecs

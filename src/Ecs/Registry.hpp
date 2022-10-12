@@ -7,26 +7,19 @@
 
 #pragma once
 
-#include <optional>
 #include <any>
-#include <typeindex>
-#include <vector>
-#include <unordered_map>
 #include <functional>
 #include <iostream>
-#include "Component/Collider.hpp"
-#include "Component/Controllable.hpp"
-#include "Component/Drawable.hpp"
-#include "Component/Killable.hpp"
-#include "Component/Position.hpp"
-#include "Component/Shootable.hpp"
-#include "Component/Shooter.hpp"
-#include "Component/Velocity.hpp"
+#include <optional>
+#include <typeindex>
+#include <vector>
 #include "Component/SparseArray.hpp"
+#include "Component/component.hpp"
 #include "Entities/Entity.hpp"
 #include "Exceptions/ExceptionEntityUnobtainable.hpp"
 #include "Exceptions/ExceptionIndexComponent.hpp"
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
+#include <unordered_map>
 
 namespace ecs
 {
@@ -44,6 +37,7 @@ namespace ecs
             registerComponents<component::Shootable>();
             registerComponents<component::Shooter>();
             registerComponents<component::Velocity>();
+            registerComponents<component::Rectangle>();
         };
         ~Registry() = default;
         template <class Component> SparseArray<Component> &registerComponents()
@@ -53,15 +47,14 @@ namespace ecs
             } catch (const std::out_of_range &e) {
                 _components_arrays.emplace(std::type_index(typeid(Component)), SparseArray<Component>());
             }
-            _components_eraser.push_back([&](Entity &entity){
+            _components_eraser.push_back([&](Entity &entity) {
                 try {
-                    std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).erase(entity);
-                } catch (const ExceptionIndexComponent &e)
-                {
+                    std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(entity);
+                } catch (const ExceptionIndexComponent &e) {
                     throw ExceptionIndexComponent("Cannot erase this component, bad index", "_components_eraser -> [&](Entity &entity)");
                 }
             });
-            return (std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
         template <class Component> SparseArray<Component> &getComponents()
         {
@@ -71,7 +64,7 @@ namespace ecs
                 throw ExceptionSparseArrayUnobtainable(
                     "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> &getComponents()");
             }
-            return (std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
         template <class Component> SparseArray<Component> const getComponents() const
         {
@@ -81,47 +74,47 @@ namespace ecs
                 throw ExceptionSparseArrayUnobtainable(
                     "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> const getComponents() const");
             }
-            return (const_cast<SparseArray<Component>>(std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component))))));
+            return (const_cast<SparseArray<Component>>(std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component))))));
         }
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, std::forward<Component>(c));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, std::forward<Component>(c));
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
                     "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)");
             }
-            return (std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, c);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, c);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
                     "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)");
             }
-            return (std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         template <typename Component, typename... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...args)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).emplace_at(to, args...);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).emplace_at(to, args...);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
                     "template <typename Component, typename ... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, "
                     "Params &&... args)");
             }
-            return (std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         template <typename Component> void removeComponent(Entity const &from)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                std::any_cast<SparseArray<Component>&>(_components_arrays.at(std::type_index(typeid(Component)))).erase(from);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(from);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable(
                     "Cannot find the SparseArray of this component type", "template <typename Component> void removeComponent(Entity const &from)");
@@ -150,8 +143,7 @@ namespace ecs
             for (auto &it : _components_eraser) {
                 try {
                     it(entity);
-                } catch (const ExceptionIndexComponent &e)
-                {
+                } catch (const ExceptionIndexComponent &e) {
                     continue;
                 }
             }
