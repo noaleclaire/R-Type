@@ -4,6 +4,10 @@
 
 ## Command Line (via CMake)
 
+Confirmation badge for Build and Test:
+
+https://github.com/noa.leclaire/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/.github/workflows/build_and_test.yml/badge.svg
+
 Required tools:
 - CMake 3.17 (minimum)
 
