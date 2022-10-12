@@ -20,7 +20,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      run: apt-get install conan
+      run: sudo apt-get install conan
 
     - name: Start Conan
       run: conan install . --build missing
@@ -41,7 +41,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Install Conan
-      run: apt-get install conan
+      run: pip install conan
 
     - name: Start Conan
       run: conan install . --build missing
