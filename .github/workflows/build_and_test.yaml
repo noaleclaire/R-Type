@@ -21,8 +21,10 @@ jobs:
 
     - name: Install Conan
       run: sudo pip install conan
-
-    - name: Start Conan
+      run: export CONAN_USER_HOME="/tmp/conan"
+      run: export CONAN_SYSREQUIRES_MODE="enabled"
+      run: conanexport CONAN_SYSREQUIRES_SUDO="1"
+      run: conan remove --system-reqs "*" 
       run: conan install . -c tools.system.package_manager:mode=install
 
     - name: Configure
@@ -42,8 +44,10 @@ jobs:
 
     - name: Install Conan
       run: pip install conan
-
-    - name: Start Conan
+      run: $env:CONAN_USER_HOME="C:\conan"
+      run: $env:CONAN_SYSREQUIRES_MODE="enabled"
+      run: $env:CONAN_SYSREQUIRES_SUDO="1"
+      run: conan remove --system-reqs "*" 
       run: conan install . --build missing
 
     - name: Configure
