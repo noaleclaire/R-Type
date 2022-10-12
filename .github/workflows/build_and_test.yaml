@@ -20,7 +20,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Configure
-      run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}/build
+      run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}
 
     - name: Build
       run: cmake --build ${{ github.workspace }}/build
@@ -35,7 +35,7 @@ jobs:
       run: mkdir build && cd build
 
     - name: Configure
-      run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+      run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
       run: cmake --build ${{ github.workspace }}/build
