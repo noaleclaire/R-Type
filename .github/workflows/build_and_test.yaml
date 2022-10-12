@@ -24,7 +24,7 @@ jobs:
         sudo pip install conan
         export CONAN_USER_HOME="/tmp/conan"
         export CONAN_SYSREQUIRES_MODE="enabled"
-        conanexport CONAN_SYSREQUIRES_SUDO="1"
+        export CONAN_SYSREQUIRES_SUDO="1"
         conan remove --system-reqs "*" 
         conan install . -c tools.system.package_manager:mode=install
 
