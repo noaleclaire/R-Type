@@ -21,12 +21,8 @@ jobs:
 
     - name: Install Conan
       run: |
-        sudo pip install conan
-        export CONAN_USER_HOME="/tmp/conan"
-        export CONAN_SYSREQUIRES_MODE="enabled"
-        export CONAN_SYSREQUIRES_SUDO="1"
-        conan remove --system-reqs "*" 
-        conan install . -c tools.system.package_manager:mode=install
+        sudo apt-get install conan
+        conan install . --build missing
 
     - name: Configure
       run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}
@@ -46,10 +42,6 @@ jobs:
     - name: Install Conan
       run: |
         pip install conan
-        $env:CONAN_USER_HOME="C:\conan"
-        $env:CONAN_SYSREQUIRES_MODE="enabled"
-        $env:CONAN_SYSREQUIRES_SUDO="1"
-        conan remove --system-reqs "*" 
         conan install . --build missing
 
     - name: Configure
