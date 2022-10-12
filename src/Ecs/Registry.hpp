@@ -127,7 +127,7 @@ namespace ecs
                     "Cannot find the SparseArray of this component type", "template <typename Component> void removeComponent(Entity const &from)");
             }
         }
-        Entity &spawnEntity(std::string label)
+        Entity &spawnEntity()
         {
             try {
                 _entities.at(_actual_scene);
