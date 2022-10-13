@@ -16,16 +16,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Create build
-      run: mkdir build && cd build
-
     - name: Install Conan & Upgrade Python
       run: |
         sudo apt-get install python3
         sudo apt-get upgrade python3
         sudo pip install conan
-        conan install .. -c tools.system.package_manager:mode=install
-        conan install .. --build missing
+        conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
+        conan install ${{ github.workspace }} --build missing
 
     - name: Configure
       run: cmake .. -G 'Unix Makefiles' ${{ github.workspace }}
@@ -39,14 +36,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Create build
-      run: mkdir build && cd build
-
     - name: Install Conan & Python
       run: |
         pip install conan
-        conan install . -c tools.system.package_manager:mode=install
-        conan install . --build missing
+        conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
+        conan install ${{ github.workspace }} --build missing
 
     - name: Configure
       run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
