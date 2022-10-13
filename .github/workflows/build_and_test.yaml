@@ -20,8 +20,8 @@ jobs:
       run: |
         sudo apt-get install python3
         sudo apt-get upgrade python3
+        sudo apt-get install libudev-dev libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
         sudo pip install conan
-        sudo apt-get install libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
         conan install ${{ github.workspace }} --build missing
         conan profile update settings.compiler.libcxx=libstdc++17 default
 
