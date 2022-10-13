@@ -34,7 +34,7 @@ jobs:
         cmake . -G 'Unix Makefiles' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
-      run: cmake --build ${{ github.workspace }}/build
+      run: cmake --build ${{ github.workspace }}
 
   windows_build:
     runs-on: windows-latest
