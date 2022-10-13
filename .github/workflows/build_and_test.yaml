@@ -16,6 +16,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Create build dir
+      run: mkdir build && cd build
+
     - name: Install Conan & Upgrade Python
       run: |
         sudo apt-get install python3
@@ -27,11 +30,11 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-17 .
-        cmake . -G 'Unix Makefiles' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-17 ..
+        cmake . -G 'Unix Makefiles' ${{ github.workspace }}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
-      run: cmake --build ${{ github.workspace }}
+      run: cmake --build ${{ github.workspace }}/build
 
   windows_build:
     runs-on: windows-latest
