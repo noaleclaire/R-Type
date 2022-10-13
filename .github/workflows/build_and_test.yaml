@@ -21,6 +21,7 @@ jobs:
 
     - name: Install Conan
       run: |
+        sudo pip --upgrade-strategy
         sudo pip install conan
         conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
@@ -42,6 +43,7 @@ jobs:
 
     - name: Install Conan
       run: |
+        pip --upgrade-strategy
         pip install conan
         conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
