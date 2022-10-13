@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=c++20 -Wextra -Wshadow -Wpointer-arith -lsfml-graphics -lsfml-system -lsfml-window -lpthread"
+      "${CMAKE_CXX_FLAGS} -std=c++2a -Wextra -Wshadow -Wpointer-arith -lsfml-graphics -lsfml-system -lsfml-window -lpthread"
   )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
