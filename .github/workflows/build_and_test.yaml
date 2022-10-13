@@ -23,7 +23,7 @@ jobs:
       run: |
         sudo apt-get upgrade python3
         sudo pip install conan
-        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan profile update settings.compiler.libcxx=libstdc++11
         conan install . --build missing
 
     - name: Configure
@@ -45,7 +45,7 @@ jobs:
       run: |
         apt-get install -y python3
         pip install conan
-        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan profile update settings.compiler.libcxx=libstdc++11
         conan install . --build missing
 
     - name: Configure
