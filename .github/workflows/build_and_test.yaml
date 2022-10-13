@@ -21,8 +21,10 @@ jobs:
 
     - name: Install Conan
       run: |
-        pip install libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
-        pip install conan
+        sudo apt update
+        sudo apt install python3-pip
+        pip3 install scrapy
+        pip3 install conan
         conan install . --build missing
 
     - name: Configure
@@ -42,8 +44,10 @@ jobs:
 
     - name: Install Conan
       run: |
-        pip install libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
-        pip install conan
+        apt update
+        apt install python3-pip
+        pip3 install scrapy
+        pip3 install conan
         conan install . --build missing
 
     - name: Configure
