@@ -23,20 +23,22 @@
 
 namespace ecs
 {
-    enum Scenes { MENU, PAUSE, SETTINGS, GAME, WIN };
+    enum Scenes { MENU, SETTINGS, WIN, LOOSE, LOBBY, GAME };
+    enum EntityTypes { SPACESHIP, MONSTER, SHOT, BUTTON, WALL, BACKGROUND };
 
     class Registry {
       public:
         Registry()
         {
+            registerComponents<component::Clickable>();
             registerComponents<component::Collider>();
             registerComponents<component::Controllable>();
             registerComponents<component::Drawable>();
             registerComponents<component::Killable>();
+            registerComponents<component::Layer>();
             registerComponents<component::Position>();
             registerComponents<component::Shootable>();
             registerComponents<component::Shooter>();
-            registerComponents<component::Velocity>();
             registerComponents<component::Rectangle>();
         };
         ~Registry() = default;
@@ -164,6 +166,8 @@ namespace ecs
         };
         std::vector<Entity> getEntities() const
         {
+            if (_entities.at(_actual_scene).size() == 0)
+                throw Exception("_entities vector is empty", "std::vector<Entity> getEntities() const");
             return (_entities.at(_actual_scene));
         };
         void setActualScene(ecs::Scenes scene)

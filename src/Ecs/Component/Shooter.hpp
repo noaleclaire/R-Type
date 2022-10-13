@@ -13,7 +13,7 @@ namespace component
 {
     class Shooter : public AComponent {
       public:
-        Shooter();
+        Shooter() = default;
         Shooter(const Shooter &other) = default;
         ~Shooter() = default;
         Shooter &operator=(const Shooter &other) = default;

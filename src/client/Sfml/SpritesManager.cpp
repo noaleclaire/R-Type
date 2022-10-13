@@ -10,18 +10,21 @@
 #include <iostream>
 #include "../Exceptions/ExceptionBadAnyCast.hpp"
 #include "../Exceptions/ExceptionNotAnInteger.hpp"
+#include "../Exceptions/ExceptionNoSpriteAnim.hpp"
+#include "../Exceptions/ExceptionNoAnimAttribute.hpp"
 
 namespace graphics
 {
     SpritesManager::SpritesManager()
     {
         _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
-            {std::make_pair("spaceship", graphics::SpriteTypes::spaceship), std::make_pair("monster", graphics::SpriteTypes::monster)},
+            {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
+            std::make_pair("background", ecs::EntityTypes::BACKGROUND)},
             {std::make_pair("anim", graphics::SpriteTypeAttributes::anim)},
             {std::make_pair("rect_x", graphics::SpriteAnimAttributes::rect_x), std::make_pair("rect_y", graphics::SpriteAnimAttributes::rect_y),
-                std::make_pair("rect_width", graphics::SpriteAnimAttributes::rect_width),
-                std::make_pair("rect_height", graphics::SpriteAnimAttributes::rect_height), std::make_pair("nb_anim", graphics::SpriteAnimAttributes::nb_anim),
-                std::make_pair("next_anim", graphics::SpriteAnimAttributes::next_anim)}};
+            std::make_pair("rect_width", graphics::SpriteAnimAttributes::rect_width),
+            std::make_pair("rect_height", graphics::SpriteAnimAttributes::rect_height), std::make_pair("nb_anim", graphics::SpriteAnimAttributes::nb_anim),
+            std::make_pair("next_anim", graphics::SpriteAnimAttributes::next_anim)}};
 
         initMapFunctionPointer();
     }
@@ -33,8 +36,11 @@ namespace graphics
     void SpritesManager::initMapFunctionPointer()
     {
         _map_fptr.insert("spritesheet", &SpritesManager::addTexturePath);
+
         _map_fptr.insert("spaceship", &SpritesManager::addSpriteTypeId);
         _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
+        _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
+
         _map_fptr.insert("anim", &SpritesManager::addSpriteAnim);
         _map_fptr.insert("rect_x", &SpritesManager::addSpriteAnimAttributes);
         _map_fptr.insert("rect_y", &SpritesManager::addSpriteAnimAttributes);
@@ -49,14 +55,14 @@ namespace graphics
         _map_fptr.searchAndCall<void, SpritesManager *>(this, sprite_config_word, sprite_config_word, value);
     }
 
-    graphics::SpriteTypes SpritesManager::getSpriteType(std::string &sprite_type) const
+    ecs::EntityTypes SpritesManager::getSpriteType(std::string &sprite_type) const
     {
         try {
             for (std::size_t i = 0; i < _sprites_config_words.size(); i++) {
                 for (std::size_t j = 0; j < _sprites_config_words.at(i).size(); j++) {
                     if (_sprites_config_words.at(i).at(j).first.compare(sprite_type) == 0) {
-                        std::any_cast<graphics::SpriteTypes>(_sprites_config_words.at(i).at(j).second);
-                        return (std::any_cast<graphics::SpriteTypes>(_sprites_config_words.at(i).at(j).second));
+                        std::any_cast<ecs::EntityTypes>(_sprites_config_words.at(i).at(j).second);
+                        return (std::any_cast<ecs::EntityTypes>(_sprites_config_words.at(i).at(j).second));
                     }
                 }
             }
@@ -64,15 +70,15 @@ namespace graphics
             throw ExceptionBadAnyCast(
                 "Cannot convert to graphics::SpriteTypes", "graphics::SpriteTypes SpritesManager::getSpriteType(std::string &sprite_type) const");
         }
-        return (graphics::SpriteTypes::spaceship);
+        return (ecs::EntityTypes::SPACESHIP);
     }
 
-    std::string const SpritesManager::getSpriteType(graphics::SpriteTypes sprite_type) const
+    std::string const SpritesManager::getSpriteType(ecs::EntityTypes sprite_type) const
     {
         for (std::size_t i = 0; i < _sprites_config_words.size(); i++) {
             for (std::size_t j = 0; j < _sprites_config_words.at(i).size(); j++) {
                 try {
-                    if (std::any_cast<graphics::SpriteTypes>(_sprites_config_words.at(i).at(j).second) == sprite_type)
+                    if (std::any_cast<ecs::EntityTypes>(_sprites_config_words.at(i).at(j).second) == sprite_type)
                         return (_sprites_config_words.at(i).at(j).first);
                 } catch (const std::bad_any_cast &e) {
                     continue;
@@ -224,5 +230,38 @@ namespace graphics
             }
             std::cout << std::endl;
         }
+    }
+
+    std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id)
+    {
+        std::vector<float> attrs;
+        try {
+            for (auto &it : _sprites_data) {
+                if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+                    if (it._animations.at(0).at(rect_x) && it._animations.at(0).at(rect_y) && it._animations.at(0).at(rect_width) && it._animations.at(0).at(rect_height)) {
+                        attrs.push_back(it._animations.at(0).at(rect_x).value());
+                        attrs.push_back(it._animations.at(0).at(rect_y).value());
+                        attrs.push_back(it._animations.at(0).at(rect_width).value());
+                        attrs.push_back(it._animations.at(0).at(rect_height).value());
+                        return (attrs);
+                    } else
+                        throw ExceptionNoAnimAttribute("No value for one of the anim attributes rect", "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, graphics::SpriteAnimAttributes attr)");
+                }
+            }
+        } catch (const std::out_of_range &e)
+        {
+            throw ExceptionNoSpriteAnim("No sprite anim in SpriteData", "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, graphics::SpriteAnimAttributes attr)");
+        }
+        return (attrs);
+    }
+
+    std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)
+    {
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+                return (it._spritesheet);
+            }
+        }
+        return ("");
     }
 } // namespace graphics

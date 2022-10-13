@@ -10,15 +10,15 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "../AYamlConfig.hpp"
-#include "../MapMemberFunctionPointer.hpp"
 #include <unordered_map>
+#include "../../Utilities/AYamlConfig.hpp"
+#include "../../Utilities/MapMemberFunctionPointer.hpp"
+#include "../../Ecs/Registry.hpp"
 
 #define NB_ANIM_ATTRIBUTES (6)
 
 namespace graphics
 {
-    enum SpriteTypes { spaceship, monster };
     enum SpriteTypeAttributes { anim };
     enum SpriteAnimAttributes { rect_x, rect_y, rect_width, rect_height, nb_anim, next_anim };
 
@@ -29,8 +29,8 @@ namespace graphics
 
         void executeMapMemberFunctionPointer(std::string &sprite_config_word, std::string &value);
 
-        graphics::SpriteTypes getSpriteType(std::string &sprite_type) const;
-        std::string const getSpriteType(graphics::SpriteTypes sprite_type) const;
+        ecs::EntityTypes getSpriteType(std::string &sprite_type) const;
+        std::string const getSpriteType(ecs::EntityTypes sprite_type) const;
 
         graphics::SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
         std::string const getSpriteTypeAttribute(graphics::SpriteTypeAttributes sprite_type_attribute) const;
@@ -44,6 +44,8 @@ namespace graphics
         void addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value);
 
         std::vector<std::string> const getTexturePath() const;
+        std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id);
+        std::string get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id);
         void printSpritesData();
 
       protected:
@@ -54,14 +56,14 @@ namespace graphics
 
         struct SpriteData {
             std::string _spritesheet;
-            std::pair<graphics::SpriteTypes, std::size_t> _sprite_type_and_id;
+            std::pair<ecs::EntityTypes, std::size_t> _sprite_type_and_id;
             std::unordered_map<std::size_t, std::vector<std::optional<std::size_t>>> _animations;
         };
         std::vector<SpriteData> _sprites_data;
         std::vector<std::string> _textures_path;
 
         std::string _spritesheet_tmp = "";
-        graphics::SpriteTypes _sprite_type_tmp;
+        ecs::EntityTypes _sprite_type_tmp;
         long unsigned int _sprite_type_id_tmp;
         long unsigned int _sprite_type_anim_id_tmp;
     };

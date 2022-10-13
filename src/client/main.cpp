@@ -11,9 +11,7 @@
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
 #include "Network/network.hpp"
-#include "ParserYaml.hpp"
-#include "Sfml/GameLoop.hpp"
-#include "Sfml/SpritesManager.hpp"
+#include "Core.hpp"
 
 void assetsFolderExists()
 {
@@ -34,16 +32,12 @@ int main(int ac, char **av)
     std::ofstream errorLogsFile("ErrorLogs.txt");
     try {
         // assetsFolderExists();
-        graphics::SpritesManager sprites_manager;
-        ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-        sprites_manager.printSpritesData();
+        Core core;
 
-        std::shared_ptr<void()> s;
-        network_player net;
-        std::thread f(&network_player::process_player, &net, s);
-        GameLoop game;
-        game.launchLoop(s);
-        f.join();
+        // std::shared_ptr<void()> s;
+        // network_player net;
+        // std::thread f(&network_player::process_player, &net, s);
+        // f.join();
     } catch (const Exception &e) {
         errorLogsFile << e.what() << std::endl;
         errorLogsFile << e.where() << std::endl;

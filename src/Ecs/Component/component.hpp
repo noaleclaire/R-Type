@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Clickable.hpp"
 #include "Collider.hpp"
 #include "Controllable.hpp"
 #include "Drawable.hpp"
@@ -15,4 +16,4 @@
 #include "Rectangle.hpp"
 #include "Shootable.hpp"
 #include "Shooter.hpp"
-#include "Velocity.hpp"
+#include "Layer.hpp"

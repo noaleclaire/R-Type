@@ -9,7 +9,7 @@
 
 namespace component
 {
-    Position::Position(float x, float y) : _x(x), _y(y)
+    Position::Position(float x, float y, float xVelocity, float yVelocity) : _x(x), _y(y), _xVelocity(xVelocity), _yVelocity(yVelocity)
     {
     }
 
@@ -24,6 +24,16 @@ namespace component
         return _y;
     }
 
+    float Position::getXVelocity() const
+    {
+        return _xVelocity;
+    }
+
+    float Position::getYVelocity() const
+    {
+        return _yVelocity;
+    }
+
     /* Setter */
     void Position::setXPosition(float x)
     {
@@ -33,5 +43,15 @@ namespace component
     void Position::setYPosition(float y)
     {
         _y = y;
+    }
+
+    void Position::setXVelocity(float x)
+    {
+        _xVelocity = x;
+    }
+
+    void Position::setYVelocity(float y)
+    {
+        _yVelocity= y;
     }
 } // namespace component
