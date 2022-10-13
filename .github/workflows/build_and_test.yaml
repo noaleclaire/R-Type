@@ -26,6 +26,7 @@ jobs:
         conan profile update settings.compiler.libcxx=libstdc++17 default
 
     - name: Configure
+      run: cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-17 .
       run: cmake . -G 'Unix Makefiles' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
