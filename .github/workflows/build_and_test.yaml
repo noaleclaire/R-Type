@@ -21,7 +21,7 @@ jobs:
 
     - name: Install Conan & Python
       run: |
-        apt-get install python3
+        sudo apt-get install python3
         sudo pip install conan
         conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
@@ -43,7 +43,7 @@ jobs:
 
     - name: Install Conan & Python
       run: |
-        apt-get install python3
+        apt-get install -y python3
         pip install conan
         conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
