@@ -21,9 +21,9 @@ jobs:
 
     - name: Install Conan & Python
       run: |
-        sudo apt-get install python3
+        sudo apt-get upgrade python3
         sudo pip install conan
-        conan install . -c tools.system.package_manager:mode=install
+        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install . --build missing
 
     - name: Configure
@@ -45,7 +45,7 @@ jobs:
       run: |
         apt-get install -y python3
         pip install conan
-        conan install . -c tools.system.package_manager:mode=install
+        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install . --build missing
 
     - name: Configure
