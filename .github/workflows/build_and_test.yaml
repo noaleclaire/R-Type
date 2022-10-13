@@ -23,23 +23,8 @@ jobs:
       run: |
         sudo apt-get upgrade python3
         sudo pip install conan
-        sudo pip install libfontenc-devel
-        sudo pip install libXaw-devel
-        sudo pip install libXcomposite-devel
-        sudo pip install libXdmcp-devel
-        sudo pip install libXtst-devel
-        sudo pip install libxkbfile-devel
-        sudo pip install libXres-devel
-        sudo pip install libXScrnSaver-devel
-        sudo pip install libXvMC-devel
-        sudo pip install xorg-x11-xtrans-devel
-        sudo pip install xcb-util-wm-devel
-        sudo pip install xcb-util-keysyms-devel
-        sudo pip install xcb-util-renderutil-devel
-        sudo pip install libXdamage-devel
-        sudo pip install xcb-util-devel
-        sudo pip install xkeyboard-config-devel
         conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
 
     - name: Configure
@@ -60,23 +45,8 @@ jobs:
     - name: Install Conan & Python
       run: |
         pip install conan
-        pip install libfontenc-devel
-        pip install libXaw-devel
-        pip install libXcomposite-devel
-        pip install libXdmcp-devel
-        pip install libXtst-devel
-        pip install libxkbfile-devel
-        pip install libXres-devel
-        pip install libXScrnSaver-devel
-        pip install libXvMC-devel
-        pip install xorg-x11-xtrans-devel
-        pip install xcb-util-wm-devel
-        pip install xcb-util-keysyms-devel
-        pip install xcb-util-renderutil-devel
-        pip install libXdamage-devel
-        pip install xcb-util-devel
-        pip install xkeyboard-config-devel
         conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install . -c tools.system.package_manager:mode=install
         conan install . --build missing
 
     - name: Configure
