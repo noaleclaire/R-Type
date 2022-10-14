@@ -8,7 +8,7 @@ add_subdirectory(Network)
 
 set(TARGET_NAME r-type_client)
 
-include(${PROJECT_SOURCE_DIR}/conanbuildinfo.cmake)
+include(${PROJECT_SOURCE_DIR}/build/conanbuildinfo.cmake)
 conan_basic_setup()
 
 add_executable(${TARGET_NAME} ${SRC})
