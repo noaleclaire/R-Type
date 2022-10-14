@@ -9,20 +9,20 @@
 #include <algorithm>
 #include <iostream>
 #include "../Exceptions/ExceptionBadAnyCast.hpp"
-#include "../Exceptions/ExceptionNotANumber.hpp"
-#include "../Exceptions/ExceptionNoSpriteAnim.hpp"
 #include "../Exceptions/ExceptionNoAnimAttribute.hpp"
+#include "../Exceptions/ExceptionNoSpriteAnim.hpp"
+#include "../Exceptions/ExceptionNotANumber.hpp"
 
 SpritesManager::SpritesManager()
 {
     _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
         {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
-        std::make_pair("background", ecs::EntityTypes::BACKGROUND)},
+            std::make_pair("background", ecs::EntityTypes::BACKGROUND), std::make_pair("button", ecs::EntityTypes::BUTTON),
+            std::make_pair("wall", ecs::EntityTypes::WALL)},
         {std::make_pair("anim", SpriteTypeAttributes::anim)},
         {std::make_pair("rect_x", SpriteAnimAttributes::rect_x), std::make_pair("rect_y", SpriteAnimAttributes::rect_y),
-        std::make_pair("rect_width", SpriteAnimAttributes::rect_width),
-        std::make_pair("rect_height", SpriteAnimAttributes::rect_height), std::make_pair("nb_anim", SpriteAnimAttributes::nb_anim),
-        std::make_pair("next_anim", SpriteAnimAttributes::next_anim)}};
+            std::make_pair("rect_width", SpriteAnimAttributes::rect_width), std::make_pair("rect_height", SpriteAnimAttributes::rect_height),
+            std::make_pair("nb_anim", SpriteAnimAttributes::nb_anim), std::make_pair("next_anim", SpriteAnimAttributes::next_anim)}};
 
     initMapFunctionPointer();
 }
@@ -38,6 +38,8 @@ void SpritesManager::initMapFunctionPointer()
     _map_fptr.insert("spaceship", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("button", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("wall", &SpritesManager::addSpriteTypeId);
 
     _map_fptr.insert("anim", &SpritesManager::addSpriteAnim);
     _map_fptr.insert("rect_x", &SpritesManager::addSpriteAnimAttributes);
@@ -98,8 +100,8 @@ SpriteTypeAttributes SpritesManager::getSpriteTypeAttribute(std::string &sprite_
             }
         }
     } catch (const std::bad_any_cast &e) {
-        throw ExceptionBadAnyCast("Cannot convert to SpriteTypeAttributes",
-            "SpriteTypeAttributes SpritesManager::getSpriteTypeAttribute(std::string &sprite_type_attribute) const");
+        throw ExceptionBadAnyCast(
+            "Cannot convert to SpriteTypeAttributes", "SpriteTypeAttributes SpritesManager::getSpriteTypeAttribute(std::string &sprite_type_attribute) const");
     }
     return (SpriteTypeAttributes::anim);
 }
@@ -131,8 +133,8 @@ SpriteAnimAttributes SpritesManager::getSpriteAnimAttribute(std::string &sprite_
             }
         }
     } catch (const std::bad_any_cast &e) {
-        throw ExceptionBadAnyCast("Cannot convert to SpriteAnimAttributes",
-            "SpriteAnimAttributes SpritesManager::getSpriteAnimAttribute(std::string &sprite_anim_attribute) const");
+        throw ExceptionBadAnyCast(
+            "Cannot convert to SpriteAnimAttributes", "SpriteAnimAttributes SpritesManager::getSpriteAnimAttribute(std::string &sprite_anim_attribute) const");
     }
     return (SpriteAnimAttributes::next_anim);
 }
@@ -236,19 +238,21 @@ std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_t
     try {
         for (auto &it : _sprites_data) {
             if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
-                if (it._animations.at(0).at(rect_x) && it._animations.at(0).at(rect_y) && it._animations.at(0).at(rect_width) && it._animations.at(0).at(rect_height)) {
+                if (it._animations.at(0).at(rect_x) && it._animations.at(0).at(rect_y) && it._animations.at(0).at(rect_width)
+                    && it._animations.at(0).at(rect_height)) {
                     attrs.push_back(it._animations.at(0).at(rect_x).value());
                     attrs.push_back(it._animations.at(0).at(rect_y).value());
                     attrs.push_back(it._animations.at(0).at(rect_width).value());
                     attrs.push_back(it._animations.at(0).at(rect_height).value());
                     return (attrs);
                 } else
-                    throw ExceptionNoAnimAttribute("No value for one of the anim attributes rect", "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+                    throw ExceptionNoAnimAttribute("No value for one of the anim attributes rect",
+                        "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
             }
         }
-    } catch (const std::out_of_range &e)
-    {
-        throw ExceptionNoSpriteAnim("No sprite anim in SpriteData", "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+    } catch (const std::out_of_range &e) {
+        throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
+            "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
     }
     return (attrs);
 }

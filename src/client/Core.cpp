@@ -5,11 +5,11 @@
 ** Core
 */
 
-#include <filesystem>
 #include "Core.hpp"
+#include <filesystem>
 #include "../Ecs/Factory.hpp"
-#include "../Utilities/ParserYaml.hpp"
 #include "../Ecs/Systems/Systems.hpp"
+#include "../Utilities/ParserYaml.hpp"
 
 Core::Core()
 {
@@ -34,9 +34,14 @@ void Core::_initMenu()
     std::size_t entity;
 
     _registry.setActualScene(ecs::Scenes::MENU);
+
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0);
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+
+    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
+    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
 }
 
 void Core::_initSettings()
@@ -54,10 +59,14 @@ void Core::_gameLoop()
     _registry.setActualScene(ecs::Scenes::MENU);
     while (_graphical.getWindow().isOpen()) {
         while (_graphical.getWindow().pollEvent(_graphical.getEvent())) {
+            if (_graphical.getEvent().type == sf::Event::MouseButtonPressed) {
+                ecs::Systems::Clickable(_registry, _registry.getComponents<ecs::Clickable>(), _graphical);
+            }
             if (_graphical.getEvent().type == sf::Event::Closed)
                 _graphical.getWindow().close();
         }
         _graphical.getWindow().clear();
+        ecs::Systems::Position(_registry, _registry.getComponents<ecs::Position>(), _graphical);
         ecs::Systems::Drawable(_registry, _registry.getComponents<ecs::Drawable>(), _graphical);
         _graphical.getWindow().display();
     }

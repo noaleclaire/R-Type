@@ -37,3 +37,11 @@ spritesheet: background.jpg
    rect_y: 0
    rect_width: 1280
    rect_height: 720
+
+spritesheet: nsgm
+ button: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 320
+   rect_height: 90

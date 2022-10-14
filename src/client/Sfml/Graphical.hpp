@@ -14,24 +14,31 @@
 namespace graphics
 {
     class Graphical {
-        public:
-            Graphical();
-            ~Graphical();
+      public:
+        Graphical();
+        ~Graphical();
 
-            void addAllTextures(SpritesManager &sprites_manager);
-            std::unordered_map<std::string, sf::Texture> getAllTextures() const;
-            void addSprite(std::size_t entity, std::string spritesheet, std::vector<float> rect = {});
-            std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;
-            void setVideoMode(int width, int height);
-            sf::VideoMode getVideoMode() const;
-            sf::Event &getEvent();
-            sf::RenderWindow &getWindow();
-        protected:
-        private:
-            sf::RenderWindow _window;
-            sf::VideoMode _mode;
-            sf::Event _event;
-            std::unordered_map<std::string, sf::Texture> _textures;
-            std::unordered_map<std::size_t, sf::Sprite> _entities_sprites;
+        /* Getter */
+        std::unordered_map<std::string, sf::Texture> getAllTextures() const;
+        std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;
+        sf::VideoMode getVideoMode() const;
+        sf::Event &getEvent();
+        sf::RenderWindow &getWindow();
+
+        /* Setter */
+        void setVideoMode(int width, int height);
+        void setSpritePosition(ecs::Entity entity, float posX, float posY);
+
+        /* Other */
+        void addAllTextures(SpritesManager &sprites_manager);
+        void addSprite(std::size_t entity, std::string spritesheet, std::vector<float> rect = {});
+
+      protected:
+      private:
+        sf::RenderWindow _window;
+        sf::VideoMode _mode;
+        sf::Event _event;
+        std::unordered_map<std::string, sf::Texture> _textures;
+        std::unordered_map<std::size_t, sf::Sprite> _entities_sprites;
     };
-}
+} // namespace graphics

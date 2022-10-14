@@ -13,9 +13,19 @@ namespace ecs
 {
     class Clickable : public AComponent {
       public:
-        Clickable() = default;
+        enum Function { EXIT };
+        Clickable(Function function = Function::EXIT);
         Clickable(const Clickable &other) = default;
         ~Clickable() = default;
         Clickable &operator=(const Clickable &other) = default;
+
+        /* Getter */
+        Function getFunction() const;
+
+        /* Setter */
+        void setFunction(Function function);
+
+      private:
+        Function _function;
     };
 } // namespace ecs

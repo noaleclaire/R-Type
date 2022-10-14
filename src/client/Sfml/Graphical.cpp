@@ -5,8 +5,8 @@
 ** Graphical
 */
 
-#include <filesystem>
 #include "Graphical.hpp"
+#include <filesystem>
 #include "../Exceptions/SfmlExceptionTexture.hpp"
 
 namespace graphics
@@ -20,6 +20,44 @@ namespace graphics
     {
     }
 
+    /* Getter */
+    std::unordered_map<std::string, sf::Texture> Graphical::getAllTextures() const
+    {
+        return (_textures);
+    }
+
+    std::unordered_map<std::size_t, sf::Sprite> Graphical::getAllSprites() const
+    {
+        return (_entities_sprites);
+    }
+
+    sf::VideoMode Graphical::getVideoMode() const
+    {
+        return (_mode);
+    }
+
+    sf::Event &Graphical::getEvent()
+    {
+        return (_event);
+    }
+
+    sf::RenderWindow &Graphical::getWindow()
+    {
+        return (_window);
+    }
+
+    /* Setter */
+    void Graphical::setVideoMode(int width, int height)
+    {
+        _mode = sf::VideoMode(width, height);
+    }
+
+    void Graphical::setSpritePosition(ecs::Entity entity, float posX, float posY)
+    {
+        _entities_sprites.at(entity).setPosition(posX, posY);
+    }
+
+    /* Other */
     void Graphical::addAllTextures(SpritesManager &sprites_manager)
     {
         sf::Texture texture;
@@ -32,11 +70,6 @@ namespace graphics
         }
     }
 
-    std::unordered_map<std::string, sf::Texture> Graphical::getAllTextures() const
-    {
-        return (_textures);
-    }
-
     void Graphical::addSprite(std::size_t entity, std::string spritesheet, std::vector<float> rect)
     {
         float xScale = 1;
@@ -47,33 +80,9 @@ namespace graphics
             xScale = rect.at(SpriteAnimAttributes::rect_width) / 1200;
             yScale = rect.at(SpriteAnimAttributes::rect_height) / 1200;
         } else {
-            _entities_sprites.at(entity).setTextureRect(sf::IntRect(rect.at(SpriteAnimAttributes::rect_x),
-            rect.at(SpriteAnimAttributes::rect_y), rect.at(SpriteAnimAttributes::rect_width),
-            rect.at(SpriteAnimAttributes::rect_height)));
+            _entities_sprites.at(entity).setTextureRect(sf::IntRect(rect.at(SpriteAnimAttributes::rect_x), rect.at(SpriteAnimAttributes::rect_y),
+                rect.at(SpriteAnimAttributes::rect_width), rect.at(SpriteAnimAttributes::rect_height)));
         }
         _entities_sprites.at(entity).setScale(sf::Vector2f(xScale, yScale));
     }
-
-    std::unordered_map<std::size_t, sf::Sprite> Graphical::getAllSprites() const
-    {
-        return (_entities_sprites);
-    }
-
-    void Graphical::setVideoMode(int width, int height)
-    {
-        _mode = sf::VideoMode(width, height);
-    }
-
-    sf::VideoMode Graphical::getVideoMode() const
-    {
-        return (_mode);
-    }
-    sf::Event &Graphical::getEvent()
-    {
-        return (_event);
-    }
-    sf::RenderWindow &Graphical::getWindow()
-    {
-        return (_window);
-    }
-}
+} // namespace graphics
