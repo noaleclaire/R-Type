@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <memory>
 
 namespace network
 {
@@ -59,4 +60,17 @@ namespace network
             return (msg);
         }
     };
+    template <class T>
+    class connection;
+    template <class T>
+    struct OwnedMessage {
+        std::shared_ptr<connection<T>> remote = nullptr;
+        Message<T> msg;
+
+        friend std::ostream &operator<<(std::ostream &os, const OwnedMessage<T> &msg)
+        {
+            os << msg.msg;
+            return os;
+        }
+    }
 }
