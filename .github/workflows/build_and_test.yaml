@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install Conan & Upgrade Python
+    - name: Building Test Linux
       run: |
         mkdir build && cd build
         sudo apt-get install python3
@@ -36,15 +36,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install Conan & Python
+    - name: Build Test Windows
       run: |
         pip install conan
         conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
-        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install ${{ github.workspace }} --build missing
-
-    - name: Configure
-      run: cmake .. -G 'Visual Studio 17 2022' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-
-    - name: Build
-      run: cmake --build ${{ github.workspace }}/build
+        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
+        cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        cmake --build ${{ github.workspace }}/build
