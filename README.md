@@ -17,7 +17,10 @@ on Linux:
 mkdir build && cd build
 
 # Install Conan
-conan install . --build missing
+pip install conan --user
+conan install .. -c tools.system.package_manager:mode=install
+conan profile update settings.compiler.libcxx=libstdc++11 default
+conan install .. --build missing
 
 # Configure the project
 cmake .. -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
