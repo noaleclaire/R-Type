@@ -23,7 +23,6 @@ jobs:
         sudo apt-get upgrade python3
         sudo apt-get install libx11-xcb-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libudev-dev libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev libxcb-util-dev
         sudo pip install conan
-        cd build
         conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan install ${{ github.workspace }} --build missing
