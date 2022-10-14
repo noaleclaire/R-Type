@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Shootable : public AComponent {
       public:
@@ -27,4 +27,4 @@ namespace component
       private:
         int _angle;
     };
-} // namespace component
+} // namespace ecs

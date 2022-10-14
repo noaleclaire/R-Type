@@ -7,7 +7,7 @@
 
 #include "Position.hpp"
 
-namespace component
+namespace ecs
 {
     Position::Position(float x, float y, float xVelocity, float yVelocity) : _x(x), _y(y), _xVelocity(xVelocity), _yVelocity(yVelocity)
     {
@@ -54,4 +54,4 @@ namespace component
     {
         _yVelocity= y;
     }
-} // namespace component
+} // namespace ecs

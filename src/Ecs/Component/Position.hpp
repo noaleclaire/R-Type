@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Position : public AComponent {
       public:
@@ -36,4 +36,4 @@ namespace component
         float _xVelocity;
         float _yVelocity;
     };
-} // namespace component
+} // namespace ecs

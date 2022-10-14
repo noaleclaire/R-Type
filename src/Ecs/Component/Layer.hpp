@@ -10,7 +10,7 @@
 #include "AComponent.hpp"
 #include <string>
 
-namespace component
+namespace ecs
 {
     class Layer : public AComponent {
       public:
@@ -28,4 +28,4 @@ namespace component
       private:
         std::size_t _layer;
     };
-} // namespace component
+} // namespace ecs

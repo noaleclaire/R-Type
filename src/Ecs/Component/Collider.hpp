@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Collider : public AComponent {
       public:
@@ -18,4 +18,4 @@ namespace component
         ~Collider() = default;
         Collider &operator=(const Collider &other) = default;
     };
-} // namespace component
+} // namespace ecs

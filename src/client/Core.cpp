@@ -20,8 +20,6 @@ Core::Core()
 
     _initMenu();
     _initSettings();
-    _initWin();
-    _initLoose();
 
     _gameLoop();
 }
@@ -46,23 +44,12 @@ void Core::_initSettings()
     _registry.setActualScene(ecs::Scenes::SETTINGS);
 }
 
-void Core::_initWin()
-{
-    _registry.setActualScene(ecs::Scenes::WIN);
-}
-
-void Core::_initLoose()
-{
-    _registry.setActualScene(ecs::Scenes::LOOSE);
-}
-
 void Core::_gameLoop()
 {
     std::shared_ptr<void()> s;
     (void)s;
 
-    _graphical.setVideoMode(1280, 720);
-    _graphical.getWindow().create(_graphical.getVideoMode(), "Window");
+    _graphical.getWindow().create(_graphical.getVideoMode(), "", sf::Style::None);
     _graphical.getWindow().setFramerateLimit(60);
     _registry.setActualScene(ecs::Scenes::MENU);
     while (_graphical.getWindow().isOpen()) {
@@ -71,7 +58,7 @@ void Core::_gameLoop()
                 _graphical.getWindow().close();
         }
         _graphical.getWindow().clear();
-        ecs::Systems::Drawable(_registry, _registry.getComponents<component::Drawable>(), _graphical);
+        ecs::Systems::Drawable(_registry, _registry.getComponents<ecs::Drawable>(), _graphical);
         _graphical.getWindow().display();
     }
 }

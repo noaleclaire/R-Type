@@ -7,7 +7,7 @@
 
 #include "Layer.hpp"
 
-namespace component
+namespace ecs
 {
     Layer::Layer(std::size_t layer) : _layer(layer)
     {
@@ -24,4 +24,4 @@ namespace component
     {
         _layer = layer;
     }
-} // namespace component
+} // namespace ecs

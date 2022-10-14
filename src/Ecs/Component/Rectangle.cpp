@@ -7,7 +7,7 @@
 
 #include "Rectangle.hpp"
 
-namespace component
+namespace ecs
 {
     Rectangle::Rectangle(float x, float y, float width, float height) : _x(x), _y(y), _width(width), _height(height)
     {
@@ -55,4 +55,4 @@ namespace component
         _height = height;
     }
 
-} // namespace component
+} // namespace ecs

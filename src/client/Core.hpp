@@ -30,11 +30,9 @@ class Core {
     private:
         void _initMenu();
         void _initSettings();
-        void _initWin();
-        void _initLoose();
         void _gameLoop();
 
         ecs::Registry _registry;
-        graphics::SpritesManager _sprites_manager;
+        SpritesManager _sprites_manager;
         graphics::Graphical _graphical;
 };

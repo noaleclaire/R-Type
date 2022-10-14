@@ -30,16 +30,16 @@ namespace ecs
       public:
         Registry()
         {
-            registerComponents<component::Clickable>();
-            registerComponents<component::Collider>();
-            registerComponents<component::Controllable>();
-            registerComponents<component::Drawable>();
-            registerComponents<component::Killable>();
-            registerComponents<component::Layer>();
-            registerComponents<component::Position>();
-            registerComponents<component::Shootable>();
-            registerComponents<component::Shooter>();
-            registerComponents<component::Rectangle>();
+            registerComponents<ecs::Clickable>();
+            registerComponents<ecs::Collider>();
+            registerComponents<ecs::Controllable>();
+            registerComponents<ecs::Drawable>();
+            registerComponents<ecs::Killable>();
+            registerComponents<ecs::Layer>();
+            registerComponents<ecs::Position>();
+            registerComponents<ecs::Shootable>();
+            registerComponents<ecs::Shooter>();
+            registerComponents<ecs::Rectangle>();
         };
         ~Registry() = default;
         template <class Component> SparseArray<Component> &registerComponents()

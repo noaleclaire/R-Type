@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Rectangle : public AComponent {
       public:
@@ -36,4 +36,4 @@ namespace component
         float _width;
         float _height;
     };
-} // namespace component
+} // namespace ecs

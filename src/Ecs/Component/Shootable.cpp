@@ -7,7 +7,7 @@
 
 #include "Shootable.hpp"
 
-namespace component
+namespace ecs
 {
     Shootable::Shootable(int angle) : _angle(angle)
     {
@@ -24,4 +24,4 @@ namespace component
     {
         _angle = angle;
     }
-} // namespace component
+} // namespace ecs

@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Clickable : public AComponent {
       public:
@@ -18,4 +18,4 @@ namespace component
         ~Clickable() = default;
         Clickable &operator=(const Clickable &other) = default;
     };
-} // namespace component
+} // namespace ecs

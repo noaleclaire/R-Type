@@ -9,7 +9,7 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Killable : public AComponent {
       public:
@@ -18,4 +18,4 @@ namespace component
         ~Killable() = default;
         Killable &operator=(const Killable &other) = default;
     };
-} // namespace component
+} // namespace ecs

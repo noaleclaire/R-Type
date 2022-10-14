@@ -18,7 +18,7 @@ namespace graphics
             Graphical();
             ~Graphical();
 
-            void addAllTextures(graphics::SpritesManager &sprites_manager);
+            void addAllTextures(SpritesManager &sprites_manager);
             std::unordered_map<std::string, sf::Texture> getAllTextures() const;
             void addSprite(std::size_t entity, std::string spritesheet, std::vector<float> rect = {});
             std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;

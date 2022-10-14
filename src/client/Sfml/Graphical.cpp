@@ -13,13 +13,14 @@ namespace graphics
 {
     Graphical::Graphical()
     {
+        setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
     }
 
     Graphical::~Graphical()
     {
     }
 
-    void Graphical::addAllTextures(graphics::SpritesManager &sprites_manager)
+    void Graphical::addAllTextures(SpritesManager &sprites_manager)
     {
         sf::Texture texture;
         for (auto &it : sprites_manager.getTexturePath()) {
@@ -43,12 +44,12 @@ namespace graphics
 
         _entities_sprites.insert(std::make_pair(entity, sf::Sprite(_textures.at(spritesheet))));
         if (_textures.at(spritesheet).getSize().x == 1200 && _textures.at(spritesheet).getSize().y == 1200) {
-            xScale = rect.at(graphics::SpriteAnimAttributes::rect_width) / 1200;
-            yScale = rect.at(graphics::SpriteAnimAttributes::rect_height) / 1200;
+            xScale = rect.at(SpriteAnimAttributes::rect_width) / 1200;
+            yScale = rect.at(SpriteAnimAttributes::rect_height) / 1200;
         } else {
-            _entities_sprites.at(entity).setTextureRect(sf::IntRect(rect.at(graphics::SpriteAnimAttributes::rect_x),
-            rect.at(graphics::SpriteAnimAttributes::rect_y), rect.at(graphics::SpriteAnimAttributes::rect_width),
-            rect.at(graphics::SpriteAnimAttributes::rect_height)));
+            _entities_sprites.at(entity).setTextureRect(sf::IntRect(rect.at(SpriteAnimAttributes::rect_x),
+            rect.at(SpriteAnimAttributes::rect_y), rect.at(SpriteAnimAttributes::rect_width),
+            rect.at(SpriteAnimAttributes::rect_height)));
         }
         _entities_sprites.at(entity).setScale(sf::Vector2f(xScale, yScale));
     }
