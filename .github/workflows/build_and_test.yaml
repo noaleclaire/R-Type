@@ -32,14 +32,11 @@ jobs:
 
     - name: Configure
       run: |
-        cd build
-        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
+        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}/build
         cmake ${{ github.workspace }} -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
-      run: |
-        cd build
-        cmake --build ${{ github.workspace }}
+      run: cmake --build ${{ github.workspace }}/build
 
   windows_build:
     runs-on: windows-latest
