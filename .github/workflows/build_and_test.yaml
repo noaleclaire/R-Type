@@ -24,16 +24,18 @@ jobs:
         sudo apt-get install python3
         sudo apt-get upgrade python3
         sudo apt-get install libx11-xcb-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libudev-dev libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev libxcb-util-dev
-        sudo pip install conan
-        sudo conan install ${{ github.workspace }} --build missing
+        sudo pip install conan --user
+        conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan install ${{ github.workspace }} --build missing
 
     - name: Configure
       run: |
         cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
-        cmake . -G 'Unix Makefiles' ${{ github.workspace }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        cmake ${{ github.workspace }} -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
     - name: Build
-      run: cmake --build ${{ github.workspace }}
+      run: cmake --build ${{ github.workspace }}/build
 
   windows_build:
     runs-on: windows-latest
