@@ -36,8 +36,8 @@ jobs:
 
     - name: Build
       run: |
-      rm ${{ github.workspace }}/build/CMakeCache.txt
-      cmake --build ${{ github.workspace }}/build
+        rm ${{ github.workspace }}/build/CMakeCache.txt
+        cmake --build ${{ github.workspace }}/build
 
   windows_build:
     runs-on: windows-latest
