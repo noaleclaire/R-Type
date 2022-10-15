@@ -25,18 +25,35 @@ namespace network
     struct Message {
         Header<T> header{};
         std::vector<uint8_t> body;
-
+        /**
+         * @brief 
+         * 
+         * @return std::size_t 
+         */
         std::size_t size() const
         {
             return (sizeof(Header<T>) + body.size());
         }
-
+        /**
+         * @brief 
+         * 
+         * @param os 
+         * @param msg 
+         * @return std::ostream& 
+         */
         friend std::ostream &operator << (std::ostream &os, const Message<T> &msg)
         {
             os << "message type: " << static_cast<int>(msg.header.id) << " size: " << msg.header.size << std::endl;
             return (os);
         }
-
+        /**
+         * @brief 
+         * 
+         * @tparam U 
+         * @param msg 
+         * @param data 
+         * @return Message<T>& 
+         */
         template <class U>
         friend Message<T> &operator << (Message<T> &msg, const U &data)
         {
@@ -47,7 +64,14 @@ namespace network
             msg.header.size = msg.size();
             return (msg);
         }
-
+        /**
+         * @brief 
+         * 
+         * @tparam U 
+         * @param msg 
+         * @param data 
+         * @return Message<T>& 
+         */
         template <class U>
         friend Message<T> &operator >> (Message<T> &msg, U &data)
         {

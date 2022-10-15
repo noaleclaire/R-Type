@@ -14,6 +14,12 @@ namespace ecs
 {
     class Systems {
       public:
+      /**
+       * @brief 
+       * 
+       * @param registry 
+       * @param drawable 
+       */
         static void Drawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
     };
 } // namespace ecs
