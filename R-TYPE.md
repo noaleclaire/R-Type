@@ -20,7 +20,7 @@ on Linux:
 mkdir build && cd build
 
 # Install Conan
-pip install conan --user
+sudo pip install conan
 conan install .. -c tools.system.package_manager:mode=install
 conan profile update settings.compiler.libcxx=libstdc++11 default
 conan install .. --build missing
