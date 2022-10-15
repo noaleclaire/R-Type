@@ -46,7 +46,7 @@ jobs:
           python.exe -m pip install --upgrade pip
           mkdir build
           cd build
-          Start-Process -Verb RunAs python.exe -m pip install conan
+          python.exe -m pip install conan
           conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
           conan install ${{ github.workspace }} --build missing
           cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
