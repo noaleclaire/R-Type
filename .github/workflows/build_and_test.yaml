@@ -43,14 +43,10 @@ jobs:
       - name: Build Test windows
         run: |
           python --version
-          pip install virtualenvwrapper
-          Get-Service | Out-File -FilePath C:\WORKON_HOME=~/Envs
-          mkdir -p $WORKON_HOME
-          . /usr/local/bin/virtualenvwrapper.sh
-          mkvirtualenv env1
+          python.exe -m pip install --upgrade pip
           mkdir build
           cd build
-          pip install conan
+          python.exe -m pip install conan -Verb RunAs -Confirm
           conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
           conan install ${{ github.workspace }} --build missing
           cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
