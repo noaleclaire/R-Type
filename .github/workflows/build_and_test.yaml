@@ -35,15 +35,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
 
       - name: Build Test windows
         run: |
           python --version
           pip install virtualenvwrapper
-          export WORKON_HOME=~/Envs
+          Get-Service | Out-File -FilePath C:\WORKON_HOME=~/Envs
           mkdir -p $WORKON_HOME
-          source /usr/local/bin/virtualenvwrapper.sh
+          . /usr/local/bin/virtualenvwrapper.sh
           mkvirtualenv env1
           mkdir build
           cd build
