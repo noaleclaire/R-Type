@@ -32,15 +32,16 @@ jobs:
 
   windows_build:
     runs-on: windows-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Test Windows
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
+    - name: Build Test windows
       run: |
-        pip install conan
+        python -m venv venv3
+        venv3\Scripts\Activate.ps1
+        python -m pip install maturin conan
+        maturin develop
         conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
         conan install ${{ github.workspace }} --build missing
-        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
         cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
         cmake --build ${{ github.workspace }}/build
