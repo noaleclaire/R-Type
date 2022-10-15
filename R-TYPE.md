@@ -1,8 +1,11 @@
+LAUNCH GAME                 {#mainpage}
 ====
 
-# BUILDING
+### Building
 
-## Command Line (via CMake)
+========
+
+### Command Line (via CMake)
 
 Confirmation badge for Build and Test:
 
