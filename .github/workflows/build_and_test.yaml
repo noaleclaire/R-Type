@@ -40,6 +40,11 @@ jobs:
       - name: Build Test windows
         run: |
           python --version
+          pip install virtualenvwrapper
+          export WORKON_HOME=~/Envs
+          mkdir -p $WORKON_HOME
+          source /usr/local/bin/virtualenvwrapper.sh
+          mkvirtualenv env1
           mkdir build
           cd build
           pip install conan
