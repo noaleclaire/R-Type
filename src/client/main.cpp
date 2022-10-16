@@ -5,13 +5,15 @@
 ** main
 */
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <filesystem>
 #include <iostream>
 #include <fstream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
-#include "Network/network.hpp"
 #include "Core.hpp"
+#include "Network/CustomClient.hpp"
 
 void assetsFolderExists()
 {
@@ -34,11 +36,26 @@ int main(int ac, char **av)
         // assetsFolderExists();
         Core core;
 
-        // std::shared_ptr<void()> s;
-        // network_player net;
-        // std::thread f(&network_player::process_player, &net, s);
-        // f.join();
+        boost::asio::io_context io_context;
+        CustomClient client(io_context, "127.0.0.1", 1313);
+        std::thread thread_client(bind(&boost::asio::io_context::run, boost::ref(io_context)));
+
+        for (int i = 0; i < 5; i++) {
+            client.PingServer();
+            std::cout << "test" << std::endl;
+        }
+        //le faire quand on quitte le jeu
+        if (thread_client.joinable()) {
+            io_context.stop();
+            thread_client.join();
+        }
+        // }
     } catch (const Exception &e) {
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile << e.where() << std::endl;
+        errorLogsFile.close();
+        return (84);
+    } catch (std::exception &e) {
         errorLogsFile << e.what() << std::endl;
         errorLogsFile << e.where() << std::endl;
         errorLogsFile.close();

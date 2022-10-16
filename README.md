@@ -4,6 +4,10 @@
 
 ## Command Line (via CMake)
 
+Confirmation badge for Build and Test:
+
+[![CMake](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml/badge.svg)](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml)
+
 Required tools:
 - CMake 3.17 (minimum)
 
@@ -13,7 +17,10 @@ on Linux:
 mkdir build && cd build
 
 # Install Conan
-conan install . --build missing
+pip install conan --user
+conan install .. -c tools.system.package_manager:mode=install
+conan profile update settings.compiler.libcxx=libstdc++11 default
+conan install .. --build missing
 
 # Configure the project
 cmake .. -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
