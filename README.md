@@ -7,7 +7,6 @@ R-Type is a horizontally scrolling shooter arcade video game developed and relea
 
 ![image](https://user-images.githubusercontent.com/72009611/196052229-109475d4-6290-4686-a0b1-7ecf660cd6e1.png)
 
-====
 
 ## Building
 
@@ -77,6 +76,6 @@ cd docs/html/index.html
 |--------------------------------------------------|
 | Noa Leclaire <noa.leclaire@epitech.eu> |
 | Julien Lafargue   <julien.lafargue@epitech.eu>   |
-| Enzo Laurent <quentin.leroueil@epitech.eu>  |
+| Enzo Laurent <enzo.laurent@epitech.eu>  |
 | Alexandre Laborde <alexandre.laborde@epitech.eu> |
 | Marvin Verain  <marvin.verain@epitech.eu>    |
