@@ -76,6 +76,6 @@ cd docs/html/index.html
 |--------------------------------------------------|
 | Noa Leclaire <noa.leclaire@epitech.eu> |
 | Julien Lafargue   <julien.lafargue@epitech.eu>   |
-| Enzo Laurent <quentin.leroueil@epitech.eu>  |
+| Enzo Laurent <enzo.laurent@epitech.eu>  |
 | Alexandre Laborde <alexandre.laborde@epitech.eu> |
 | Marvin Verain  <marvin.verain@epitech.eu>    |
