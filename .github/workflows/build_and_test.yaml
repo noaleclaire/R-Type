@@ -14,9 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - uses: lukka/get-cmake@latest
+      - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@latest
 
       - name: install-conan
         shell: bash
@@ -43,7 +42,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - uses: lukka/get-cmake@latest
 
       - name: Install latest python version
