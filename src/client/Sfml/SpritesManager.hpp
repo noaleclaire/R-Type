@@ -24,25 +24,99 @@ namespace graphics
 
     class SpritesManager : public AYamlConfig {
       public:
+        /**
+         * @brief Construct a new Sprites Manager object
+         * 
+         */
         SpritesManager();
+        /**
+         * @brief Destroy the Sprites Manager object
+         * 
+         */
         ~SpritesManager();
-
+        /**
+         * @brief 
+         * 
+         * @param sprite_config_word 
+         * @param value 
+         */
         void executeMapMemberFunctionPointer(std::string &sprite_config_word, std::string &value);
-
+        /**
+         * @brief Get the Sprite Type object
+         * 
+         * @param sprite_type 
+         * @return graphics::SpriteTypes 
+         */
         graphics::SpriteTypes getSpriteType(std::string &sprite_type) const;
+        /**
+         * @brief Get the Sprite Type object
+         * 
+         * @param sprite_type 
+         * @return std::string const 
+         */
         std::string const getSpriteType(graphics::SpriteTypes sprite_type) const;
+        /**
+         * @brief Get the Sprite Type Attribute object
+         * 
+         * @param sprite_type_attribute 
+         * @return graphics::SpriteTypeAttributes 
+         */
 
         graphics::SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
+        /**
+         * @brief Get the Sprite Type Attribute object
+         * 
+         * @param sprite_type_attribute 
+         * @return std::string const 
+         */
         std::string const getSpriteTypeAttribute(graphics::SpriteTypeAttributes sprite_type_attribute) const;
-
+        /**
+         * @brief Get the Sprite Anim Attribute object
+         * 
+         * @param sprite_anim_attribute 
+         * @return graphics::SpriteAnimAttributes 
+         */
         graphics::SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
+        /**
+         * @brief Get the Sprite Anim Attribute object
+         * 
+         * @param sprite_anim_attribute 
+         * @return std::string const 
+         */
         std::string const getSpriteAnimAttribute(graphics::SpriteAnimAttributes sprite_anim_attribute) const;
-
+        /**
+         * @brief 
+         * 
+         * @param key_word 
+         * @param texture_path 
+         */
         void addTexturePath(std::string &key_word, std::string &texture_path);
+        /**
+         * @brief 
+         * 
+         * @param sprite_type 
+         * @param sprite_type_id 
+         */
         void addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id);
+        /**
+         * @brief 
+         * 
+         * @param sprite_type_anim 
+         * @param sprite_type_anim_id 
+         */
         void addSpriteAnim(std::string &sprite_type_anim, std::string &sprite_type_anim_id);
+        /**
+         * @brief 
+         * 
+         * @param anim_attribute_type 
+         * @param anim_attribute_value 
+         */
         void addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value);
-
+        /**
+         * @brief Get the Texture Path object
+         * 
+         * @return std::vector<std::string> const 
+         */
         std::vector<std::string> const getTexturePath() const;
         void printSpritesData();
 

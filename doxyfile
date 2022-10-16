@@ -910,12 +910,16 @@ WARN_LOGFILE           =
 
 INPUT                  =   src/client \
 >                          src/client/Exceptions \
+                           src/client/Network \
+                           src/client/Sfml \
+                           src/Network \
 >                          src/Ecs \
 >                          src/Ecs/Component \
 >                          src/Ecs/Entities \
 >                          src/Ecs/Exceptions \
 >                          src/Ecs/Systems \
 >                          src/server \
+                           src/server/Network \
 >                          ./ \
 
 # This tag can be used to specify the character encoding of the source files
