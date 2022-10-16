@@ -18,7 +18,9 @@ jobs:
 
       - name: install-conan
         shell: bash
-        run: pip install conan
+        run: |
+          python --version
+          pip install conan
 
       - name: Set and Update conan profile
         shell: bash
