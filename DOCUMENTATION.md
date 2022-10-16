@@ -41,7 +41,7 @@ game.
     
     Asynchronous connectionless mode networking is conducted by configuring the endpoint for non-blocking service, and either polling for or receiving asynchronous notification when data might be transferred. If asynchronous notification is used, the actual receipt of data typically takes place within a signal handler. 
 
-- 3. Architecture Protocole
+- 3. Architecture Protocol
     
     ![citation Je t'aime - cadre sur ecran d'ordinateur et lignes de code](https://user-images.githubusercontent.com/72009611/196060225-b9e3677d-96e0-48c1-b260-ac18e4c899da.png)
 
