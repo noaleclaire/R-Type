@@ -7,13 +7,16 @@
 
 #include "Graphical.hpp"
 #include <filesystem>
+#include "../../Ecs/Systems/Systems.hpp"
 #include "../Exceptions/SfmlExceptionTexture.hpp"
 
 namespace graphics
 {
     Graphical::Graphical()
     {
-        setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
+        // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
+        // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
+        setVideoMode(1280, 720);
     }
 
     Graphical::~Graphical()
@@ -84,5 +87,29 @@ namespace graphics
                 rect.at(SpriteAnimAttributes::rect_width), rect.at(SpriteAnimAttributes::rect_height)));
         }
         _entities_sprites.at(entity).setScale(sf::Vector2f(xScale, yScale));
+    }
+
+    void Graphical::draw(ecs::Registry &registry)
+    {
+        _window.clear();
+        ecs::Systems::Drawable(registry, registry.getComponents<ecs::Drawable>(), this);
+        _window.display();
+    }
+
+    void Graphical::handleEvents(ecs::Registry &registry)
+    {
+        while (_window.pollEvent(_event)) {
+            _handleMouseButtonEvents(registry);
+            if (_event.type == sf::Event::Closed)
+                _window.close();
+        }
+    }
+
+    void Graphical::_handleMouseButtonEvents(ecs::Registry &registry)
+    {
+        if (_event.type == sf::Event::MouseButtonReleased) {
+            if (_event.mouseButton.button == sf::Mouse::Button::Left)
+                ecs::Systems::Clickable(registry, registry.getComponents<ecs::Clickable>(), this);
+        }
     }
 } // namespace graphics

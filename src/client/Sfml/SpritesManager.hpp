@@ -55,7 +55,7 @@ class SpritesManager : public AYamlConfig {
     struct SpriteData {
         std::string _spritesheet;
         std::pair<ecs::EntityTypes, std::size_t> _sprite_type_and_id;
-        std::unordered_map<std::size_t, std::vector<std::optional<std::size_t>>> _animations;
+        std::unordered_map<std::size_t, std::vector<std::optional<int>>> _animations;
     };
     std::vector<SpriteData> _sprites_data;
     std::vector<std::string> _textures_path;

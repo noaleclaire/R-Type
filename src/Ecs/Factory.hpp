@@ -48,78 +48,96 @@ namespace ecs
         static Entity createSpaceship(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
             registry.addComponent<ecs::Controllable>(entity, ecs::Controllable());
-            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Killable>(entity, ecs::Killable());
-            registry.addComponent<ecs::Position>(entity,
-            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
-            registry.addComponent<ecs::Rectangle>(entity,
-            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Shooter>(entity, ecs::Shooter());
-            return (entity);
-        }
-        static Entity createMonster(Registry &registry)
-        {
-            Entity entity = registry.spawnEntity();
-            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
-            registry.addComponent<ecs::Killable>(entity, ecs::Killable());
-            registry.addComponent<ecs::Position>(entity,
-            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
-            registry.addComponent<ecs::Rectangle>(entity,
-            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            return (entity);
-        }
-        static Entity createShot(Registry &registry)
-        {
-            Entity entity = registry.spawnEntity();
-            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
-            registry.addComponent<ecs::Position>(entity,
-            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
-            registry.addComponent<ecs::Rectangle>(entity,
-            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
-            return (entity);
-        }
-        static Entity createButton(Registry &registry)
-        {
-            Entity entity = registry.spawnEntity();
-            registry.addComponent<ecs::Clickable>(entity, ecs::Clickable());
-            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
-            registry.addComponent<ecs::Position>(entity,
-            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
-            registry.addComponent<ecs::Rectangle>(entity,
-            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            return (entity);
-        }
-        static Entity createWall(Registry &registry)
-        {
-            Entity entity = registry.spawnEntity();
-            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
-            registry.addComponent<ecs::Position>(entity,
-            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
-            registry.addComponent<ecs::Rectangle>(entity,
-            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            return (entity);
-        }
-        static Entity createBackground(Registry &registry)
-        {
-            Entity entity = registry.spawnEntity();
+
             registry.addComponent<ecs::Position>(entity,
             ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
             registry.addComponent<ecs::Rectangle>(entity,
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            return (entity);
+        }
+        static Entity createMonster(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
+            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
+            registry.addComponent<ecs::Killable>(entity, ecs::Killable());
+
+            registry.addComponent<ecs::Position>(entity,
+            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            return (entity);
+        }
+        static Entity createShot(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
+            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
+
+            registry.addComponent<ecs::Position>(entity,
+            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+
+            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
+            return (entity);
+        }
+        static Entity createButton(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
+            registry.addComponent<ecs::Clickable>(entity, ecs::Clickable());
+
+            registry.addComponent<ecs::Position>(entity,
+            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            return (entity);
+        }
+        static Entity createWall(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
+            registry.addComponent<ecs::Collider>(entity, ecs::Collider());
+
+            registry.addComponent<ecs::Position>(entity,
+            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            return (entity);
+        }
+        static Entity createBackground(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
+
+            registry.addComponent<ecs::Position>(entity,
+            ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+            ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+            UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
             return (entity);
         }
     };

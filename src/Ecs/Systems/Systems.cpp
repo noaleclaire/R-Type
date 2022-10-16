@@ -7,36 +7,37 @@
 
 #include "Systems.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
+#include "../Exceptions/ExceptionComponentNull.hpp"
 
 namespace ecs
 {
-    void Systems::Clickable(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical &graphical)
+    void Systems::Clickable(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
     {
-        auto mouse_pos = sf::Mouse::getPosition(graphical.getWindow());          // Mouse position relative to the window
-        auto translated_pos = graphical.getWindow().mapPixelToCoords(mouse_pos); // Mouse position translated into world coordinates
-
         for (auto &it : registry.getEntities()) {
             try {
-                if (clickable.at(it)) { // probleme a ce .at de merde
-                    if (graphical.getAllSprites().at(it).getGlobalBounds().contains(translated_pos)) {
-                        switch (clickable.at(it).value().getFunction()) {
-                            case ecs::Clickable::Function::EXIT: graphical.getWindow().close(); break;
-                            default: break;
-                        }
+                clickable.at(it);
+                if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    switch (clickable.at(it).value().getFunction()) {
+                        case Clickable::Function::EXIT: graphical->getWindow().close(); break;
+                        default: break;
                     }
                 }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }
     }
 
-    void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical &graphical)
+    void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
         for (auto &it : registry.getEntities()) {
             try {
-                if (drawable.at(it))
-                    graphical.getWindow().draw(graphical.getAllSprites().at(it));
+                drawable.at(it);
+                graphical->getWindow().draw(graphical->getAllSprites().at(it));
+            } catch (const ExceptionComponentNull &e) {
+                continue;
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
@@ -47,8 +48,10 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                if (position.at(it))
-                    graphical.setSpritePosition(it, position.at(it).value().getXPosition(), position.at(it).value().getYPosition());
+                position.at(it);
+                graphical.setSpritePosition(it, position.at(it).value().getXPosition(), position.at(it).value().getYPosition());
+            } catch (const ExceptionComponentNull &e) {
+                continue;
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             }

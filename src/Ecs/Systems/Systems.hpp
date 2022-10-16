@@ -15,8 +15,8 @@ namespace ecs
 {
     class Systems {
       public:
-        static void Clickable(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical &graphical);
-        static void Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical &graphical);
+        static void Clickable(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical);
+        static void Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical);
         static void Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical);
     };
 } // namespace ecs

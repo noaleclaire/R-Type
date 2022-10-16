@@ -169,7 +169,7 @@ void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &spri
         _sprite_type_id_tmp = std::stoi(sprite_type_id, &pos);
         _sprite_type_tmp = getSpriteType(sprite_type);
         _sprites_data.push_back({_spritesheet_tmp, std::make_pair(_sprite_type_tmp, _sprite_type_id_tmp),
-            std::unordered_map<std::size_t, std::vector<std::optional<std::size_t>>>{}});
+            std::unordered_map<std::size_t, std::vector<std::optional<int>>>{}});
     } catch (const std::invalid_argument &e) {
         throw ExceptionNotANumber(
             "the id of the sprite is not an integer", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
@@ -185,7 +185,7 @@ void SpritesManager::addSpriteAnim(std::string &sprite_type_anim, std::string &s
         _sprite_type_anim_id_tmp = std::stoi(sprite_type_anim_id, &pos);
         for (auto &it : _sprites_data) {
             if (it._sprite_type_and_id.first == _sprite_type_tmp && it._sprite_type_and_id.second == _sprite_type_id_tmp) {
-                it._animations.emplace(_sprite_type_anim_id_tmp, std::vector<std::optional<std::size_t>>(NB_ANIM_ATTRIBUTES, std::nullopt));
+                it._animations.emplace(_sprite_type_anim_id_tmp, std::vector<std::optional<int>>(NB_ANIM_ATTRIBUTES, std::nullopt));
                 break;
             }
         }

@@ -6,19 +6,10 @@
 */
 
 #pragma once
-#include "../Ecs/Registry.hpp"
-#include "Sfml/SpritesManager.hpp"
 #include "Sfml/Graphical.hpp"
-#include <atomic>
-#include <csignal>
-#include <cstdio>
-#include <cstdlib>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <thread>
 #include <unordered_map>
-#include "../Network/shared.hpp"
 
 
 class Core {
