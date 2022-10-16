@@ -30,7 +30,7 @@ jobs:
       - name: build
         shell: bash
         run: |
-          sudo apt-get install libx11-xcb-dev libfontenc-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev libxfixes-dev libxi-dev libxinerama-dev libxmu-dev libxmuu-dev libxpm-dev libxrandr-dev libxres-dev libxss-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev;
+          sudo apt-get install libX11-xcb-dev libfontenc-dev libXaw7-dev libXcomposite-dev libXcursor-dev libXdamage-dev libXfixes-dev libXi-dev libXinerama-dev libXmu-dev libXmuu-dev libXpm-dev libXrandr-dev libXres-dev libXss-dev libXtst-dev libXv-dev libXvmc-dev libXxf86vm-dev libXcb-render-util0-dev libXcb-xkb-dev libXcb-icccm4-dev libXcb-image0-dev libXcb-keysyms1-dev libXcb-randr0-dev libXcb-shape0-dev libXcb-sync-dev libXcb-xfixes0-dev libXcb-xinerama0-dev libXcb-dri3-dev libXcb-util-dev libXcb-util0-dev;
           export CONAN_SYSREQUIRES_MODE="enabled"
           export CONAN_SYSREQUIRES_SUDO="1"
           cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
