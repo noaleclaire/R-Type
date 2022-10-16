@@ -36,3 +36,40 @@ jobs:
           cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
           cmake ${{ github.workspace }} -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
           cmake --build ${{ github.workspace }}/build
+        
+  windows_build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@latest
+
+      - name: Install latest python version
+        shell: powershell
+        run: |
+          python --version
+          python.exe -m pip install --upgrade pip
+
+      - name: Install conan
+        shell: powershell
+        run: pip install conan
+
+      - name: Set and Update conan profile
+        shell: powershell
+        run: |
+          conan profile new default --detect
+          conan config set tools.system.package_manager:mode=install
+        
+      - name: Check for Dependencies (Install)
+        shell: powershell
+        run: |
+          mkdir build
+          cd build
+          conan install .. --build=missing
+
+      - name: Build Test windows
+        shell: powershell
+        run: |
+          cd build
+          cmake .. -G "Visual Studio 17"
+          cmake --build . --config Release
