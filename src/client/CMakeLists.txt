@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/client/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/)
 
-set(SRC ${SRCROOT}/main.cpp ${SRCROOT}/ParserYaml.cpp ${SRCROOT}/AYamlConfig.cpp)
+set(SRC ${SRCROOT}/main.cpp ${SRCROOT}/Core.cpp)
 
 add_subdirectory(Sfml)
 add_subdirectory(Network)
@@ -13,6 +13,7 @@ add_executable(${TARGET_NAME} ${SRC})
 target_link_libraries(${TARGET_NAME} Client)
 target_link_libraries(${TARGET_NAME} Sfml)
 target_link_libraries(${TARGET_NAME} Ecs)
+target_link_libraries(${TARGET_NAME} Utilities)
 target_link_libraries(${TARGET_NAME} ${CONAN_LIBS})
 
 add_custom_command(

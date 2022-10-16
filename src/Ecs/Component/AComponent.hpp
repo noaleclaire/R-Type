@@ -7,11 +7,11 @@
 
 #pragma once
 
-namespace component
+namespace ecs
 {
     class AComponent {
       public:
         AComponent() = default;
         ~AComponent() = default;
     };
-} // namespace component
+} // namespace ecs

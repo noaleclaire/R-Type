@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 
-set(SRC ${SRCROOT}/ecs.cpp ${SRCROOT}/ecs.hpp ${SRCROOT}/Registry.hpp)
+set(SRC)
 
 add_subdirectory(Systems)
 add_subdirectory(Exceptions)

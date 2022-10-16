@@ -9,15 +9,11 @@
 #include <SFML/Window.hpp>
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
-#include "ParserYaml.hpp"
-#include "Sfml/SpritesManager.hpp"
-
-#include "../Ecs/Component/Position.hpp"
-#include "../Network/UdpServerClient.hpp"
+#include "Core.hpp"
 #include "Network/CustomClient.hpp"
-#include <unistd.h>
 
 void assetsFolderExists()
 {
@@ -35,11 +31,10 @@ int main(int ac, char **av)
 {
     (void)av;
     (void)ac;
+    std::ofstream errorLogsFile("ErrorLogs.txt");
     try {
         // assetsFolderExists();
-        graphics::SpritesManager sprites_manager;
-        ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-        sprites_manager.printSpritesData();
+        Core core;
 
         boost::asio::io_context io_context;
         CustomClient client(io_context, "127.0.0.1", 1313);
@@ -48,7 +43,6 @@ int main(int ac, char **av)
         for (int i = 0; i < 5; i++) {
             client.PingServer();
             std::cout << "test" << std::endl;
-            sleep(1);
         }
         //le faire quand on quitte le jeu
         if (thread_client.joinable()) {
@@ -57,11 +51,14 @@ int main(int ac, char **av)
         }
         // }
     } catch (const Exception &e) {
-        std::cerr << e.what() << std::endl;
-        std::cerr << e.where() << std::endl;
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile << e.where() << std::endl;
+        errorLogsFile.close();
         return (84);
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile << e.where() << std::endl;
+        errorLogsFile.close();
         return (84);
     }
     return (0);

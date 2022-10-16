@@ -39,14 +39,4 @@ namespace ecs
     {
         return (_id);
     }
-
-    void Entity::setLabel(std::string label)
-    {
-        _label = label;
-    }
-
-    std::string Entity::getLabel() const
-    {
-        return (_label);
-    }
 } // namespace ecs

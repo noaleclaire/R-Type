@@ -9,11 +9,11 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Shootable : public AComponent {
       public:
-        Shootable(int angle);
+        Shootable(int angle = 0);
         Shootable(const Shootable &other) = default;
         ~Shootable() = default;
         Shootable &operator=(const Shootable &other) = default;
@@ -27,4 +27,4 @@ namespace component
       private:
         int _angle;
     };
-} // namespace component
+} // namespace ecs
