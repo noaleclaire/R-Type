@@ -24,7 +24,14 @@ namespace network
     struct Header {
         T id;
         uint32_t size = 0;
-
+        /**
+         * @brief 
+         * 
+         * @tparam U 
+         * @param header 
+         * @param data 
+         * @return std::vector<uint8_t>& 
+         */
         template <class U>
         friend std::vector<uint8_t> &operator << (std::vector<uint8_t> &header, const U &data)
         {
@@ -34,7 +41,14 @@ namespace network
             std::memcpy(header.data() + i, &data, sizeof(U));
             return (header);
         }
-
+        /**
+         * @brief 
+         * 
+         * @tparam U 
+         * @param header 
+         * @param data 
+         * @return std::vector<uint8_t>& 
+         */
         template <class U>
         friend std::vector<uint8_t> &operator >> (std::vector<uint8_t> &header, U &data)
         {
