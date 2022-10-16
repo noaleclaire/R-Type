@@ -1,7 +1,12 @@
-LAUNCH GAME                 {#mainpage}
+R-Type Game              {#mainpage}
 ====
 
-### Building
+R-Type is a horizontally scrolling shooter arcade video game developed and released by Irem in 1987 and the first game in the R-Type series. The player controls a star ship, the R-9 "Arrowhead", in its efforts to destroy the Bydo, a powerful alien race bent on wiping out all of mankind.
+
+![image](https://user-images.githubusercontent.com/72009611/196052229-109475d4-6290-4686-a0b1-7ecf660cd6e1.png)
+
+
+## Building
 
 ### Command Line (via CMake)
 
