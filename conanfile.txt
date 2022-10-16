@@ -3,5 +3,11 @@ asio/1.16.0
 sfml/2.5.1
 boost/1.80.0
 
+[options]
+sfml:graphics=True
+sfml:window=True
+sfml:audio=True
+sfml:network=True
+
 [generators]
 cmake
