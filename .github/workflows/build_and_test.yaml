@@ -47,7 +47,6 @@ jobs:
           mkdir build
           cd build
           python.exe -m pip install conan
-          conan install ${{ github.workspace }} ../../profiles/windows_msvc_17_release
           conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
           conan install ${{ github.workspace }} --build missing
           cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
