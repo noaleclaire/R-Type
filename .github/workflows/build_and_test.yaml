@@ -11,7 +11,7 @@ env:
 
 jobs:
   linux_build:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
           cmake --build ${{ github.workspace }}/build
 
   windows_build:
-    runs-on: windows-latest
+    runs-on: [windows-latest]
 
     steps:
       - uses: actions/checkout@v2
