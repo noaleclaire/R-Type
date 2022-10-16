@@ -10,16 +10,40 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <memory>
+#include <boost/asio.hpp>
+
+using boost::asio::ip::udp;
 
 namespace network
 {
-    enum CustomMessage {
+    enum CustomMessage : uint32_t {
         PingServer
     };
     template <class T>
     struct Header {
         T id;
         uint32_t size = 0;
+
+        template <class U>
+        friend std::vector<uint8_t> &operator << (std::vector<uint8_t> &header, const U &data)
+        {
+            static_assert(std::is_standard_layout<U>::value, "Data is too complex to be pushed into vector");
+            std::size_t i = header.size();
+            header.resize(header.size() + sizeof(U));
+            std::memcpy(header.data() + i, &data, sizeof(U));
+            return (header);
+        }
+
+        template <class U>
+        friend std::vector<uint8_t> &operator >> (std::vector<uint8_t> &header, U &data)
+        {
+            static_assert(std::is_standard_layout<U>::value, "Data is too complex to be pulled from vector");
+            std::size_t i = header.size() - sizeof(U);
+            std::memcpy(&data, header.data() + i, sizeof(U));
+            header.resize(i);
+            return (header);
+        }
     };
     template <class T>
     struct Message {
@@ -32,7 +56,7 @@ namespace network
          */
         std::size_t size() const
         {
-            return (sizeof(Header<T>) + body.size());
+            return (body.size());
         }
         /**
          * @brief 

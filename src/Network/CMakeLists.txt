@@ -1,15 +1,13 @@
-set(INCROOT ${PROJECT_SOURCE_DIR}/src/server/Network/)
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/server/Network/)
+set(INCROOT ${PROJECT_SOURCE_DIR}/src/Network/)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Network/)
 
-set(SRC ${SRCROOT}/CustomServer.cpp)
-
-set(INCDIRS ${INCROOT})
+set(SRC)
 
 source_group("" FILES ${SRC})
 
 set(LIB_NAME Network)
 
-add_library(Network ${SRC})
+add_library(${LIB_NAME} ${SRC})
 
 target_include_directories(${LIB_NAME} PRIVATE ${INCDIRS})
 target_include_directories(${LIB_NAME} PUBLIC ${INCROOT})

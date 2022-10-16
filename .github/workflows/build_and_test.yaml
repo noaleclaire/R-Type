@@ -32,15 +32,23 @@ jobs:
 
   windows_build:
     runs-on: windows-latest
-    
-    steps:
-    - uses: actions/checkout@v2
 
-    - name: Build Test Windows
-      run: |
-        pip install conan
-        conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
-        conan install ${{ github.workspace }} --build missing
-        cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
-        cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-        cmake --build ${{ github.workspace }}/build
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+
+      - name: Build Test windows
+        run: |
+          python --version
+          python.exe -m pip install --upgrade pip
+          mkdir build
+          cd build
+          python.exe -m pip install conan
+          conan install ${{ github.workspace }} ../../profiles/windows_msvc_17_release
+          conan install ${{ github.workspace }} -c tools.system.package_manager:mode=install
+          conan install ${{ github.workspace }} --build missing
+          cmake ${{ github.workspace }} -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+          cmake --build ${{ github.workspace }}/build
