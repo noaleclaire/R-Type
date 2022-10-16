@@ -3,8 +3,6 @@ LAUNCH GAME                 {#mainpage}
 
 ### Building
 
-========
-
 ### Command Line (via CMake)
 
 Confirmation badge for Build and Test:
@@ -16,14 +14,9 @@ Required tools:
 
 on Linux:
 ```sh
-# Create the build directory
-mkdir build && cd build
+# Create the build directory and install all tools
+./setup_conan.sh
 
-# Install Conan
-sudo pip install conan
-conan install .. -c tools.system.package_manager:mode=install
-conan profile update settings.compiler.libcxx=libstdc++11 default
-conan install .. --build missing
 
 # Configure the project
 cmake .. -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
@@ -48,4 +41,20 @@ cmake --build .
 
 # Return to previous directory
 cd -
+```
+
+
+====
+
+## Professional Documentation
+
+Required tools:
+- Doxygen 1.9.5 (minimum)
+
+```sh
+#build the documentation
+doxygen doxyfile
+
+#open the documentation
+cd docs/html/index.html
 ```
