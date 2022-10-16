@@ -7,6 +7,7 @@ R-Type is a horizontally scrolling shooter arcade video game developed and relea
 
 ![image](https://user-images.githubusercontent.com/72009611/196052229-109475d4-6290-4686-a0b1-7ecf660cd6e1.png)
 
+====
 
 ## Building
 
@@ -51,7 +52,6 @@ cmake --build .
 cd -
 ```
 
-
 ====
 
 ## Professional Documentation
@@ -65,7 +65,7 @@ Required tools:
 doxygen doxyfile
 
 #open the documentation
-cd docs/html/index.html
+xdg-open docs/html/index.html
 ```
 
 ====
