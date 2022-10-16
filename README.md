@@ -65,6 +65,7 @@ Required tools:
 doxygen doxyfile
 
 #open the documentation
+
 xdg-open docs/html/index.html
 ```
 
