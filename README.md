@@ -18,7 +18,8 @@ Confirmation badge for Build and Test:
 [![CMake](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml/badge.svg)](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml)
 
 Required tools:
-- CMake 3.17 (minimum)
+- CMake 3.17 (minimum) 
+    - -> Install link : https://cmake.org/install/
 
 on Linux:
 ```sh
@@ -58,6 +59,7 @@ cd -
 
 Required tools:
 - Doxygen 1.9.5 (minimum)
+  - -> Install link : https://doxygen.nl/manual/install.html
 
 ```sh
 #build the documentation
