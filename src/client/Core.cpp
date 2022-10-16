@@ -35,11 +35,11 @@ void Core::_initMenu()
 
     _registry.setActualScene(ecs::Scenes::MENU);
 
-    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0);
+    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
 
-    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0);
+    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
 }

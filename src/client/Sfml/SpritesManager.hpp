@@ -42,7 +42,7 @@ class SpritesManager : public AYamlConfig {
     void addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value);
 
     std::vector<std::string> const getTexturePath() const;
-    std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id);
+    std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id);
     std::string get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id);
     void printSpritesData();
 

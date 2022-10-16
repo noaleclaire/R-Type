@@ -232,21 +232,21 @@ void SpritesManager::printSpritesData()
     }
 }
 
-std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id)
+std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)
 {
     std::vector<float> attrs;
     try {
         for (auto &it : _sprites_data) {
             if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
-                if (it._animations.at(0).at(rect_x) && it._animations.at(0).at(rect_y) && it._animations.at(0).at(rect_width)
-                    && it._animations.at(0).at(rect_height)) {
-                    attrs.push_back(it._animations.at(0).at(rect_x).value());
-                    attrs.push_back(it._animations.at(0).at(rect_y).value());
-                    attrs.push_back(it._animations.at(0).at(rect_width).value());
-                    attrs.push_back(it._animations.at(0).at(rect_height).value());
+                if (it._animations.at(anim_id).at(rect_x) && it._animations.at(anim_id).at(rect_y) && it._animations.at(anim_id).at(rect_width)
+                    && it._animations.at(anim_id).at(rect_height)) {
+                    attrs.push_back(it._animations.at(anim_id).at(rect_x).value());
+                    attrs.push_back(it._animations.at(anim_id).at(rect_y).value());
+                    attrs.push_back(it._animations.at(anim_id).at(rect_width).value());
+                    attrs.push_back(it._animations.at(anim_id).at(rect_height).value());
                     return (attrs);
                 } else
-                    throw ExceptionNoAnimAttribute("No value for one of the anim attributes rect",
+                    throw ExceptionNoAnimAttribute("No value for one or more of the anim attributes rect",
                         "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
             }
         }
