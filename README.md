@@ -1,10 +1,13 @@
 R-Type Game              {#mainpage}
 ====
 
+[![License](https://img.shields.io/github/license/MisterPeModder/Arcade)](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire)
+
 R-Type is a horizontally scrolling shooter arcade video game developed and released by Irem in 1987 and the first game in the R-Type series. The player controls a star ship, the R-9 "Arrowhead", in its efforts to destroy the Bydo, a powerful alien race bent on wiping out all of mankind.
 
 ![image](https://user-images.githubusercontent.com/72009611/196052229-109475d4-6290-4686-a0b1-7ecf660cd6e1.png)
 
+====
 
 ## Building
 
@@ -63,3 +66,15 @@ doxygen doxyfile
 #open the documentation
 cd docs/html/index.html
 ```
+
+====
+
+## Groups
+
+| Group |
+|--------------------------------------------------|
+| Noa Leclaire <noa.leclaire@epitech.eu> |
+| Julien Lafargue   <julien.lafargue@epitech.eu>   |
+| Enzo Laurent <quentin.leroueil@epitech.eu>  |
+| Alexandre Laborde <alexandre.laborde@epitech.eu> |
+| Marvin Verain  <marvin.verain@epitech.eu>    |
