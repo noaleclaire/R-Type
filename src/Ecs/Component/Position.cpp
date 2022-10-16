@@ -13,18 +13,17 @@ namespace component
     {
     }
 
-    /* Getter */
+    /** Getter */
     float Position::getXPosition() const
     {
         return _x;
     }
-
     float Position::getYPosition() const
     {
         return _y;
     }
 
-    /* Setter */
+    /** Setter */
     void Position::setXPosition(float x)
     {
         _x = x;

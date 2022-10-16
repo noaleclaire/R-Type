@@ -26,9 +26,17 @@ namespace network
 
     template <class T>
     struct UdpSession : std::enable_shared_from_this<UdpSession<T>> {
-
+        /**
+         * @brief Construct a new Udp Session object
+         * 
+         * @param instance 
+         */
         UdpSession(UdpServerClient<T> *instance) : _instance(instance) {}
-
+        /**
+         * @brief 
+         * 
+         * @param error 
+         */
         void handleRequestReadHeader(const boost::system::error_code &error)
         {
             if (!error) {
@@ -48,6 +56,11 @@ namespace network
                     _instance->_socket.close();
             }
         };
+        /**
+         * @brief 
+         * 
+         * @param error 
+         */
         void handleRequestReadBody(const boost::system::error_code &error)
         {
             if (!error) {
@@ -57,7 +70,11 @@ namespace network
                     _instance->_socket.close();
             }
         }
-
+        /**
+         * @brief 
+         * 
+         * @param error 
+         */
         void handleSentWriteHeader(const boost::system::error_code &error, std::size_t) {
             if (!error) {
                 if (_instance->_sendMsg.front().body.size() > 0)
@@ -72,6 +89,11 @@ namespace network
                     _instance->_socket.close();
             }
         }
+        /**
+         * @brief 
+         * 
+         * @param error 
+         */
         void handleSentWriteBody(const boost::system::error_code &error, std::size_t) {
             if (!error) {
                 _instance->_sendMsg.pop_front();
@@ -87,18 +109,37 @@ namespace network
         Message<T> _recv_msg;
         UdpServerClient<T> *_instance;
     };
-
+    /**
+     * @brief 
+     * 
+     * @tparam T 
+     */
     template <class T>
     class UdpServerClient {
         typedef std::shared_ptr<UdpSession<T>> shared_session;
         public:
             enum Owner { SERVER, CLIENT };
+            /**
+             * @brief Construct a new Udp Server Client object
+             * 
+             * @param io_context 
+             * @param local_port 
+             * @param owner_type 
+             */
             UdpServerClient(boost::asio::io_context& io_context, unsigned short local_port, Owner owner_type)
                 : _socket(io_context, udp::endpoint(udp::v4(), local_port)),
                 _strand(io_context), _owner_type(owner_type)
             {
                 readHeader();
             }
+            /**
+             * @brief Construct a new Udp Server Client object
+             * 
+             * @param io_context 
+             * @param host 
+             * @param server_port 
+             * @param owner_type 
+             */
             UdpServerClient(boost::asio::io_context& io_context, std::string host, unsigned short server_port, Owner owner_type)
                 : _socket(io_context),
                 _strand(io_context), _owner_type(owner_type)
@@ -108,8 +149,16 @@ namespace network
                 _socket.open(udp::v4());
                 readHeader();
             }
+            /**
+             * @brief Destroy the Udp Server Client object
+             * 
+             */
             ~UdpServerClient() = default;
-
+            /**
+             * @brief 
+             * 
+             * @param msg 
+             */
             void send(const Message<T> &msg)
             {
                 bool writingMsg = !_sendMsg.empty();
@@ -117,6 +166,12 @@ namespace network
                 if (!writingMsg)
                     writeHeader(_server_endpoint);
             };
+            /**
+             * @brief 
+             * 
+             * @param msg 
+             * @param target_endpoint 
+             */
             void send(const Message<T> &msg, udp::endpoint target_endpoint)
             {
                 bool writingMsg = !_sendMsg.empty();
@@ -124,6 +179,12 @@ namespace network
                 if (!writingMsg)
                     writeHeader(target_endpoint);
             };
+            /**
+             * @brief 
+             * 
+             * @param msg 
+             * @param target_endpoint 
+             */
             void sendToAllClientsExceptOne(const Message<T> &msg, udp::endpoint target_endpoint)
 			{
                 if (_owner_type == Owner::SERVER) {
@@ -132,6 +193,11 @@ namespace network
                             send(msg, client_endpoint);
                 }
 			};
+            /**
+             * @brief 
+             * 
+             * @param msg 
+             */
             void sendToAllClients(const Message<T> &msg)
 			{
                 if (_owner_type == Owner::SERVER) {
@@ -140,6 +206,12 @@ namespace network
                 }
 			};
         protected:
+            /**
+             * @brief 
+             * 
+             * @param target_endpoint 
+             * @param msg 
+             */
             virtual void onMessage(udp::endpoint target_endpoint, Message<T>& msg)
             {
                 static_cast<void>(target_endpoint);
@@ -159,6 +231,11 @@ namespace network
                                 boost::asio::placeholders::error,
                                 boost::asio::placeholders::bytes_transferred)));
             }
+            /**
+             * @brief 
+             * 
+             * @param session 
+             */
             void readBody(shared_session const& session)
             {
                 _socket.async_receive_from(
@@ -177,7 +254,11 @@ namespace network
             void handleReceiveReadBody(shared_session session, const boost::system::error_code& ec, std::size_t /*bytes_transferred*/) {
                 boost::asio::post(_socket.get_executor(), boost::bind(&UdpSession<T>::handleRequestReadBody, session, ec));
             }
-
+            /**
+             * @brief 
+             * 
+             * @param target_endpoint 
+             */
             void writeHeader(udp::endpoint target_endpoint)
             {
                 auto session = std::make_shared<UdpSession<T>>(this);
@@ -186,11 +267,21 @@ namespace network
                 boost::asio::post(_socket.get_executor(),
                     _strand.wrap(boost::bind(&UdpServerClient::writeHeaderStrand, this, session)));
             }
+            /**
+             * @brief 
+             * 
+             * @param session 
+             */
             void writeHeader(shared_session const& session)
             {
                 boost::asio::post(_socket.get_executor(),
                     _strand.wrap(boost::bind(&UdpServerClient::writeHeaderStrand, this, session)));
             }
+            /**
+             * @brief 
+             * 
+             * @param session 
+             */
             void writeHeaderStrand(shared_session const& session)
             {
                 _socket.async_send_to(boost::asio::buffer(&_sendMsg.front().header, sizeof(Header<T>)),
@@ -200,11 +291,21 @@ namespace network
                                 boost::asio::placeholders::error,
                                 boost::asio::placeholders::bytes_transferred)));
             }
+            /**
+             * @brief 
+             * 
+             * @param session 
+             */
             void writeBody(shared_session const& session)
             {
                 boost::asio::post(_socket.get_executor(),
                     _strand.wrap(boost::bind(&UdpServerClient::writeBodyStrand, this, session)));
             }
+            /**
+             * @brief 
+             * 
+             * @param session 
+             */
             void writeBodyStrand(shared_session const& session)
             {
                 _socket.async_send_to(boost::asio::buffer(_sendMsg.front().body.data(), _sendMsg.front().body.size()),
@@ -214,7 +315,12 @@ namespace network
                                 boost::asio::placeholders::error,
                                 boost::asio::placeholders::bytes_transferred)));
             }
-
+            /**
+             * @brief Get the Or Add Client Endpoint object
+             * 
+             * @param client_endpoint 
+             * @return udp::endpoint 
+             */
             udp::endpoint getOrAddClientEndpoint(udp::endpoint client_endpoint)
             {
                 for (auto &it : _clients_endpoint) {

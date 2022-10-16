@@ -25,6 +25,12 @@ namespace ecs
 
     class Registry {
       public:
+      /**
+       * @brief 
+       * 
+       * @tparam Component 
+       * @return SparseArray<Component>& 
+       */
         template <class Component> SparseArray<Component> &registerComponents()
         {
             try {
@@ -34,6 +40,12 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))));
         }
+        /**
+         * @brief Get the Components object
+         * 
+         * @tparam Component 
+         * @return SparseArray<Component>& 
+         */
         template <class Component> SparseArray<Component> &getComponents()
         {
             try {
@@ -44,6 +56,12 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))));
         }
+        /**
+         * @brief Get the Components object
+         * 
+         * @tparam Component 
+         * @return SparseArray<Component> const 
+         */
         template <class Component> SparseArray<Component> const getComponents() const
         {
             try {
@@ -54,6 +72,14 @@ namespace ecs
             }
             return (const_cast<SparseArray<Component>>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
+        /**
+         * @brief 
+         * 
+         * @tparam Component 
+         * @param to 
+         * @param c 
+         * @return SparseArray<Component>::reference_type 
+         */
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)
         {
             try {
@@ -65,6 +91,14 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
         }
+        /**
+         * @brief 
+         * 
+         * @tparam Component 
+         * @param to 
+         * @param c 
+         * @return SparseArray<Component>::reference_type 
+         */
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)
         {
             try {
@@ -76,6 +110,15 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
         }
+        /**
+         * @brief 
+         * 
+         * @tparam Component 
+         * @tparam Params 
+         * @param to 
+         * @param args 
+         * @return SparseArray<Component>::reference_type 
+         */
         template <typename Component, typename... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...args)
         {
             try {
@@ -88,6 +131,12 @@ namespace ecs
             }
             return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
         }
+        /**
+         * @brief 
+         * 
+         * @tparam Component 
+         * @param from 
+         */
         template <typename Component> void removeComponent(Entity const &from)
         {
             try {
@@ -98,6 +147,12 @@ namespace ecs
                     "Cannot find the SparseArray of this component type", "template <typename Component> void remove_component(Entity const &from)");
             }
         }
+        /**
+         * @brief 
+         * 
+         * @param label 
+         * @return Entity& 
+         */
         Entity &spawnEntity(std::string label)
         {
             try {
@@ -120,6 +175,11 @@ namespace ecs
             _entities.at(_actual_scene).push_back(entity);
             return (_entities.at(_actual_scene).back());
         };
+        /**
+         * @brief 
+         * 
+         * @param entity 
+         */
         void killEntity(Entity &entity)
         {
             _dead_entities.push_back(entity.getId());
@@ -131,6 +191,12 @@ namespace ecs
             }
             entity.setLabel("");
         };
+        /**
+         * @brief Get the Entity By Label object
+         * 
+         * @param label 
+         * @return Entity& 
+         */
         Entity &getEntityByLabel(std::string label)
         {
             for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
@@ -139,6 +205,12 @@ namespace ecs
             }
             throw ExceptionEntityUnobtainable("Cannot find an entity with this label", "Entity &get_entity_by_label(std::string label)");
         };
+        /**
+         * @brief Get the Entity By Id object
+         * 
+         * @param id 
+         * @return Entity& 
+         */
         Entity &getEntityById(std::size_t id)
         {
             for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
@@ -147,14 +219,29 @@ namespace ecs
             }
             throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &get_entity_by_id(std::size_t id)");
         };
+        /**
+         * @brief Get the Entities object
+         * 
+         * @return std::vector<Entity> 
+         */
         std::vector<Entity> getEntities() const
         {
             return (_entities.at(_actual_scene));
         };
+        /**
+         * @brief Set the Actual Scene object
+         * 
+         * @param scene 
+         */
         void setActualScene(ecs::Scenes scene)
         {
             _actual_scene = scene;
         };
+        /**
+         * @brief Get the Actual Scene object
+         * 
+         * @return ecs::Scenes 
+         */
         ecs::Scenes getActualScene() const
         {
             return (_actual_scene);
