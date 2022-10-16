@@ -1,0 +1,48 @@
+name: Windows Build & Test
+ 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  windows_build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@latest
+
+      - name: Install latest python version
+        shell: powershell
+        run: |
+          python --version
+          python.exe -m pip install --upgrade pip
+
+      - name: Install conan
+        shell: powershell
+        run: pip install conan
+
+      - name: Set and Update conan profile
+        shell: powershell
+        run: |
+          conan profile new default --detect
+          conan config set tools.system.package_manager:mode=install
+        
+      - name: Check for Dependencies (Install)
+        shell: powershell
+        run: |
+          mkdir build
+          cd build
+          conan install .. --build=missing
+
+      - name: Build Test windows
+        shell: powershell
+        run: |
+          cd build
+          cmake .. -G "Visual Studio 17"
+          cmake --build . --config Release
