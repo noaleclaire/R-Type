@@ -11,14 +11,19 @@ env:
 
 jobs:
   linux_build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v3
 
+    - uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: '3.16.x'
+
     - name: Building Test Linux
       run: |
         sudo apt-get install libx11-xcb-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-dri3-dev libudev-dev libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev libxcb-util-dev
+        chmod +x setup_conan.sh
         sudo ./setup_conan.sh
         cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
         cmake ${{ github.workspace }} -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
@@ -33,6 +38,10 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: '3.7'
+
+      - uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+        cmake-version: '3.16.x'
 
       - name: Build Test windows
         run: |
