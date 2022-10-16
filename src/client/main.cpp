@@ -5,14 +5,19 @@
 ** main
 */
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <filesystem>
 #include <iostream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
-#include "Network/network.hpp"
 #include "ParserYaml.hpp"
-#include "Sfml/window.hpp"
 #include "Sfml/SpritesManager.hpp"
+
+#include "../Ecs/Component/Position.hpp"
+#include "../Network/UdpServerClient.hpp"
+#include "Network/CustomClient.hpp"
+#include <unistd.h>
 
 void assetsFolderExists()
 {
@@ -36,15 +41,27 @@ int main(int ac, char **av)
         ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
         sprites_manager.printSpritesData();
 
-        std::shared_ptr<void()> s;
-        network_player net;
-        std::thread f(&network_player::process_player, &net, s);
-        window win;
-        win.launch_window(s);
-        f.join();
+        boost::asio::io_context io_context;
+        CustomClient client(io_context, "127.0.0.1", 1313);
+        std::thread thread_client(bind(&boost::asio::io_context::run, boost::ref(io_context)));
+
+        for (int i = 0; i < 5; i++) {
+            client.PingServer();
+            std::cout << "test" << std::endl;
+            sleep(1);
+        }
+        //le faire quand on quitte le jeu
+        if (thread_client.joinable()) {
+            io_context.stop();
+            thread_client.join();
+        }
+        // }
     } catch (const Exception &e) {
         std::cerr << e.what() << std::endl;
         std::cerr << e.where() << std::endl;
+        return (84);
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
         return (84);
     }
     return (0);
