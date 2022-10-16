@@ -9,6 +9,7 @@
 #include <mutex>
 #include <deque>
 #include <string>
+#include <condition_variable>
 
 namespace network
 {
@@ -25,11 +26,13 @@ namespace network
             {
                 std::scoped_lock lock(mtx);
                 queue.push_front(msg);
+                std::unique_lock<std::mutex> ulock(mtxBlock);
+				cvBlock.notify_one();
             }
             T pop_front()
             {
                 std::scoped_lock lock(mtx);
-                auto msg = std::move(front());
+                auto msg = std::move(queue.front());
                 queue.pop_front();
                 return msg;
             }
@@ -38,17 +41,19 @@ namespace network
                 std::scoped_lock lock(mtx);
                 return (queue.front());
             }
-            T pop_back()
-            {
-                std::scoped_lock lock(mtx);
-                auto msg = std::move(back());
-                queue.pop_back();
-                return msg;
-            }
             void push_back(const T &msg)
             {
                 std::scoped_lock lock(mtx);
                 queue.push_back(msg);
+                std::unique_lock<std::mutex> ulock(mtxBlock);
+				cvBlock.notify_one();
+            }
+            T pop_back()
+            {
+                std::scoped_lock lock(mtx);
+                auto msg = std::move(queue.back());
+                queue.pop_back();
+                return msg;
             }
             const T &back()
             {
@@ -60,7 +65,7 @@ namespace network
                 std::scoped_lock lock(mtx);
                 return (queue.empty());
             }
-            std::size_t count()
+            std::size_t size()
             {
                 std::scoped_lock lock(mtx);
                 return (queue.size());
@@ -70,9 +75,18 @@ namespace network
                 std::scoped_lock lock(mtx);
                 queue.clear();
             }
+            void wait()
+			{
+				while (empty()) {
+					std::unique_lock<std::mutex> ulock(mtxBlock);
+					cvBlock.wait(ulock);
+				}
+			}
         protected:
         private:
             std::mutex mtx;
             std::deque<T> queue;
+            std::condition_variable cvBlock;
+			std::mutex mtxBlock;
     };
 }

@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/Network/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Network/)
 
-set(SRC ${SRCROOT}/Network.cpp ${SRCROOT}/Network.hpp)
+set(SRC)
 
 source_group("" FILES ${SRC})
 
