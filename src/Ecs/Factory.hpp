@@ -21,6 +21,14 @@ namespace ecs
         typedef std::function<Entity (Registry &)> fptr;
         typedef std::map<EntityTypes, fptr> MapCall;
         template <class... Params>
+        /**
+         * @brief Create a Entity object
+         * 
+         * @param registry 
+         * @param entityType 
+         * @param args 
+         * @return Entity 
+         */
         static Entity createEntity(Registry &registry, EntityTypes entityType, Params &&...args)
         {
             MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster},
@@ -46,6 +54,12 @@ namespace ecs
         }
 
       private:
+      /**
+       * @brief Create a Spaceship object
+       * 
+       * @param registry 
+       * @return Entity 
+       */
         static Entity createSpaceship(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
@@ -65,6 +79,12 @@ namespace ecs
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP));
             return (entity);
         }
+        /**
+         * @brief Create a Monster object
+         * 
+         * @param registry 
+         * @return Entity 
+         */
         static Entity createMonster(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
@@ -82,6 +102,12 @@ namespace ecs
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER));
             return (entity);
         }
+        /**
+         * @brief Create a Shot object
+         * 
+         * @param registry 
+         * @return Entity 
+         */
         static Entity createShot(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
@@ -100,6 +126,12 @@ namespace ecs
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT));
             return (entity);
         }
+        /**
+         * @brief Create a Button object
+         * 
+         * @param registry 
+         * @return Entity 
+         */
         static Entity createButton(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
@@ -116,6 +148,12 @@ namespace ecs
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BUTTON));
             return (entity);
         }
+        /**
+         * @brief Create a Wall object
+         * 
+         * @param registry 
+         * @return Entity 
+         */
         static Entity createWall(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
@@ -132,6 +170,12 @@ namespace ecs
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::WALL));
             return (entity);
         }
+        /**
+         * @brief Create a Background object
+         * 
+         * @param registry 
+         * @return Entity 
+         */
         static Entity createBackground(Registry &registry)
         {
             Entity entity = registry.spawnEntity();

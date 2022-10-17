@@ -116,14 +116,37 @@ class SpritesManager : public AYamlConfig {
      * @return std::vector<std::string> const
      */
     std::vector<std::string> const getTexturePath() const;
+    /**
+     * @brief Get the Animations rect object
+     * 
+     * @param entity_type 
+     * @param entity_id 
+     * @param anim_id 
+     * @return std::vector<float> 
+     */
     std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id);
+    /**
+     * @brief Get the Spritesheet object
+     * 
+     * @param entity_type 
+     * @param entity_id 
+     * @return std::string 
+     */
     std::string get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id);
+    /**
+     * @brief 
+     * 
+     */
     void printSpritesData();
 
   protected:
   private:
     typedef void (SpritesManager::*MAP_FPTR)(std::string &, std::string &);
     MapMemberFunctionPointer<MAP_FPTR> _map_fptr;
+    /**
+     * @brief 
+     * 
+     */
     void initMapFunctionPointer();
 
     struct SpriteData {

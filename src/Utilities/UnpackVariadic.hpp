@@ -14,17 +14,37 @@
 
 class UnpackVariadic {
     public:
+    /**
+     * @brief 
+     * 
+     * @tparam T 
+     * @param first 
+     */
         template <class T>
         static void unpackVariadicArgs(T &&first)
         {
             unpack.push_back(first);
         }
+        /**
+         * @brief 
+         * 
+         * @tparam T 
+         * @tparam Params 
+         * @param first 
+         * @param args 
+         */
         template <class T, class... Params>
         static void unpackVariadicArgs(T &&first, Params &&...args)
         {
             unpack.push_back(first);
             unpackVariadicArgs(args...);
         }
+        /**
+         * @brief Get the Arg Nb object
+         * 
+         * @param arg 
+         * @return float 
+         */
         static float getArgNb(std::any &arg)
         {
             try {
@@ -41,6 +61,12 @@ class UnpackVariadic {
             } catch (const std::bad_any_cast &e) {}
             throw std::bad_any_cast();
         }
+        /**
+         * @brief Get the Arg Char object
+         * 
+         * @param arg 
+         * @return char* 
+         */
         static char *getArgChar(std::any &arg)
         {
             try {

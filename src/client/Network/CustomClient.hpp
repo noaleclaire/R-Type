@@ -41,7 +41,15 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @return CustomClient&
      */
     CustomClient &operator=(const CustomClient &other) = delete;
+    /**
+     * @brief 
+     * 
+     */
     void pingServer();
+    /**
+     * @brief 
+     * 
+     */
     void initGame();
     ecs::Registry *registry;
     graphics::Graphical *graphical;
@@ -58,6 +66,11 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
+  /**
+   * @brief 
+   * 
+   * @param msg 
+   */
     void receivedGameComponent(network::Message<network::CustomMessage> &msg);
     ecs::ComponentTypes _actualType;
 };

@@ -118,11 +118,19 @@ namespace network
                 std::scoped_lock lock(mtx);
                 return (queue.size());
             }
+            /**
+             * @brief 
+             * 
+             */
             void clear()
             {
                 std::scoped_lock lock(mtx);
                 queue.clear();
             }
+            /**
+             * @brief 
+             * 
+             */
             void wait()
 			{
 				while (empty()) {
