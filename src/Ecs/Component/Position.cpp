@@ -13,12 +13,11 @@ namespace ecs
     {
     }
 
-    /* Getter */
+    /** Getter */
     float Position::getXPosition() const
     {
         return _x;
     }
-
     float Position::getYPosition() const
     {
         return _y;
@@ -52,6 +51,6 @@ namespace ecs
 
     void Position::setYVelocity(float y)
     {
-        _yVelocity= y;
+        _yVelocity = y;
     }
 } // namespace ecs
