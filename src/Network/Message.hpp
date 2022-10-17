@@ -17,7 +17,7 @@ using boost::asio::ip::udp;
 
 namespace network
 {
-    enum CustomMessage : uint32_t { PingServer, SwitchToGame, SendGameComponent, ComponentType, AllGameComponentSent };
+    enum CustomMessage : uint32_t { PingServer, SwitchToGame, SendGameComponent, ComponentType, AllGameComponentSent, RemoveClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;

@@ -20,7 +20,7 @@ namespace ecs
          * @param registry
          * @param drawable
          */
-        static void Drawable(Registry &registry, SparseArray<component::Drawable> const &drawable);
+        static void Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical);
         /**
          * @brief
          *

@@ -57,31 +57,31 @@ class SpritesManager : public AYamlConfig {
      * @brief Get the Sprite Type Attribute object
      *
      * @param sprite_type_attribute
-     * @return graphics::SpriteTypeAttributes
+     * @return SpriteTypeAttributes
      */
 
-    graphics::SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
+    SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
     /**
      * @brief Get the Sprite Type Attribute object
      *
      * @param sprite_type_attribute
      * @return std::string const
      */
-    std::string const getSpriteTypeAttribute(graphics::SpriteTypeAttributes sprite_type_attribute) const;
+    std::string const getSpriteTypeAttribute(SpriteTypeAttributes sprite_type_attribute) const;
     /**
      * @brief Get the Sprite Anim Attribute object
      *
      * @param sprite_anim_attribute
-     * @return graphics::SpriteAnimAttributes
+     * @return SpriteAnimAttributes
      */
-    graphics::SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
+    SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
     /**
      * @brief Get the Sprite Anim Attribute object
      *
      * @param sprite_anim_attribute
      * @return std::string const
      */
-    std::string const getSpriteAnimAttribute(graphics::SpriteAnimAttributes sprite_anim_attribute) const;
+    std::string const getSpriteAnimAttribute(SpriteAnimAttributes sprite_anim_attribute) const;
     /**
      * @brief
      *
