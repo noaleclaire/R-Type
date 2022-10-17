@@ -5,19 +5,12 @@
 ** main
 */
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 #include "Exceptions/Exception.hpp"
 #include "Exceptions/ExceptionDirectoryNotFound.hpp"
-#include "ParserYaml.hpp"
-#include "Sfml/SpritesManager.hpp"
-
-#include "../Ecs/Component/Position.hpp"
-#include "../Network/UdpServerClient.hpp"
-#include "Network/CustomClient.hpp"
-#include <unistd.h>
+#include "Core.hpp"
 
 void assetsFolderExists()
 {
@@ -25,43 +18,29 @@ void assetsFolderExists()
         throw ExceptionDirectoryNotFound("directory /assets not found", "bool assetsFolderExists()");
     if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sprites"))
         throw ExceptionDirectoryNotFound("directory /sprites not found in /assets", "bool assetsFolderExists()");
-    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sounds"))
-        throw ExceptionDirectoryNotFound("directory /sounds not found in /assets", "bool assetsFolderExists()");
-    if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/font"))
-        throw ExceptionDirectoryNotFound("directory /font not found in /assets", "bool assetsFolderExists()");
+    // if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/sounds"))
+    //     throw ExceptionDirectoryNotFound("directory /sounds not found in /assets", "bool assetsFolderExists()");
+    // if (!std::filesystem::is_directory(std::filesystem::current_path() / "assets/font"))
+    //     throw ExceptionDirectoryNotFound("directory /font not found in /assets", "bool assetsFolderExists()");
 }
 
 int main(int ac, char **av)
 {
-    (void)av;
-    (void)ac;
+    static_cast<void>(av);
+    static_cast<void>(ac);
+    std::ofstream errorLogsFile("ErrorLogs.txt");
     try {
-        // assetsFolderExists();
-        graphics::SpritesManager sprites_manager;
-        ParserYaml::parseYaml(sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-        sprites_manager.printSpritesData();
-
+        assetsFolderExists();
         boost::asio::io_context io_context;
-        CustomClient client(io_context, "127.0.0.1", 1313);
-        std::thread thread_client(bind(&boost::asio::io_context::run, boost::ref(io_context)));
-
-        for (int i = 0; i < 5; i++) {
-            client.PingServer();
-            std::cout << "test" << std::endl;
-            sleep(1);
-        }
-        //le faire quand on quitte le jeu
-        if (thread_client.joinable()) {
-            io_context.stop();
-            thread_client.join();
-        }
-        // }
+        Core core(io_context, "127.0.0.1", 1313);
     } catch (const Exception &e) {
-        std::cerr << e.what() << std::endl;
-        std::cerr << e.where() << std::endl;
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile << e.where() << std::endl;
+        errorLogsFile.close();
         return (84);
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        errorLogsFile << e.what() << std::endl;
+        errorLogsFile.close();
         return (84);
     }
     return (0);

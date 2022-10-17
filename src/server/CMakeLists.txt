@@ -11,6 +11,7 @@ add_executable(${TARGET_NAME} ${SRC})
 
 target_link_libraries(${TARGET_NAME} Network)
 target_link_libraries(${TARGET_NAME} Ecs)
+target_link_libraries(${TARGET_NAME} Utilities)
 target_link_libraries(${TARGET_NAME} ${CONAN_LIBS})
 
 add_custom_command(

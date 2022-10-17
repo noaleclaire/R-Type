@@ -30,3 +30,34 @@
 #   rect_height: 27
 #   nb_anim: 15
 #   next_anim: 0
+spritesheet: background.jpg
+ background: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: button.png
+ button: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110
+
+spritesheet: button.png
+ spaceship: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110
+
+spritesheet: button.png
+ monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110

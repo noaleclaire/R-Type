@@ -8,12 +8,15 @@
 #pragma once
 
 #include <any>
+#include <functional>
+#include <iostream>
 #include <optional>
 #include <typeindex>
 #include <vector>
 #include "Component/SparseArray.hpp"
+#include "Component/component.hpp"
 #include "Entities/Entity.hpp"
-#include "Exceptions/ExceptionEntityLabelExists.hpp"
+#include "Enum.hpp"
 #include "Exceptions/ExceptionEntityUnobtainable.hpp"
 #include "Exceptions/ExceptionIndexComponent.hpp"
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
@@ -21,16 +24,29 @@
 
 namespace ecs
 {
-    enum Scenes { MENU, PAUSE, SETTINGS, GAME, WIN };
-
     class Registry {
       public:
-      /**
-       * @brief 
-       * 
-       * @tparam Component 
-       * @return SparseArray<Component>& 
-       */
+        Registry()
+        {
+            registerComponents<ecs::Clickable>();
+            registerComponents<ecs::Collider>();
+            registerComponents<ecs::Controllable>();
+            registerComponents<ecs::Drawable>();
+            registerComponents<ecs::Type>();
+            registerComponents<ecs::Killable>();
+            registerComponents<ecs::Layer>();
+            registerComponents<ecs::Position>();
+            registerComponents<ecs::Shootable>();
+            registerComponents<ecs::Shooter>();
+            registerComponents<ecs::Rectangle>();
+        };
+        ~Registry() = default;
+        /**
+         * @brief
+         *
+         * @tparam Component
+         * @return SparseArray<Component>&
+         */
         template <class Component> SparseArray<Component> &registerComponents()
         {
             try {
@@ -38,13 +54,20 @@ namespace ecs
             } catch (const std::out_of_range &e) {
                 _components_arrays.emplace(std::type_index(typeid(Component)), SparseArray<Component>());
             }
-            return (_components_arrays.at(std::type_index(typeid(Component))));
+            _components_eraser.push_back([&](Entity &entity) {
+                try {
+                    std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(entity);
+                } catch (const ExceptionIndexComponent &e) {
+                    throw ExceptionIndexComponent("Cannot erase this component, bad index", "_components_eraser -> [&](Entity &entity)");
+                }
+            });
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
         /**
          * @brief Get the Components object
-         * 
-         * @tparam Component 
-         * @return SparseArray<Component>& 
+         *
+         * @tparam Component
+         * @return SparseArray<Component>&
          */
         template <class Component> SparseArray<Component> &getComponents()
         {
@@ -52,15 +75,15 @@ namespace ecs
                 _components_arrays.at(std::type_index(typeid(Component)));
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable(
-                    "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> &get_components()");
+                    "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> &getComponents()");
             }
-            return (_components_arrays.at(std::type_index(typeid(Component))));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
         /**
          * @brief Get the Components object
-         * 
-         * @tparam Component 
-         * @return SparseArray<Component> const 
+         *
+         * @tparam Component
+         * @return SparseArray<Component> const
          */
         template <class Component> SparseArray<Component> const getComponents() const
         {
@@ -68,92 +91,168 @@ namespace ecs
                 _components_arrays.at(std::type_index(typeid(Component)));
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable(
-                    "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> const get_components() const");
+                    "Cannot find the SparseArray of this component type", "template <class Component> SparseArray<Component> const getComponents() const");
             }
-            return (const_cast<SparseArray<Component>>(_components_arrays.at(std::type_index(typeid(Component)))));
+            return (const_cast<SparseArray<Component>>(std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component))))));
         }
         /**
-         * @brief 
-         * 
-         * @tparam Component 
-         * @param to 
-         * @param c 
-         * @return SparseArray<Component>::reference_type 
+         * @brief
+         *
+         * @tparam Component
+         * @param to
+         * @param c
+         * @return SparseArray<Component>::reference_type
          */
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                _components_arrays.at(std::type_index(typeid(Component))).insert_at(to, std::forward<Component>(c));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, std::forward<Component>(c));
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
-                    "template <typename Component> typename SparseArray<Component>::reference_type add_component(Entity const &to, Component &&c)");
+                    "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)");
             }
-            return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         /**
-         * @brief 
-         * 
-         * @tparam Component 
-         * @param to 
-         * @param c 
-         * @return SparseArray<Component>::reference_type 
+         * @brief
+         *
+         * @tparam Component
+         * @param to
+         * @param c
+         * @return SparseArray<Component>::reference_type
          */
         template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                _components_arrays.at(std::type_index(typeid(Component))).insert_at(to, c);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, c);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
-                    "template <typename Component> typename SparseArray<Component>::reference_type add_component(Entity const &to, Component &c)");
+                    "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)");
             }
-            return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         /**
-         * @brief 
-         * 
-         * @tparam Component 
-         * @tparam Params 
-         * @param to 
-         * @param args 
-         * @return SparseArray<Component>::reference_type 
+         * @brief
+         *
+         * @tparam Component
+         * @param to
+         * @param c
+         * @return SparseArray<Component>::reference_type
+         */
+        template <typename Component> typename SparseArray<Component>::reference_type addComponent(std::size_t const &to, Component &&c)
+        {
+            try {
+                _components_arrays.at(std::type_index(typeid(Component)));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, std::forward<Component>(c));
+            } catch (const std::out_of_range &e) {
+                throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
+                    "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &&c)");
+            }
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+        }
+        /**
+         * @brief
+         *
+         * @tparam Component
+         * @param to
+         * @param c
+         * @return SparseArray<Component>::reference_type
+         */
+        template <typename Component> typename SparseArray<Component>::reference_type addComponent(std::size_t const &to, Component &c)
+        {
+            try {
+                _components_arrays.at(std::type_index(typeid(Component)));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(to, c);
+            } catch (const std::out_of_range &e) {
+                throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
+                    "template <typename Component> typename SparseArray<Component>::reference_type addComponent(Entity const &to, Component &c)");
+            }
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+        }
+        /**
+         * @brief
+         *
+         * @tparam Component
+         * @tparam Params
+         * @param to
+         * @param args
+         * @return SparseArray<Component>::reference_type
          */
         template <typename Component, typename... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, Params &&...args)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                _components_arrays.at(std::type_index(typeid(Component))).emplace_at(to, args...);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).emplace_at(to, args...);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
-                    "template <typename Component, typename ... Params> typename SparseArray<Component>::reference_type emplace_component(Entity const &to, "
+                    "template <typename Component, typename ... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, "
                     "Params &&... args)");
             }
-            return (_components_arrays.at(std::type_index(typeid(Component))).at(to));
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
         }
         /**
-         * @brief 
-         * 
-         * @tparam Component 
-         * @param from 
+         * @brief
+         *
+         * @tparam Component
+         * @tparam Params
+         * @param to
+         * @param args
+         * @return SparseArray<Component>::reference_type
+         */
+        template <typename Component, typename... Params>
+        typename SparseArray<Component>::reference_type emplaceComponent(std::size_t const &to, Params &&...args)
+        {
+            try {
+                _components_arrays.at(std::type_index(typeid(Component)));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).emplace_at(to, args...);
+            } catch (const std::out_of_range &e) {
+                throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
+                    "template <typename Component, typename ... Params> typename SparseArray<Component>::reference_type emplaceComponent(Entity const &to, "
+                    "Params &&... args)");
+            }
+            return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(to));
+        }
+        /**
+         * @brief
+         *
+         * @tparam Component
+         * @param from
          */
         template <typename Component> void removeComponent(Entity const &from)
         {
             try {
                 _components_arrays.at(std::type_index(typeid(Component)));
-                _components_arrays.at(std::type_index(typeid(Component))).erase(from);
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(from);
             } catch (const std::out_of_range &e) {
                 throw ExceptionSparseArrayUnobtainable(
-                    "Cannot find the SparseArray of this component type", "template <typename Component> void remove_component(Entity const &from)");
+                    "Cannot find the SparseArray of this component type", "template <typename Component> void removeComponent(Entity const &from)");
             }
         }
         /**
-         * @brief 
-         * 
-         * @param label 
-         * @return Entity& 
+         * @brief
+         *
+         * @tparam Component
+         * @param from
          */
-        Entity &spawnEntity(std::string label)
+        template <typename Component> void removeComponent(std::size_t const &from)
+        {
+            try {
+                _components_arrays.at(std::type_index(typeid(Component)));
+                std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(from);
+            } catch (const std::out_of_range &e) {
+                throw ExceptionSparseArrayUnobtainable(
+                    "Cannot find the SparseArray of this component type", "template <typename Component> void removeComponent(Entity const &from)");
+            }
+        }
+        /**
+         * @brief
+         *
+         * @param label
+         * @return Entity&
+         */
+        Entity &spawnEntity()
         {
             try {
                 _entities.at(_actual_scene);
@@ -166,50 +265,37 @@ namespace ecs
                 _dead_entities.pop_back();
                 break;
             }
-            for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
-                if (_entities.at(_actual_scene).at(i).getLabel().compare(label) == 0)
-                    throw ExceptionEntityLabelExists("An entity with this label already exists", "Entity &spawn_entity(std::string label)");
-            }
             Entity entity(id);
-            entity.setLabel(label);
             _entities.at(_actual_scene).push_back(entity);
             return (_entities.at(_actual_scene).back());
         };
         /**
-         * @brief 
-         * 
-         * @param entity 
+         * @brief
+         *
+         * @param entity
          */
         void killEntity(Entity &entity)
         {
             _dead_entities.push_back(entity.getId());
-            for (auto &it : _components_arrays)
-                it.second.erase(entity);
+            for (auto &it : _components_eraser) {
+                try {
+                    it(entity);
+                } catch (const ExceptionIndexComponent &e) {
+                    continue;
+                }
+            }
             for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
-                if (_entities.at(_actual_scene).at(i).getLabel().compare(entity.getLabel()) == 0)
+                if (_entities.at(_actual_scene).at(i).getId() == entity.getId()) {
                     _entities.at(_actual_scene).erase(std::next(_entities.at(_actual_scene).begin(), i));
+                    break;
+                }
             }
-            entity.setLabel("");
-        };
-        /**
-         * @brief Get the Entity By Label object
-         * 
-         * @param label 
-         * @return Entity& 
-         */
-        Entity &getEntityByLabel(std::string label)
-        {
-            for (std::size_t i = 0; i < _entities.at(_actual_scene).size(); i++) {
-                if (_entities.at(_actual_scene).at(i).getLabel().compare(label) == 0)
-                    return (_entities.at(_actual_scene).at(i));
-            }
-            throw ExceptionEntityUnobtainable("Cannot find an entity with this label", "Entity &get_entity_by_label(std::string label)");
         };
         /**
          * @brief Get the Entity By Id object
-         * 
-         * @param id 
-         * @return Entity& 
+         *
+         * @param id
+         * @return Entity&
          */
         Entity &getEntityById(std::size_t id)
         {
@@ -217,21 +303,52 @@ namespace ecs
                 if (_entities.at(_actual_scene).at(i).getId() == id)
                     return (_entities.at(_actual_scene).at(i));
             }
-            throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &get_entity_by_id(std::size_t id)");
+            throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &getEntityById(std::size_t id)");
         };
         /**
          * @brief Get the Entities object
-         * 
-         * @return std::vector<Entity> 
+         *
+         * @return std::vector<Entity>
          */
         std::vector<Entity> getEntities() const
         {
+            try {
+                if (_entities.at(_actual_scene).size() == 0) {
+                    std::cout << "test46cdseve5" << std::endl;
+                    throw Exception("_entities vector is empty", "std::vector<Entity> getEntities() const");
+                }
+            } catch (const std::out_of_range &e) {
+                std::cout << _actual_scene << std::endl;
+                std::cout << "test4fzesqdqref65" << std::endl;
+                throw Exception("_entities vector doesn't exist", "std::vector<Entity> getEntities() const");
+            }
             return (_entities.at(_actual_scene));
         };
         /**
+         * @brief
+         *
+         * @param id
+         * @return Entity&
+         */
+        Entity &addEntity(std::size_t id)
+        {
+            try {
+                _entities.at(_actual_scene);
+            } catch (const std::out_of_range &e) {
+                _entities.emplace(_actual_scene, std::vector<Entity>());
+            }
+            for (auto &it : _entities.at(_actual_scene)) {
+                if (id == it.getId())
+                    return (it);
+            }
+            Entity entity(id);
+            _entities.at(_actual_scene).push_back(entity);
+            return (_entities.at(_actual_scene).back());
+        }
+        /**
          * @brief Set the Actual Scene object
-         * 
-         * @param scene 
+         *
+         * @param scene
          */
         void setActualScene(ecs::Scenes scene)
         {
@@ -239,17 +356,19 @@ namespace ecs
         };
         /**
          * @brief Get the Actual Scene object
-         * 
-         * @return ecs::Scenes 
+         *
+         * @return ecs::Scenes
          */
         ecs::Scenes getActualScene() const
         {
             return (_actual_scene);
         };
 
-      private:
-        std::unordered_map<std::type_index, SparseArray<std::any>> _components_arrays;
         std::unordered_map<ecs::Scenes, std::vector<Entity>> _entities;
+
+      private:
+        std::unordered_map<std::type_index, std::any> _components_arrays;
+        std::vector<std::function<void(Entity &)>> _components_eraser;
         std::vector<std::size_t> _dead_entities;
         ecs::Scenes _actual_scene = ecs::Scenes::MENU;
     };

@@ -5,7 +5,6 @@ set(SRC
     ${SRC}
     ${INCROOT}/Exception.hpp
     ${INCROOT}/ExceptionComponentNull.hpp
-    ${INCROOT}/ExceptionEntityLabelExists.hpp
     ${INCROOT}/ExceptionEntityUnobtainable.hpp
     ${INCROOT}/ExceptionIndexComponent.hpp
     ${INCROOT}/ExceptionSparseArrayUnobtainable.hpp

@@ -11,20 +11,20 @@
 
 class ParserYaml {
   public:
-  /**
-   * @brief 
-   * 
-   * @param manager 
-   * @param filename 
-   */
+    /**
+     * @brief
+     *
+     * @param manager
+     * @param filename
+     */
     static void parseYaml(IYamlConfig &manager, const std::string filename);
 
   private:
-  /**
-   * @brief Get the Nb Tab Start Of Line object
-   * 
-   * @param line 
-   * @return int 
-   */
+    /**
+     * @brief Get the Nb Tab Start Of Line object
+     *
+     * @param line
+     * @return int
+     */
     static int getNbTabStartOfLine(std::string &line);
 };

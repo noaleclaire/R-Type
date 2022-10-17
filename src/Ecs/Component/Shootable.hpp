@@ -9,52 +9,52 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Shootable : public AComponent {
       public:
-      /**
-       * @brief Construct a new Shootable object
-       * 
-       * @param angle 
-       */
-        Shootable(int angle);
         /**
          * @brief Construct a new Shootable object
-         * 
-         * @param other 
+         *
+         * @param angle
+         */
+        Shootable(int angle = 0);
+        /**
+         * @brief Construct a new Shootable object
+         *
+         * @param other
          */
         Shootable(const Shootable &other) = default;
         /**
          * @brief Destroy the Shootable object
-         * 
+         *
          */
         ~Shootable() = default;
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Shootable& 
+         * @brief
+         *
+         * @param other
+         * @return Shootable&
          */
         Shootable &operator=(const Shootable &other) = default;
 
         /** Getter */
         /**
          * @brief Get the Angle object
-         * 
-         * @return int 
+         *
+         * @return int
          */
         int getAngle() const;
 
         /** Setter */
         /**
          * @brief Set the Angle object
-         * 
-         * @param angle 
+         *
+         * @param angle
          */
         void setAngle(int angle);
 
       private:
         int _angle;
     };
-} // namespace component
+} // namespace ecs

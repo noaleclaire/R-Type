@@ -7,19 +7,19 @@
 
 #pragma once
 
-namespace component
+namespace ecs
 {
     class AComponent {
       public:
-      /**
-       * @brief Construct a new AComponent object
-       * 
-       */
+        /**
+         * @brief Construct a new AComponent object
+         *
+         */
         AComponent() = default;
         /**
          * @brief Destroy the AComponent object
-         * 
+         *
          */
         ~AComponent() = default;
     };
-} // namespace component
+} // namespace ecs

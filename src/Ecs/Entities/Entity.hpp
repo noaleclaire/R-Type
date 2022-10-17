@@ -13,51 +13,38 @@ namespace ecs
 {
     class Entity {
       public:
-      /**
-       * @brief Construct a new Entity object
-       * 
-       * @param id 
-       */
+        /**
+         * @brief Construct a new Entity object
+         *
+         * @param id
+         */
         explicit Entity(std::optional<std::size_t> id = std::nullopt);
         /**
          * @brief Destroy the Entity object
-         * 
+         *
          */
         ~Entity();
         /**
-         * @brief 
-         * 
-         * @return std::size_t 
+         * @brief
+         *
+         * @return std::size_t
          */
         operator std::size_t();
         /**
-         * @brief 
-         * 
-         * @return std::size_t 
+         * @brief
+         *
+         * @return std::size_t
          */
         operator std::size_t() const;
-/**
- * @brief Get the Id object
- * 
- * @return std::size_t 
- */
+        /**
+         * @brief Get the Id object
+         *
+         * @return std::size_t
+         */
         std::size_t getId() const;
-        /**
-         * @brief Set the Label object
-         * 
-         * @param label 
-         */
-        void setLabel(std::string label);
-        /**
-         * @brief Get the Label object
-         * 
-         * @return std::string 
-         */
-        std::string getLabel() const;
         static std::size_t _idCount;
 
       private:
         std::size_t _id;
-        std::string _label;
     };
 } // namespace ecs

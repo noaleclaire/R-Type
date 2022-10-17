@@ -2,19 +2,9 @@ set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Component)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/Component)
 
 set(SRC
-    ${SRC}
-    ${INCROOT}/Collider.hpp
-    ${INCROOT}/Controllable.hpp
-    ${INCROOT}/Drawable.hpp
-    ${INCROOT}/Killable.hpp
-    ${INCROOT}/Position.hpp
-    ${SRCROOT}/Position.cpp
-    ${INCROOT}/Shootable.hpp
-    ${SRCROOT}/Shootable.cpp
-    ${INCROOT}/Shooter.hpp
-    ${INCROOT}/SparseArray.hpp
-    ${INCROOT}/Velocity.hpp
-    ${SRCROOT}/Velocity.cpp
+    ${SRC} ${SRCROOT}/Position.cpp ${SRCROOT}/Clickable.cpp
+    ${SRCROOT}/Shootable.cpp ${SRCROOT}/Rectangle.cpp ${SRCROOT}/Layer.cpp
+    ${SRCROOT}/Type.cpp
     PARENT_SCOPE)
 
 set(INCDIRS

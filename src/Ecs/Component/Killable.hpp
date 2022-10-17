@@ -9,32 +9,32 @@
 
 #include "AComponent.hpp"
 
-namespace component
+namespace ecs
 {
     class Killable : public AComponent {
       public:
-      /**
-       * @brief Construct a new Killable object
-       * 
-       */
+        /**
+         * @brief Construct a new Killable object
+         *
+         */
         Killable() = default;
         /**
          * @brief Construct a new Killable object
-         * 
-         * @param other 
+         *
+         * @param other
          */
         Killable(const Killable &other) = default;
         /**
          * @brief Destroy the Killable object
-         * 
+         *
          */
         ~Killable() = default;
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Killable& 
+         * @brief
+         *
+         * @param other
+         * @return Killable&
          */
         Killable &operator=(const Killable &other) = default;
     };
-} // namespace component
+} // namespace ecs

@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/client/Sfml)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/client/Sfml)
 
-set(SRC ${SRCROOT}/SpritesManager.cpp)
+set(SRC ${SRCROOT}/SpritesManager.cpp ${SRCROOT}/Graphical.cpp)
 
 set(INCDIRS ${INCROOT})
 
