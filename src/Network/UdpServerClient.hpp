@@ -220,6 +220,10 @@ namespace network
         }
 
       private:
+      /**
+       * @brief 
+       * 
+       */
         void readHeader()
         {
             auto session = std::make_shared<UdpSession<T>>(this);
