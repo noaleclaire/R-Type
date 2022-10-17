@@ -45,3 +45,19 @@ spritesheet: button.png
    rect_y: 0
    rect_width: 300
    rect_height: 110
+
+spritesheet: button.png
+ spaceship: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110
+
+spritesheet: button.png
+ monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110

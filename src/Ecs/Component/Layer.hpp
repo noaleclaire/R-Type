@@ -14,6 +14,7 @@ namespace ecs
 {
     class Layer : public AComponent {
       public:
+        Layer() = default;
         Layer(std::size_t layer);
         Layer(const Layer &other) = default;
         ~Layer() = default;

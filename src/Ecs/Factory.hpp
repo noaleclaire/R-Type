@@ -12,6 +12,7 @@
 #include "Registry.hpp"
 #include "Exceptions/Exception.hpp"
 #include "../Utilities/UnpackVariadic.hpp"
+#include "Enum.hpp"
 
 namespace ecs
 {
@@ -61,6 +62,7 @@ namespace ecs
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP));
             return (entity);
         }
         static Entity createMonster(Registry &registry)
@@ -77,6 +79,7 @@ namespace ecs
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER));
             return (entity);
         }
         static Entity createShot(Registry &registry)
@@ -94,6 +97,7 @@ namespace ecs
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
 
             registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT));
             return (entity);
         }
         static Entity createButton(Registry &registry)
@@ -109,6 +113,7 @@ namespace ecs
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BUTTON));
             return (entity);
         }
         static Entity createWall(Registry &registry)
@@ -124,6 +129,7 @@ namespace ecs
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::WALL));
             return (entity);
         }
         static Entity createBackground(Registry &registry)
@@ -138,6 +144,7 @@ namespace ecs
             ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
             UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BACKGROUND));
             return (entity);
         }
     };

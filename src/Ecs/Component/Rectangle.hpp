@@ -13,6 +13,7 @@ namespace ecs
 {
     class Rectangle : public AComponent {
       public:
+        Rectangle() = default;
         Rectangle(float x, float y, float width, float height);
         Rectangle(const Rectangle &other) = default;
         ~Rectangle() = default;

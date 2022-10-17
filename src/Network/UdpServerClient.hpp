@@ -93,13 +93,13 @@ namespace network
         typedef std::shared_ptr<UdpSession<T>> shared_session;
         public:
             enum Owner { SERVER, CLIENT };
-            UdpServerClient(boost::asio::io_context& io_context, unsigned short local_port, Owner owner_type)
+            UdpServerClient(boost::asio::io_context &io_context, unsigned short local_port, Owner owner_type = Owner::SERVER)
                 : _socket(io_context, udp::endpoint(udp::v4(), local_port)),
                 _strand(io_context), _owner_type(owner_type)
             {
                 readHeader();
             }
-            UdpServerClient(boost::asio::io_context& io_context, std::string host, unsigned short server_port, Owner owner_type)
+            UdpServerClient(boost::asio::io_context &io_context, std::string host, unsigned short server_port, Owner owner_type = Owner::CLIENT)
                 : _socket(io_context),
                 _strand(io_context), _owner_type(owner_type)
             {
@@ -222,7 +222,7 @@ namespace network
                         return it;
                 }
                 _clients_endpoint.push_back(client_endpoint);
-                return _clients_endpoint.back();
+                return (_clients_endpoint.back());
             }
 
             udp::socket _socket;

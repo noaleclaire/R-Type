@@ -13,6 +13,7 @@ namespace ecs
 {
     class Position : public AComponent {
       public:
+        Position() = default;
         Position(float x, float y, float xVelocity = 1, float yVelocity = 1);
         Position(const Position &other) = default;
         ~Position() = default;

@@ -13,7 +13,7 @@ namespace ecs
 {
     class Clickable : public AComponent {
       public:
-        enum Function { EXIT };
+        enum Function { EXIT, TOGAME };
         Clickable(Function function = Function::EXIT);
         Clickable(const Clickable &other) = default;
         ~Clickable() = default;

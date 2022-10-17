@@ -7,7 +7,6 @@
 
 #pragma once
 #include "../../client/Sfml/Graphical.hpp"
-#include "../Component/Drawable.hpp"
 #include "../Component/SparseArray.hpp"
 #include "../Registry.hpp"
 

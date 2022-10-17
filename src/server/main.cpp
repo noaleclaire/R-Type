@@ -11,6 +11,8 @@
 
 int main(int ac, char **av)
 {
+    static_cast<void>(av);
+    static_cast<void>(ac);
     try {
         boost::asio::io_context io_context;
         CustomServer server(io_context, 1313);

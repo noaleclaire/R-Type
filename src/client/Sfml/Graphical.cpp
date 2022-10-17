@@ -14,6 +14,7 @@ namespace graphics
 {
     Graphical::Graphical()
     {
+        _actual_sprites_entities = &_unique_sprites_entities;
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
@@ -31,7 +32,7 @@ namespace graphics
 
     std::unordered_map<std::size_t, sf::Sprite> Graphical::getAllSprites() const
     {
-        return (_entities_sprites);
+        return (*_actual_sprites_entities);
     }
 
     sf::VideoMode Graphical::getVideoMode() const
@@ -57,7 +58,7 @@ namespace graphics
 
     void Graphical::setSpritePosition(ecs::Entity entity, float posX, float posY)
     {
-        _entities_sprites.at(entity).setPosition(posX, posY);
+        _actual_sprites_entities->at(entity).setPosition(posX, posY);
     }
 
     /* Other */
@@ -78,15 +79,15 @@ namespace graphics
         float xScale = 1;
         float yScale = 1;
 
-        _entities_sprites.insert(std::make_pair(entity, sf::Sprite(_textures.at(spritesheet))));
+        _actual_sprites_entities->insert_or_assign(entity, sf::Sprite(_textures.at(spritesheet)));
         if (_textures.at(spritesheet).getSize().x == 1200 && _textures.at(spritesheet).getSize().y == 1200) {
             xScale = rect.at(SpriteAnimAttributes::rect_width) / 1200;
             yScale = rect.at(SpriteAnimAttributes::rect_height) / 1200;
         } else {
-            _entities_sprites.at(entity).setTextureRect(sf::IntRect(rect.at(SpriteAnimAttributes::rect_x), rect.at(SpriteAnimAttributes::rect_y),
+            _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(rect.at(SpriteAnimAttributes::rect_x), rect.at(SpriteAnimAttributes::rect_y),
                 rect.at(SpriteAnimAttributes::rect_width), rect.at(SpriteAnimAttributes::rect_height)));
         }
-        _entities_sprites.at(entity).setScale(sf::Vector2f(xScale, yScale));
+        _actual_sprites_entities->at(entity).setScale(sf::Vector2f(xScale, yScale));
     }
 
     void Graphical::draw(ecs::Registry &registry)
@@ -111,5 +112,13 @@ namespace graphics
             if (_event.mouseButton.button == sf::Mouse::Button::Left)
                 ecs::Systems::Clickable(registry, registry.getComponents<ecs::Clickable>(), this);
         }
+    }
+
+    void Graphical::setActualSpritesEntities(ecs::Scenes _scene)
+    {
+        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS)
+            _actual_sprites_entities = &_unique_sprites_entities;
+        else
+            _actual_sprites_entities = &_shared_sprites_entities;
     }
 } // namespace graphics

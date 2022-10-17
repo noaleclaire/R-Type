@@ -6,6 +6,7 @@
 */
 
 #include "Systems.hpp"
+#include "../../client/Core.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 
@@ -19,6 +20,7 @@ namespace ecs
                 if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
                     switch (clickable.at(it).value().getFunction()) {
                         case Clickable::Function::EXIT: graphical->getWindow().close(); break;
+                        case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
                         default: break;
                     }
                 }
@@ -48,7 +50,6 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                position.at(it);
                 graphical.setSpritePosition(it, position.at(it).value().getXPosition(), position.at(it).value().getYPosition());
             } catch (const ExceptionComponentNull &e) {
                 continue;
