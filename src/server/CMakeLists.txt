@@ -5,6 +5,8 @@ set(SRC ${SRCROOT}/main.cpp)
 
 add_subdirectory(Network)
 
+source_group("" FILES ${SRC})
+
 set(TARGET_NAME r-type_server)
 
 add_executable(${TARGET_NAME} ${SRC})
