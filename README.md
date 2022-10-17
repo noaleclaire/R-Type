@@ -40,7 +40,7 @@ cd -
 on Windows:
 ```sh
 # Create the build directory
-mkdir build && cd build
+./setup_conan.sh
 
 # Configure the project
 cmake .. -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=Release
@@ -65,7 +65,6 @@ Required tools:
 doxygen doxyfile
 
 #open the documentation
-
 xdg-open docs/html/index.html
 ```
 
