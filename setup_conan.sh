@@ -37,33 +37,75 @@ done
 ╚═════╝    ╚═╝       ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
                                 
 "
-mkdir build && cd build
-for (( i = 30; i < 38; i++ ));
-    do echo -ne "\033[0;"$i"m \033[1;"$i"m...Entering BUILD directory..."; printf "\r"
-    sleep 0.15
-done
-echo -e "\033[0;"93"m \033[1;"93"m...Entering BUILD directory..."
-sudo pip install conan
-for (( i = 30; i < 38; i++ ));
-    do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Conan..."; printf "\r"
-    sleep 0.15
-done
-echo -e "\033[0;"35"m \033[0;"95"m...Installing Conan..."
-conan install .. -c tools.system.package_manager:mode=install
-for (( i = 30; i < 38; i++ ));
-    do echo -ne "\033[0;"$i"m \033[1;"$i"m...Checking for dependencies..."; printf "\r"
-    sleep 0.15
-done
-echo -e "\033[0;"36"m \033[1;"96"m...Checking for dependencies..."
-conan profile update settings.compiler.libcxx=libstdc++11 default
-for (( i = 30; i < 38; i++ ));
-    do echo -ne "\033[0;"$i"m \033[1;"$i"m...Updating Profile..."; printf "\r"
-    sleep 0.15
-done
-echo -e "\033[0;"31"m \033[4;"91"m...Updating Profile..."
-conan install .. --build missing
-for (( i = 30; i < 38; i++ ));
-    do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Useful Tools..."; printf "\r"
-    sleep 0.15
-done
-echo -e "\033[0;"34"m \033[1;"92"m...Installing Useful Tools..."
+
+OS="`uname`"
+case $OS in
+  'Linux')
+    OS='Linux'
+    mkdir build && cd build
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Entering BUILD directory..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"93"m \033[1;"93"m...Entering BUILD directory..."
+    sudo pip install conan
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Conan..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"35"m \033[0;"95"m...Installing Conan..."
+    conan install .. -c tools.system.package_manager:mode=install
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Checking for dependencies..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"36"m \033[1;"96"m...Checking for dependencies..."
+    conan profile update settings.compiler.libcxx=libstdc++11 default
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Updating Profile..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"31"m \033[1;"91"m...Updating Profile..."
+    conan install .. --build missing
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Useful Tools..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"34"m \033[1;"92"m...Installing Useful Tools..."
+    ;;
+  'WindowsNT')
+    OS='Windows'
+    mkdir build
+    cd build
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Entering BUILD directory..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"93"m \033[1;"93"m...Entering BUILD directory..."
+    pip install conan
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Conan..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"35"m \033[0;"95"m...Installing Conan..."
+    conan profile new default --detect
+    conan config set tools.system.package_manager:mode=install
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Updating Profile..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"31"m \033[1;"91"m...Updating Profile..."
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Checking for dependencies..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"36"m \033[1;"96"m...Checking for dependencies..."
+    conan install .. --build=missing
+    for (( i = 30; i < 38; i++ ));
+        do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Useful Tools..."; printf "\r"
+        sleep 0.15
+    done
+    echo -e "\033[0;"34"m \033[1;"92"m...Installing Useful Tools..."
+    ;;
+  *) ;;
+esac

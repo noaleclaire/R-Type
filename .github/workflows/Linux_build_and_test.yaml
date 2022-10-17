@@ -21,13 +21,15 @@ jobs:
         shell: bash
         run: |
           python --version
-          pip install conan
+          sudo pip install conan
 
       - name: Set and Update conan profile
         shell: bash
         run: |
           conan profile new default --detect
           echo [conf]\ntools.system.package_manager:sudo=True\ntools.system.package_manager:mode=install >> ~/.conan/profiles/default
+          mkdir build && cd build
+          conan install .. --build=missing
 
       - name: Build Test Linux
         shell: bash
