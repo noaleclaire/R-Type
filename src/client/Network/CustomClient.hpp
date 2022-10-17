@@ -70,7 +70,16 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
+<<<<<<< HEAD
     void _setRectAndSpriteComponent();
     void _receivedGameComponent(network::Message<network::CustomMessage> &msg);
+=======
+    /**
+     * @brief
+     *
+     * @param msg
+     */
+    void receivedGameComponent(network::Message<network::CustomMessage> &msg);
+>>>>>>> d23f5a4a77bbc322d852438f958205849cdf756c
     ecs::ComponentTypes _actualType;
 };

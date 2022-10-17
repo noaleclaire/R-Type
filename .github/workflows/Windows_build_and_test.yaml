@@ -1,5 +1,5 @@
 name: Windows Build & Test
- 
+
 on:
   push:
     branches: [ "main" ]
@@ -32,13 +32,13 @@ jobs:
         run: |
           conan profile new default --detect
           conan config set tools.system.package_manager:mode=install
-        
+
       - name: Check for Dependencies (Install)
         shell: powershell
         run: |
           mkdir build
           cd build
-          conan install .. --build=missing
+
 
       - name: Build Test windows
         shell: powershell

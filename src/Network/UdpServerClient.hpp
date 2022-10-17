@@ -225,6 +225,10 @@ namespace network
         std::vector<udp::endpoint> _clients_endpoint;
 
       private:
+        /**
+         * @brief
+         *
+         */
         void readHeader()
         {
             auto session = std::make_shared<UdpSession<T>>(this);
