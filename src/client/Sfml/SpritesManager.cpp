@@ -67,8 +67,7 @@ ecs::EntityTypes SpritesManager::getSpriteType(std::string &sprite_type) const
             }
         }
     } catch (const std::bad_any_cast &e) {
-        throw ExceptionBadAnyCast(
-            "Cannot convert to graphics::SpriteTypes", "graphics::SpriteTypes SpritesManager::getSpriteType(std::string &sprite_type) const");
+        throw ExceptionBadAnyCast("Cannot convert to SpriteTypes", "SpriteTypes SpritesManager::getSpriteType(std::string &sprite_type) const");
     }
     return (ecs::EntityTypes::SPACESHIP);
 }
@@ -168,8 +167,8 @@ void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &spri
     try {
         _sprite_type_id_tmp = std::stoi(sprite_type_id, &pos);
         _sprite_type_tmp = getSpriteType(sprite_type);
-        _sprites_data.push_back({_spritesheet_tmp, std::make_pair(_sprite_type_tmp, _sprite_type_id_tmp),
-            std::unordered_map<std::size_t, std::vector<std::optional<int>>>{}});
+        _sprites_data.push_back(
+            {_spritesheet_tmp, std::make_pair(_sprite_type_tmp, _sprite_type_id_tmp), std::unordered_map<std::size_t, std::vector<std::optional<int>>>{}});
     } catch (const std::invalid_argument &e) {
         throw ExceptionNotANumber(
             "the id of the sprite is not an integer", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");

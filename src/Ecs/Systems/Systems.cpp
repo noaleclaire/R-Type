@@ -7,8 +7,8 @@
 
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
-#include "../Exceptions/ExceptionIndexComponent.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
+#include "../Exceptions/ExceptionIndexComponent.hpp"
 
 namespace ecs
 {

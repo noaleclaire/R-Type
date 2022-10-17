@@ -7,56 +7,56 @@
 
 #pragma once
 
-#include "AComponent.hpp"
 #include <string>
+#include "AComponent.hpp"
 
 namespace ecs
 {
     class Layer : public AComponent {
       public:
-      /**
-       * @brief Construct a new Layer object
-       * 
-       */
+        /**
+         * @brief Construct a new Layer object
+         *
+         */
         Layer() = default;
         /**
          * @brief Construct a new Layer object
-         * 
-         * @param layer 
+         *
+         * @param layer
          */
         Layer(std::size_t layer);
         /**
          * @brief Construct a new Layer object
-         * 
-         * @param other 
+         *
+         * @param other
          */
         Layer(const Layer &other) = default;
         /**
          * @brief Destroy the Layer object
-         * 
+         *
          */
         ~Layer() = default;
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Layer& 
+         * @brief
+         *
+         * @param other
+         * @return Layer&
          */
         Layer &operator=(const Layer &other) = default;
 
         /* Getter */
         /**
          * @brief Get the Layer object
-         * 
-         * @return int 
+         *
+         * @return int
          */
         int getLayer() const;
 
         /* Setter */
         /**
          * @brief Set the Layer object
-         * 
-         * @param layer 
+         *
+         * @param layer
          */
         void setLayer(std::size_t layer);
 

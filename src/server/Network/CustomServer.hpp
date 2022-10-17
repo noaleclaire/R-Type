@@ -7,10 +7,13 @@
 
 #pragma once
 
+#include <chrono>
 #include "../../Ecs/Enum.hpp"
 #include "../../Ecs/NetworkComponent.hpp"
 #include "../../Ecs/Registry.hpp"
 #include "../../Network/UdpServerClient.hpp"
+
+using namespace std::chrono_literals;
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -59,8 +62,10 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
             msg << type;
             _registry.getComponents<Component>().at(entity);
             sendToAllClients(msg);
+            std::this_thread::sleep_for(5ms);
             sendToAllClients(ecs::NetworkComponent<Component, network::CustomMessage>::createMessage(
                 entity, _registry.getComponents<Component>().at(entity).value(), network::CustomMessage::SendGameComponent));
+            std::this_thread::sleep_for(5ms);
         } catch (const ecs::ExceptionComponentNull &e) {
             return;
         } catch (const ecs::ExceptionIndexComponent &e) {

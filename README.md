@@ -30,6 +30,7 @@ Required tools:
 on Linux:
 ```sh
 # Create the build directory and install all tools
+chmod 755 setup.conan.sh
 ./setup_conan.sh
 
 
@@ -46,6 +47,7 @@ cd -
 on Windows:
 ```sh
 # Create the build directory
+chmod +x setup.conan.sh
 ./setup_conan.sh
 
 # Configure the project

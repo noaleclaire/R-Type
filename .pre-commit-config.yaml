@@ -25,7 +25,6 @@ repos:
   hooks:
   - id: check-added-large-files
   - id: check-case-conflict
-  - id: check-merge-conflict
   - id: debug-statements
   - id: end-of-file-fixer
   - id: mixed-line-ending

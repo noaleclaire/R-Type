@@ -29,8 +29,8 @@ namespace ecs
         Position(float x, float y, float xVelocity = 1, float yVelocity = 1);
         /**
          * @brief Construct a new Position object
-         * 
-         * @param other 
+         *
+         * @param other
          */
         Position(const Position &other) = default;
         /**

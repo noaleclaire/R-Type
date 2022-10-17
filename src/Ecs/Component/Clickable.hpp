@@ -16,42 +16,42 @@ namespace ecs
         enum Function { EXIT, TOGAME };
         /**
          * @brief Construct a new Clickable object
-         * 
-         * @param function 
+         *
+         * @param function
          */
         Clickable(Function function = Function::EXIT);
         /**
          * @brief Construct a new Clickable object
-         * 
-         * @param other 
+         *
+         * @param other
          */
         Clickable(const Clickable &other) = default;
         /**
          * @brief Destroy the Clickable object
-         * 
+         *
          */
         ~Clickable() = default;
         /**
-         * @brief 
-         * 
-         * @param other 
-         * @return Clickable& 
+         * @brief
+         *
+         * @param other
+         * @return Clickable&
          */
         Clickable &operator=(const Clickable &other) = default;
 
         /* Getter */
         /**
          * @brief Get the Function object
-         * 
-         * @return Function 
+         *
+         * @return Function
          */
         Function getFunction() const;
 
         /* Setter */
         /**
          * @brief Set the Function object
-         * 
-         * @param function 
+         *
+         * @param function
          */
         void setFunction(Function function);
 

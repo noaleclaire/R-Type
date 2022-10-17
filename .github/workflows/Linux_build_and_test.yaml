@@ -12,7 +12,7 @@ env:
 jobs:
   linux_build:
     runs-on: ubuntu-latest
-  
+
     steps:
       - uses: actions/checkout@v2
       - uses: lukka/get-cmake@latest
@@ -22,6 +22,7 @@ jobs:
         run: |
           python --version
           sudo pip install conan
+          sudo apt-get updatelibfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
 
       - name: Set and Update conan profile
         shell: bash
@@ -29,6 +30,7 @@ jobs:
           conan profile new default --detect
           echo [conf]\ntools.system.package_manager:sudo=True\ntools.system.package_manager:mode=install >> ~/.conan/profiles/default
           mkdir build && cd build
+          sudo apt-get remove libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
           sudo apt-get install libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
           conan install .. --build=missing
 

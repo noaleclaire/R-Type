@@ -1,7 +1,8 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/Utilities/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Utilities/)
 
-set(SRC ${SRCROOT}/UnpackVariadic.cpp ${SRCROOT}/ParserYaml.cpp ${SRCROOT}/AYamlConfig.cpp)
+set(SRC ${SRCROOT}/UnpackVariadic.cpp ${SRCROOT}/ParserYaml.cpp
+        ${SRCROOT}/AYamlConfig.cpp)
 
 source_group("" FILES ${SRC})
 

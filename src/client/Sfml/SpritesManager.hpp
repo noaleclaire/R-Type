@@ -57,31 +57,31 @@ class SpritesManager : public AYamlConfig {
      * @brief Get the Sprite Type Attribute object
      *
      * @param sprite_type_attribute
-     * @return graphics::SpriteTypeAttributes
+     * @return SpriteTypeAttributes
      */
 
-    graphics::SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
+    SpriteTypeAttributes getSpriteTypeAttribute(std::string &sprite_type_attribute) const;
     /**
      * @brief Get the Sprite Type Attribute object
      *
      * @param sprite_type_attribute
      * @return std::string const
      */
-    std::string const getSpriteTypeAttribute(graphics::SpriteTypeAttributes sprite_type_attribute) const;
+    std::string const getSpriteTypeAttribute(SpriteTypeAttributes sprite_type_attribute) const;
     /**
      * @brief Get the Sprite Anim Attribute object
      *
      * @param sprite_anim_attribute
-     * @return graphics::SpriteAnimAttributes
+     * @return SpriteAnimAttributes
      */
-    graphics::SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
+    SpriteAnimAttributes getSpriteAnimAttribute(std::string &sprite_anim_attribute) const;
     /**
      * @brief Get the Sprite Anim Attribute object
      *
      * @param sprite_anim_attribute
      * @return std::string const
      */
-    std::string const getSpriteAnimAttribute(graphics::SpriteAnimAttributes sprite_anim_attribute) const;
+    std::string const getSpriteAnimAttribute(SpriteAnimAttributes sprite_anim_attribute) const;
     /**
      * @brief
      *
@@ -118,24 +118,24 @@ class SpritesManager : public AYamlConfig {
     std::vector<std::string> const getTexturePath() const;
     /**
      * @brief Get the Animations rect object
-     * 
-     * @param entity_type 
-     * @param entity_id 
-     * @param anim_id 
-     * @return std::vector<float> 
+     *
+     * @param entity_type
+     * @param entity_id
+     * @param anim_id
+     * @return std::vector<float>
      */
     std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id);
     /**
      * @brief Get the Spritesheet object
-     * 
-     * @param entity_type 
-     * @param entity_id 
-     * @return std::string 
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return std::string
      */
     std::string get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id);
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     void printSpritesData();
 
@@ -144,8 +144,8 @@ class SpritesManager : public AYamlConfig {
     typedef void (SpritesManager::*MAP_FPTR)(std::string &, std::string &);
     MapMemberFunctionPointer<MAP_FPTR> _map_fptr;
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      */
     void initMapFunctionPointer();
 

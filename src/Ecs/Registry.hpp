@@ -314,12 +314,9 @@ namespace ecs
         {
             try {
                 if (_entities.at(_actual_scene).size() == 0) {
-                    std::cout << "test46cdseve5" << std::endl;
                     throw Exception("_entities vector is empty", "std::vector<Entity> getEntities() const");
                 }
             } catch (const std::out_of_range &e) {
-                std::cout << _actual_scene << std::endl;
-                std::cout << "test4fzesqdqref65" << std::endl;
                 throw Exception("_entities vector doesn't exist", "std::vector<Entity> getEntities() const");
             }
             return (_entities.at(_actual_scene));

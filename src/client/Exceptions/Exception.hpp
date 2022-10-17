@@ -10,12 +10,12 @@
 
 class Exception : public std::exception {
   public:
-  /**
-   * @brief Construct a new Exception object
-   * 
-   * @param message 
-   * @param location 
-   */
+    /**
+     * @brief Construct a new Exception object
+     *
+     * @param message
+     * @param location
+     */
     Exception(const std::string &message, const std::string &location)
     {
         _message = message;
@@ -23,22 +23,22 @@ class Exception : public std::exception {
     };
     /**
      * @brief Destroy the Exception object
-     * 
+     *
      */
     ~Exception() = default;
     /**
-     * @brief 
-     * 
-     * @return const char* 
+     * @brief
+     *
+     * @return const char*
      */
     const char *what() const noexcept override
     {
         return (_message.c_str());
     };
     /**
-     * @brief 
-     * 
-     * @return const char* 
+     * @brief
+     *
+     * @return const char*
      */
     const char *where() const noexcept
     {

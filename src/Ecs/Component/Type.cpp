@@ -32,4 +32,4 @@ namespace ecs
     {
         _entityID = entityID;
     }
-}
+} // namespace ecs
