@@ -52,3 +52,43 @@ game.
     ![netw](https://user-images.githubusercontent.com/72009611/196368292-df6a206d-1499-40ea-b447-62faeb331f53.png)
     
 - 4. Command Protocol
+
+    Use of serialisation: It lets you take an object or group of objects, put them on a disk or send them through a wire or wireless transport mechanism, then later, perhaps on another computer, reverse the process: resurrect the original object(s). The basic mechanisms are to flatten object(s) into a one-dimensional stream of bits, and to turn that stream of bits back into the original object(s).
+
+    Format : Non-human-readable (“binary”) format
+
+    Type of message send or receive:
+    ```
+    enum CustomMessage : uint32_t { 
+        PingServer, 
+        SwitchToGame, 
+        SendGameComponent, 
+        ComponentType, 
+        AllGameComponentSent, 
+        RemoveClient 
+    };
+    ```
+
+## Display
+
+Use of configurator file in yaml exemple : 
+
+    ```
+    spritesheet: background.jpg
+       background: 0
+       anim: 0
+       rect_x: 0
+       rect_y: 0
+       rect_width: 1280
+       rect_height: 720 
+
+    spritesheet: button.png
+        button: 0
+        anim: 0
+        rect_x: 0
+        rect_y: 0
+        rect_width: 300
+        rect_height: 110
+   ```
+
+
