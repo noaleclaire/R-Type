@@ -25,7 +25,13 @@ Entity Component System (ECS) is a software architectural pattern mostly used in
     ### Architecture ECS
 
     ![ddddddd](https://user-images.githubusercontent.com/72009611/196061182-257c90ae-e8c9-4b25-94d4-ca4a653342c2.png)
-
+    
+    ### SparseArray ECS
+    
+    A sparse set is a way of mapping sparse indexes to a tightly packed array. It essentially amounts to two lists, one sparsely filled with indexes to the     tightly packed list. And the packed list contains indexes back to the sparse list elements. A diagram might help this concept come across.
+    
+    ![sparsearray](https://user-images.githubusercontent.com/72009611/196367562-4c41aaa7-d2de-46e6-a514-d65cfc014ea4.png)
+    
 
 
 ## Network
@@ -37,12 +43,12 @@ game.
 
     The first purpose of the R-Type UDP Protocol is to send all the frames to display (in the client) from the server to the client.
 
--   2. Asynchronous Protocol
+-  2. Asynchronous Protocol
 
     Asynchronous connectionless mode networking is conducted by configuring the endpoint for non-blocking service, and either polling for or receiving asynchronous notification when data might be transferred. If asynchronous notification is used, the actual receipt of data typically takes place within a signal handler.
 
 - 3. Architecture Protocol
-
-    ![citation Je t'aime - cadre sur ecran d'ordinateur et lignes de code](https://user-images.githubusercontent.com/72009611/196060225-b9e3677d-96e0-48c1-b260-ac18e4c899da.png)
-
+    
+    ![netw](https://user-images.githubusercontent.com/72009611/196368292-df6a206d-1499-40ea-b447-62faeb331f53.png)
+    
 - 4. Command Protocol
