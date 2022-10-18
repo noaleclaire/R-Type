@@ -70,7 +70,10 @@ void CustomClient::_setRectAndSpriteComponent()
             registry->getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(1));
             registry->getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(2));
             registry->getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(3));
-            graphical->addSprite(it, sprites_manager->get_Spritesheet(registry->getComponents<ecs::Type>().at(it).value().getEntityType(), 0), rect);
+            graphical->addSprite(it,
+                sprites_manager->get_Spritesheet(
+                    registry->getComponents<ecs::Type>().at(it).value().getEntityType(), registry->getComponents<ecs::Type>().at(it).value().getEntityID()),
+                rect);
         } catch (const ecs::Exception &e) {
             continue;
         }

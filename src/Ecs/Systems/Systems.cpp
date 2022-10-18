@@ -58,4 +58,60 @@ namespace ecs
             }
         }
     }
+    void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> const &controllable, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                controllable.at(it);
+                if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
+                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(
+                        pos - registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
+                }
+                if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
+                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
+                        pos - registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
+                }
+                if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
+                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(
+                        pos + registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
+                }
+                if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
+                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
+                        pos + registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Parallaxe(Registry &registry, SparseArray<ecs::Type> const &type)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
+                    auto posX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
+                        posX - registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
+                    // auto posY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                    // registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY -
+                    // registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
+                    if (registry.getComponents<ecs::Position>().at(it).value().getXPosition()
+                        <= -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                        registry.getComponents<ecs::Position>().at(it).value().setXPosition(
+                            registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle());
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
 } // namespace ecs

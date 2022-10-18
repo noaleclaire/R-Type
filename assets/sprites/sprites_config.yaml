@@ -38,6 +38,14 @@ spritesheet: background.jpg
    rect_width: 1280
    rect_height: 720
 
+spritesheet: moon.png
+ background: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
 spritesheet: button.png
  button: 0
   anim: 0
@@ -46,18 +54,19 @@ spritesheet: button.png
    rect_width: 300
    rect_height: 110
 
-spritesheet: button.png
+spritesheet: spaceships.gif
  spaceship: 0
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 300
-   rect_height: 110
+   rect_width: 132
+   rect_height: 72
+   nb_anim: 4
 
-spritesheet: button.png
+spritesheet: nsm
  monster: 0
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 300
-   rect_height: 110
+   rect_width: 72
+   rect_height: 72

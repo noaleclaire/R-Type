@@ -80,10 +80,6 @@ namespace network
             if (!error) {
                 if (_send_msg.body.size() > 0)
                     _instance->writeBody(this->shared_from_this());
-                // else {
-                //     if (!_send_msg.empty() && _send_msg.front().second == _remote_endpoint)
-                //         _instance->writeHeader(this->shared_from_this());
-                // }
             } else {
                 if (_instance->_owner_type == UdpServerClient<T>::Owner::CLIENT)
                     _instance->_socket.close();
@@ -98,8 +94,6 @@ namespace network
         {
             if (!error) {
                 return;
-                // if (!_send_msg.empty() && _send_msg.front().second == _remote_endpoint)
-                //     _instance->writeHeader(this->shared_from_this());
             } else {
                 if (_instance->_owner_type == UdpServerClient<T>::Owner::CLIENT)
                     _instance->_socket.close();
@@ -161,9 +155,6 @@ namespace network
          */
         void send(const Message<T> &msg)
         {
-            // bool writingMsg = !_sendMsg.empty();
-            // _sendMsg.push_back(std::make_pair(msg, _server_endpoint));
-            // if (!writingMsg)
             writeHeader(msg, _server_endpoint);
         };
         /**
@@ -174,7 +165,6 @@ namespace network
          */
         void send(const Message<T> &msg, udp::endpoint target_endpoint)
         {
-            // _sendMsg.push_back(std::make_pair(msg, target_endpoint));
             if (hasClientEndpoint(target_endpoint))
                 writeHeader(msg, target_endpoint);
         };
@@ -199,13 +189,9 @@ namespace network
          */
         void sendToAllClients(const Message<T> &msg)
         {
-            static int i = 0;
             if (_owner_type == Owner::SERVER) {
-                for (auto &client_endpoint : _clients_endpoint) {
-                    std::cout << i << std::endl;
-                    i++;
+                for (auto &client_endpoint : _clients_endpoint)
                     send(msg, client_endpoint);
-                }
             }
         };
 

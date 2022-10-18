@@ -66,11 +66,15 @@ void CustomServer::_initGame()
     std::size_t entity;
     _registry.setActualScene(ecs::Scenes::GAME);
 
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 0, 0, 0, 0, 0, 0, 1);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0);
     _sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SPACESHIP, 0, 340, 0, 0, 0, 0, 2);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, 0, 0, 0, 0, 1, 0);
     _sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::MONSTER, 1000, 450, 0, 0, 0, 0, 2);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, 0, 0, 0, 0, 2, 1);
+    _sendNetworkComponents(entity);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SPACESHIP, 0, 340, 0, 0, 0, 0, 3);
+    _sendNetworkComponents(entity);
+    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::MONSTER, 1000, 450, 0, 0, 0, 0, 3);
     _sendNetworkComponents(entity);
 }
 

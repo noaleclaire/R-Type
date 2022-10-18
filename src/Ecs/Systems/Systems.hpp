@@ -37,5 +37,21 @@ namespace ecs
          * @param graphical
          */
         static void Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param controllable
+         * @param graphical
+         */
+        static void Controllable(Registry &registry, SparseArray<ecs::Controllable> const &controllable, graphics::Graphical *graphical);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param parallaxe
+         * @param graphical
+         */
+        static void Parallaxe(Registry &registry, SparseArray<ecs::Type> const &type);
     };
 } // namespace ecs

@@ -70,7 +70,7 @@ namespace ecs
             registry.addComponent<ecs::Shooter>(entity, ecs::Shooter());
 
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), 10, 10));
             registry.addComponent<ecs::Rectangle>(entity,
                 ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
@@ -181,13 +181,14 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
 
-            registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Position>(entity,
+                ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
             registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BACKGROUND));
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BACKGROUND, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(9))));
             return (entity);
         }
     };

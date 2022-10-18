@@ -11,6 +11,7 @@
 #include <SFML/Window.hpp>
 #include "../../Ecs/Enum.hpp"
 #include "../../Ecs/Registry.hpp"
+#include "Event.hpp"
 #include "SpritesManager.hpp"
 
 namespace graphics
@@ -40,17 +41,17 @@ namespace graphics
          */
         sf::VideoMode getVideoMode() const;
         /**
-         * @brief Get the Event object
-         *
-         * @return sf::Event&
-         */
-        sf::Event &getEvent();
-        /**
          * @brief Get the Window object
          *
          * @return sf::RenderWindow&
          */
         sf::RenderWindow &getWindow();
+        /**
+         * @brief Get the Event object
+         *
+         * @return sf::Event&
+         */
+        sf::Event &getEvent();
 
         /* Setter */
         /**
@@ -95,26 +96,19 @@ namespace graphics
          *
          * @param registry
          */
-        void draw(ecs::Registry &registry);
+        void handleEvents(ecs::Registry &registry);
         /**
          * @brief
          *
          * @param registry
          */
-        void handleEvents(ecs::Registry &registry);
+        void draw(ecs::Registry &registry);
 
       protected:
       private:
-        /**
-         * @brief
-         *
-         * @param registry
-         */
-        void _handleMouseButtonEvents(ecs::Registry &registry);
-
         sf::RenderWindow _window;
         sf::VideoMode _mode;
-        sf::Event _event;
+        Event _event;
         std::unordered_map<std::string, sf::Texture> _textures;
         std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;

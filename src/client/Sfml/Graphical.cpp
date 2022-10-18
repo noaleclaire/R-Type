@@ -40,14 +40,14 @@ namespace graphics
         return (_mode);
     }
 
-    sf::Event &Graphical::getEvent()
-    {
-        return (_event);
-    }
-
     sf::RenderWindow &Graphical::getWindow()
     {
         return (_window);
+    }
+
+    sf::Event &Graphical::getEvent()
+    {
+        return (_event.getEvent());
     }
 
     /* Setter */
@@ -90,28 +90,16 @@ namespace graphics
         _actual_sprites_entities->at(entity).setScale(sf::Vector2f(xScale, yScale));
     }
 
+    void Graphical::handleEvents(ecs::Registry &registry)
+    {
+        _event.handleEvents(this, registry);
+    }
+
     void Graphical::draw(ecs::Registry &registry)
     {
         _window.clear();
         ecs::Systems::Drawable(registry, registry.getComponents<ecs::Drawable>(), this);
         _window.display();
-    }
-
-    void Graphical::handleEvents(ecs::Registry &registry)
-    {
-        while (_window.pollEvent(_event)) {
-            _handleMouseButtonEvents(registry);
-            if (_event.type == sf::Event::Closed)
-                _window.close();
-        }
-    }
-
-    void Graphical::_handleMouseButtonEvents(ecs::Registry &registry)
-    {
-        if (_event.type == sf::Event::MouseButtonReleased) {
-            if (_event.mouseButton.button == sf::Mouse::Button::Left)
-                ecs::Systems::Clickable(registry, registry.getComponents<ecs::Clickable>(), this);
-        }
     }
 
     void Graphical::setActualSpritesEntities(ecs::Scenes _scene)

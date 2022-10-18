@@ -50,8 +50,13 @@ void Core::_initMenu()
     _unique_registry.setActualScene(ecs::Scenes::MENU);
 
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
+    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
+    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 1), rect);
 
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
     entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
@@ -100,6 +105,7 @@ void Core::_gameLoop()
             _graphical.setActualSpritesEntities(Core::actual_scene);
             _switchScenes();
             _graphical.handleEvents(*_actual_registry);
+            ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Position(*_actual_registry, _actual_registry->getComponents<ecs::Position>(), _graphical);
             _graphical.draw(*_actual_registry);
         }
