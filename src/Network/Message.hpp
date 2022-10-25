@@ -6,14 +6,11 @@
 */
 
 #pragma once
-#include <boost/asio.hpp>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <memory>
 #include <vector>
-
-using boost::asio::ip::udp;
 
 namespace network
 {
