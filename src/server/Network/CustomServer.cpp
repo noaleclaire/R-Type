@@ -29,10 +29,10 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SwitchToGame: {
-            network::Message<network::CustomMessage> _msg;
-            _msg.header.id = network::CustomMessage::AllGameComponentSent;
             _initGame();
-            sendToAllClients(_msg);
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::AllGameComponentSent;
+            sendToAllClients(message);
         } break;
         case network::CustomMessage::RemoveClient: {
             for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
@@ -80,15 +80,15 @@ void CustomServer::_initGame()
 
 void CustomServer::_sendNetworkComponents(std::size_t entity)
 {
-    _sendNetworkComponent<ecs::Clickable>(entity, ecs::ComponentTypes::CLICKABLE);
-    _sendNetworkComponent<ecs::Collider>(entity, ecs::ComponentTypes::COLLIDER);
-    _sendNetworkComponent<ecs::Controllable>(entity, ecs::ComponentTypes::CONTROLLABLE);
-    _sendNetworkComponent<ecs::Drawable>(entity, ecs::ComponentTypes::DRAWABLE);
-    _sendNetworkComponent<ecs::Type>(entity, ecs::ComponentTypes::TYPE);
-    _sendNetworkComponent<ecs::Killable>(entity, ecs::ComponentTypes::KILLABLE);
-    _sendNetworkComponent<ecs::Layer>(entity, ecs::ComponentTypes::LAYER);
-    _sendNetworkComponent<ecs::Position>(entity, ecs::ComponentTypes::POSITION);
-    _sendNetworkComponent<ecs::Shooter>(entity, ecs::ComponentTypes::SHOOTER);
-    _sendNetworkComponent<ecs::Shootable>(entity, ecs::ComponentTypes::SHOOTABLE);
-    _sendNetworkComponent<ecs::Rectangle>(entity, ecs::ComponentTypes::RECTANGLE);
+    for (std::size_t i = 0; i < _registry.getNetMessageCreate().size(); i++) {
+        try {
+            network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(i)(entity, network::CustomMessage::SendGameComponent, i);
+            sendToAllClients(message);
+            std::this_thread::sleep_for(5ms);
+        } catch (const ecs::ExceptionComponentNull &e) {
+            continue;
+        } catch (const ecs::ExceptionIndexComponent &e) {
+            continue;
+        }
+    }
 }

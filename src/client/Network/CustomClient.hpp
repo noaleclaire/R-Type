@@ -80,6 +80,4 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      * @param msg
      */
-    void _receivedGameComponent(network::Message<network::CustomMessage> &msg);
-    ecs::ComponentTypes _actualType;
 };

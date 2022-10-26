@@ -21,6 +21,8 @@
 #include "Exceptions/ExceptionEntityUnobtainable.hpp"
 #include "Exceptions/ExceptionIndexComponent.hpp"
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
+#include "../Network/Message.hpp"
+#include <unistd.h>
 
 namespace ecs
 {
@@ -61,10 +63,32 @@ namespace ecs
                     throw ExceptionIndexComponent("Cannot erase this component, bad index", "_components_eraser -> [&](Entity &entity)");
                 }
             });
-            // _components_insertion.emplace(std::type_index(typeid(Component)),
-            // [&]() {
-
-            // });
+            _net_message_create.push_back([&](std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create) {
+                try {
+                    network::Message<network::CustomMessage> message;
+                    message.header.id = header_id;
+                    std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity);
+                    message << std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity).value() << entity << index_component_create;
+                    return (message);
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    throw ExceptionComponentNull("Component doesn't exist", "_netComp.getMessageCreate() -> [&](std::size_t entity, T header_id)");
+                } catch (const ecs::ExceptionIndexComponent &e) {
+                    throw ExceptionIndexComponent("Bad index", "_netComp.getMessageCreate() -> [&](std::size_t entity, T header_id)");
+                }
+            });
+            _net_component_create.push_back([&](network::Message<network::CustomMessage> message) {
+                try {
+                    _components_arrays.at(std::type_index(typeid(Component)));
+                    std::size_t entity;
+                    Component compo;
+                    message >> entity >> compo;
+                    addEntity(entity);
+                    std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(entity, compo);
+                } catch (const std::out_of_range &e) {
+                    throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
+                        "_netComp.getComponentCreate() -> [&](network::Message<T> message)");
+                }
+            });
             return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
         }
         /**
@@ -289,13 +313,24 @@ namespace ecs
             return (_actual_scene);
         };
 
+        std::vector<std::function<network::Message<network::CustomMessage>(std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create)>> getNetMessageCreate() const
+        {
+            return (_net_message_create);
+        }
+
+        std::vector<std::function<void(network::Message<network::CustomMessage> message)>> getNetComponentCreate() const
+        {
+            return (_net_component_create);
+        }
 
       private:
         std::unordered_map<std::type_index, std::any> _components_arrays;
         std::vector<std::function<void(Entity &)>> _components_eraser;
-        // std::unordered_map<std::type_index, std::function<void()>> _components_insertion;
         std::unordered_map<ecs::Scenes, std::vector<Entity>> _entities;
         std::vector<std::size_t> _dead_entities;
         ecs::Scenes _actual_scene = ecs::Scenes::MENU;
+
+        std::vector<std::function<network::Message<network::CustomMessage>(std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create)>> _net_message_create;
+        std::vector<std::function<void(network::Message<network::CustomMessage> message)>> _net_component_create;
     };
 } // namespace ecs
