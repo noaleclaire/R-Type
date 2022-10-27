@@ -13,6 +13,7 @@ case $OS in
     then
         echo -e "Restart Firewall..."
         sudo systemctl start firewalld.service
+    fi
     ;;
     'WindowsNT')
     OS='Windows'
