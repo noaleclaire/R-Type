@@ -32,7 +32,7 @@ int main(int ac, char **av)
     try {
         assetsFolderExists();
         boost::asio::io_context io_context;
-        Core core(io_context, "127.0.0.1", 1358);
+        Core core(io_context, "192.168.122.1", 1358);
     } catch (const Exception &e) {
         errorLogsFile << e.what() << std::endl;
         errorLogsFile << e.where() << std::endl;
