@@ -41,6 +41,9 @@ int main(int ac, char **av)
         boost::asio::io_context io_context;
         unsigned short port = 1358;
         signal(SIGINT, signalHandler);
+        signal(SIGSEGV, signalHandler);
+        signal(SIGABRT, signalHandler);
+        signal(SIGTERM, signalHandler);
         executeSystemSetupCmd();
         if (ac == 2) {
             std::size_t pos{};
