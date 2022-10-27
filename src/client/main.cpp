@@ -32,7 +32,16 @@ int main(int ac, char **av)
     try {
         assetsFolderExists();
         boost::asio::io_context io_context;
-        Core core(io_context, "192.168.122.1", 1358);
+        std::string host = "192.168.122.1";
+        unsigned short port = 1358;
+        if (ac == 2)
+            host = std::string(av[1]);
+        if (ac == 3) {
+            std::size_t pos{};
+            host = std::string(av[1]);
+            port = static_cast<unsigned short>(std::stoi(std::string(av[2]), &pos));
+        }
+        Core core(io_context, host, port);
     } catch (const Exception &e) {
         errorLogsFile << e.what() << std::endl;
         errorLogsFile << e.where() << std::endl;
