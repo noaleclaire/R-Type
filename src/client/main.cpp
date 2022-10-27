@@ -32,7 +32,7 @@ int main(int ac, char **av)
     try {
         assetsFolderExists();
         boost::asio::io_context io_context;
-        std::string host = "192.168.122.1";
+        std::string host = "127.0.0.1";
         unsigned short port = 1358;
         if (ac == 2)
             host = std::string(av[1]);
