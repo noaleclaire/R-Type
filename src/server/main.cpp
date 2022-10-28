@@ -27,6 +27,16 @@ void executeSystemSetupCmd()
 {
     if (!std::filesystem::is_regular_file(std::filesystem::current_path() / "setup_server.sh"))
         throw ExceptionFileNotFound("setup_server.sh not found in : " + std::string(std::filesystem::current_path()), "void executeSystemSetupCmd()");
+    std::string validation;
+    std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
+    std::cin >> validation;
+    while (validation.compare("yes") != 0 && validation.compare("no") != 0) {
+        std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
+        std::cout << validation << std::endl;
+        std::cin >> validation;
+    }
+    if (validation.compare("no") == 0)
+        exit(0);
     std::system("chmod +x setup_server.sh");
     std::system("./setup_server.sh 1 > tmp.cache");
     std::cout << std::ifstream("tmp.cache").rdbuf();
@@ -40,10 +50,10 @@ int main(int ac, char **av)
     try {
         boost::asio::io_context io_context;
         unsigned short port = 1358;
-        signal(SIGINT, signalHandler);
-        signal(SIGSEGV, signalHandler);
-        signal(SIGABRT, signalHandler);
-        signal(SIGTERM, signalHandler);
+        std::signal(SIGINT, signalHandler);
+        std::signal(SIGSEGV, signalHandler);
+        std::signal(SIGABRT, signalHandler);
+        std::signal(SIGTERM, signalHandler);
         executeSystemSetupCmd();
         if (ac == 2) {
             std::size_t pos{};

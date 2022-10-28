@@ -7,12 +7,8 @@
 
 #pragma once
 
-#include <chrono>
-#include "../../Ecs/Enum.hpp"
-#include "../../Ecs/Registry.hpp"
 #include "../../Network/UdpServerClient.hpp"
-
-using namespace std::chrono_literals;
+#include "../../Ecs/Registry.hpp"
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -41,6 +37,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @return CustomServer&
      */
     CustomServer &operator=(const CustomServer &other) = delete;
+    void sendNetworkComponents(std::size_t entity);
 
   protected:
     /**
@@ -53,7 +50,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
 
   private:
     void _initGame();
-    void _sendNetworkComponents(std::size_t entity);
 
     ecs::Registry _registry;
 };
