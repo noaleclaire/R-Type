@@ -44,7 +44,7 @@ namespace ecs
          * @param controllable
          * @param graphical
          */
-        static void Controllable(Registry &registry, SparseArray<ecs::Controllable> const &controllable, graphics::Graphical *graphical);
+        static void Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical);
         /**
          * @brief
          *

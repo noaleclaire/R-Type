@@ -18,6 +18,8 @@ namespace graphics
 {
     class Graphical {
       public:
+        static float world_current_time;
+
         Graphical();
         ~Graphical();
 
@@ -68,7 +70,7 @@ namespace graphics
          * @param posX
          * @param posY
          */
-        void setSpritePosition(ecs::Entity entity, float posX, float posY);
+        void setSpritePosition(std::size_t entity, float posX, float posY);
         /**
          * @brief Set the Actual Sprites Entities object
          *
@@ -103,12 +105,14 @@ namespace graphics
          * @param registry
          */
         void draw(ecs::Registry &registry);
+        void getWorldClock();
 
       protected:
       private:
         sf::RenderWindow _window;
         sf::VideoMode _mode;
         Event _event;
+        sf::Clock _world_clock;
         std::unordered_map<std::string, sf::Texture> _textures;
         std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;

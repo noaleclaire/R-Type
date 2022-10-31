@@ -5,6 +5,7 @@ set(SRC
     ${SRC}
     ${SRCROOT}/Position.cpp
     ${SRCROOT}/Clickable.cpp
+    ${SRCROOT}/Controllable.cpp
     ${SRCROOT}/Shootable.cpp
     ${SRCROOT}/Rectangle.cpp
     ${SRCROOT}/Layer.cpp

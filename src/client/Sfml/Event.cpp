@@ -43,7 +43,6 @@ namespace graphics
 
     void Event::_handleKeyEvents(Graphical *graphical, ecs::Registry &registry)
     {
-        if (_event.type == sf::Event::KeyPressed)
-            ecs::Systems::Controllable(registry, registry.getComponents<ecs::Controllable>(), graphical);
+        ecs::Systems::Controllable(registry, registry.getComponents<ecs::Controllable>(), graphical);
     }
 } // namespace graphics

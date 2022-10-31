@@ -72,6 +72,7 @@ void Core::_gameLoop()
     _actual_registry->setActualScene(actual_scene);
     try {
         while (_graphical.getWindow().isOpen()) {
+            _graphical.getWorldClock();
             _setActualRegistry(Core::actual_scene);
             _graphical.setActualSpritesEntities(Core::actual_scene);
             _switchScenes();

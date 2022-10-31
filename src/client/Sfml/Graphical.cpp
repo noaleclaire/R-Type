@@ -12,6 +12,7 @@
 
 namespace graphics
 {
+    float Graphical::world_current_time = 0;
     Graphical::Graphical()
     {
         _actual_sprites_entities = &_unique_sprites_entities;
@@ -56,7 +57,7 @@ namespace graphics
         _mode = sf::VideoMode(width, height);
     }
 
-    void Graphical::setSpritePosition(ecs::Entity entity, float posX, float posY)
+    void Graphical::setSpritePosition(std::size_t entity, float posX, float posY)
     {
         _actual_sprites_entities->at(entity).setPosition(posX, posY);
     }
@@ -108,5 +109,9 @@ namespace graphics
             _actual_sprites_entities = &_unique_sprites_entities;
         else
             _actual_sprites_entities = &_shared_sprites_entities;
+    }
+    void Graphical::getWorldClock()
+    {
+        Graphical::world_current_time = _world_clock.restart().asSeconds();
     }
 } // namespace graphics

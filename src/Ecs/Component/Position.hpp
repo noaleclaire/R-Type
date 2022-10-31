@@ -26,7 +26,7 @@ namespace ecs
          * @param xVelocity
          * @param yVelocity
          */
-        Position(float x, float y, float xVelocity = 1, float yVelocity = 1);
+        Position(float x, float y, float xVelocity = 0, float yVelocity = 0);
         /**
          * @brief Construct a new Position object
          *
