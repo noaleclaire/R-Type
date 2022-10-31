@@ -12,6 +12,8 @@
 #include "../Exceptions/ExceptionNoAnimAttribute.hpp"
 #include "../Exceptions/ExceptionNoSpriteAnim.hpp"
 #include "../Exceptions/ExceptionNotANumber.hpp"
+#include "../Exceptions/ExceptionSpriteIdExists.hpp"
+#include "../Exceptions/ExceptionSpriteIdDoesntExists.hpp"
 
 SpritesManager::SpritesManager()
 {
@@ -167,8 +169,15 @@ void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &spri
     try {
         _sprite_type_id_tmp = std::stoi(sprite_type_id, &pos);
         _sprite_type_tmp = getSpriteType(sprite_type);
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == _sprite_type_tmp && it._sprite_type_and_id.second == _sprite_type_id_tmp)
+                throw ExceptionSpriteIdExists("the id of this type of sprite already exists", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
+        }
+        if (_spritesheet_tmp == "")
+            _spritesheet_tmp = "missing_texture.png";
         _sprites_data.push_back(
             {_spritesheet_tmp, std::make_pair(_sprite_type_tmp, _sprite_type_id_tmp), std::unordered_map<std::size_t, std::vector<std::optional<int>>>{}});
+        _spritesheet_tmp = "";
     } catch (const std::invalid_argument &e) {
         throw ExceptionNotANumber(
             "the id of the sprite is not an integer", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
@@ -253,7 +262,7 @@ std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_t
         throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
             "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
     }
-    return (attrs);
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
 }
 
 std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)
@@ -263,5 +272,5 @@ std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::s
             return (it._spritesheet);
         }
     }
-    return ("");
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)");
 }

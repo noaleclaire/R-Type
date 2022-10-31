@@ -17,21 +17,20 @@ ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
+    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
+    // _sprites_manager.printSpritesData();
+
+    _graphical.addAllTextures(_sprites_manager);
+    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
+    Settings::initScene(_unique_registry, _sprites_manager, _graphical);
+
     _client.registry = &_shared_registry;
     _actual_registry = &_unique_registry;
     _client_thread = std::thread(bind(&boost::asio::io_context::run, boost::ref(io_context)));
     _client.pingServer();
 
-    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-    // _sprites_manager.printSpritesData();
-
-    _graphical.addAllTextures(_sprites_manager);
-
     _client.graphical = &_graphical;
     _client.sprites_manager = &_sprites_manager;
-
-    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
-    Settings::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _gameLoop();
 }
