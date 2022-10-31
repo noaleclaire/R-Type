@@ -8,21 +8,20 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "Network/CustomClient.hpp"
-#include "Sfml/Graphical.hpp"
 #include <unordered_map>
+#include "Network/CustomClient.hpp"
 
 class Core {
   public:
     Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port);
+    Core(const Core &other) = delete;
     ~Core();
+    Core &operator=(const Core &other) = delete;
 
     static ecs::Scenes actual_scene;
 
   protected:
   private:
-    void _initMenu();
-    void _initSettings();
     void _switchScenes();
     void _gameLoop();
     void _gameStop();

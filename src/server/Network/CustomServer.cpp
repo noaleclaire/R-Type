@@ -10,6 +10,7 @@
 #include "../../Ecs/Exceptions/ExceptionComponentNull.hpp"
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
 #include "../../Ecs/Factory.hpp"
+#include "../Scenes/LobbySelector.hpp"
 
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, local_port)
@@ -29,7 +30,8 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SwitchToGame: {
-            _initGame();
+            // _initGame();
+            LobbySelector::initScene(this, _registry);
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllGameComponentSent;
             sendToAllClients(message);
@@ -73,18 +75,18 @@ void CustomServer::_initGame()
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, 0, 0, 0, 0, 2, 1);
     _sendNetworkComponents(entity);
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SPACESHIP, 0, 340, 0, 0, 0, 0, 3);
-    _sendNetworkComponents(entity);
+    sendNetworkComponents(entity);
     entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::MONSTER, 1000, 450, 0, 0, 0, 0, 3);
-    _sendNetworkComponents(entity);
+    sendNetworkComponents(entity);
 }
 
-void CustomServer::_sendNetworkComponents(std::size_t entity)
+void CustomServer::sendNetworkComponents(std::size_t entity)
 {
     for (std::size_t i = 0; i < _registry.getNetMessageCreate().size(); i++) {
         try {
             network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(i)(entity, network::CustomMessage::SendGameComponent, i);
             sendToAllClients(message);
-            std::this_thread::sleep_for(5ms);
+            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
         } catch (const ecs::ExceptionComponentNull &e) {
             continue;
         } catch (const ecs::ExceptionIndexComponent &e) {

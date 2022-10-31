@@ -7,7 +7,6 @@
 
 #include <typeindex>
 #include "CustomClient.hpp"
-#include "../../Ecs/Component/component.hpp"
 #include "../../Ecs/Exceptions/Exception.hpp"
 
 CustomClient::CustomClient(boost::asio::io_context &io_context, std::string host, unsigned short server_port)

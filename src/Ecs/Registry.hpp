@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <any>
 #include <functional>
 #include <iostream>
@@ -23,6 +24,9 @@
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
 #include "../Network/Message.hpp"
 #include <unistd.h>
+
+//convert to milliseconds with std::chrono::milliseconds() operator
+#define TRANSFER_TIME_COMPONENT 5
 
 namespace ecs
 {

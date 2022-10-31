@@ -5,15 +5,13 @@
 ** Core
 */
 
-#include "Core.hpp"
-#include <chrono>
 #include <filesystem>
-#include "../Ecs/Factory.hpp"
+#include "Core.hpp"
 #include "../Ecs/Systems/Systems.hpp"
 #include "../Utilities/ParserYaml.hpp"
 #include "Exceptions/Exception.hpp"
-
-using namespace std::chrono_literals;
+#include "Scenes/Menu.hpp"
+#include "Scenes/Settings.hpp"
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 
@@ -32,47 +30,14 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.graphical = &_graphical;
     _client.sprites_manager = &_sprites_manager;
 
-    _initMenu();
-    _initSettings();
+    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
+    Settings::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _gameLoop();
 }
 
 Core::~Core()
 {
-}
-
-void Core::_initMenu()
-{
-    std::vector<float> rect;
-    std::size_t entity;
-
-    _unique_registry.setActualScene(ecs::Scenes::MENU);
-
-    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
-    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
-    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
-    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
-    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-
-    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
-    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 1), rect);
-    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-
-    rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
-    _unique_registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
-    _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
-    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-}
-
-void Core::_initSettings()
-{
-    _unique_registry.setActualScene(ecs::Scenes::SETTINGS);
 }
 
 void Core::_setActualRegistry(ecs::Scenes _scene)
@@ -87,7 +52,7 @@ void Core::_switchScenes()
 {
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
         _client.initGame();
-        std::this_thread::sleep_for(500ms);
+        std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
     }
     _last_scene = Core::actual_scene;
 }

@@ -7,9 +7,8 @@
 
 #pragma once
 
-#include "../../Ecs/Enum.hpp"
-#include "../../Ecs/Registry.hpp"
 #include "../../Network/UdpServerClient.hpp"
+#include "../../Ecs/Registry.hpp"
 #include "../Sfml/Graphical.hpp"
 #include "../Sfml/SpritesManager.hpp"
 
