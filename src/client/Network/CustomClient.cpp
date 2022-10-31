@@ -73,6 +73,7 @@ void CustomClient::_setRectAndSpriteComponent()
                 sprites_manager->get_Spritesheet(
                     registry->getComponents<ecs::Type>().at(it).value().getEntityType(), registry->getComponents<ecs::Type>().at(it).value().getEntityID()),
                 rect);
+            graphical->setSpritePosition(it, registry->getComponents<ecs::Position>().at(it).value().getXPosition(), registry->getComponents<ecs::Position>().at(it).value().getYPosition());
         } catch (const ecs::Exception &e) {
             continue;
         }

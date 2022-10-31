@@ -70,7 +70,7 @@ namespace ecs
             registry.addComponent<ecs::Shooter>(entity, ecs::Shooter());
 
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), 10, 10));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), 5, 5));
             registry.addComponent<ecs::Rectangle>(entity,
                 ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));

@@ -50,7 +50,9 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                graphical.setSpritePosition(it, position.at(it).value().getXPosition(), position.at(it).value().getYPosition());
+                float posX = position.at(it).value().getXPosition();
+                float posY = position.at(it).value().getYPosition();
+                graphical.setSpritePosition(it, posX, posY);
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -66,22 +68,22 @@ namespace ecs
                 if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                     auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
                     registry.getComponents<ecs::Position>().at(it).value().setYPosition(
-                        pos - registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
+                        pos - (10 * registry.getComponents<ecs::Position>().at(it).value().getYVelocity() * graphics::Graphical::current_time));
                 }
                 if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                     auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
                     registry.getComponents<ecs::Position>().at(it).value().setXPosition(
-                        pos - registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
+                        pos - (10 * registry.getComponents<ecs::Position>().at(it).value().getXVelocity() * graphics::Graphical::current_time));
                 }
                 if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                     auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
                     registry.getComponents<ecs::Position>().at(it).value().setYPosition(
-                        pos + registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
+                        pos + (10 * registry.getComponents<ecs::Position>().at(it).value().getYVelocity() * graphics::Graphical::current_time));
                 }
                 if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                     auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
                     registry.getComponents<ecs::Position>().at(it).value().setXPosition(
-                        pos + registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
+                        pos + (10 * registry.getComponents<ecs::Position>().at(it).value().getXVelocity() * graphics::Graphical::current_time));
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;

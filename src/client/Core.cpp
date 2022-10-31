@@ -52,16 +52,22 @@ void Core::_initMenu()
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
     entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
+
     entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
+
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
     entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 1), rect);
+    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
 
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
     entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
     _unique_registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
+    _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
 }
 
 void Core::_initSettings()
@@ -101,6 +107,7 @@ void Core::_gameLoop()
     _actual_registry->setActualScene(actual_scene);
     try {
         while (_graphical.getWindow().isOpen()) {
+            _graphical.getWorldClock();
             _setActualRegistry(Core::actual_scene);
             _graphical.setActualSpritesEntities(Core::actual_scene);
             _switchScenes();
