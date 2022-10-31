@@ -20,11 +20,11 @@ class LobbySelector {
         std::size_t entity;
         registry.setActualScene(ecs::Scenes::GAME);
 
-        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0);
+        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, 0, 0, 0, 0, 1, 0);
         server->sendNetworkComponents(entity);
-        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, 0, 0, 0, 0, 1, 0);
+        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, 0, 0, 0, 0, 1, 0);
         server->sendNetworkComponents(entity);
-        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, 0, 0, 0, 0, 2, 1);
+        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, 0, 0, 0, 0, 2, 1);
         server->sendNetworkComponents(entity);
         entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 0, 340, 0, 0, 0, 0, 3);
         server->sendNetworkComponents(entity);

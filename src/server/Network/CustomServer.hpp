@@ -49,7 +49,5 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
-    void _initGame();
-
     ecs::Registry _registry;
 };

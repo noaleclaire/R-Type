@@ -30,7 +30,6 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SwitchToGame: {
-            // _initGame();
             LobbySelector::initScene(this, _registry);
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllGameComponentSent;
@@ -61,23 +60,6 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             // }
             // break;
     }
-}
-
-void CustomServer::_initGame()
-{
-    std::size_t entity;
-    _registry.setActualScene(ecs::Scenes::GAME);
-
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, 0, 0, 0, 0, 1, 0);
-    _sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, 0, 0, 0, 0, 1, 0);
-    _sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, 0, 0, 0, 0, 2, 1);
-    _sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SPACESHIP, 0, 340, 0, 0, 0, 0, 3);
-    sendNetworkComponents(entity);
-    entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::MONSTER, 1000, 450, 0, 0, 0, 0, 3);
-    sendNetworkComponents(entity);
 }
 
 void CustomServer::sendNetworkComponents(std::size_t entity)

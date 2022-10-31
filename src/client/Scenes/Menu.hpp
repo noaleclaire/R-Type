@@ -21,12 +21,12 @@ class Menu : public ScenesInitializer {
             registry.setActualScene(ecs::Scenes::MENU);
 
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 1), rect);
 
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
