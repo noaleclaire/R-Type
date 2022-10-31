@@ -50,16 +50,16 @@ void Core::_initMenu()
     _unique_registry.setActualScene(ecs::Scenes::MENU);
 
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
     _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
 
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, 2, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
     _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
 
     rect = _sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
-    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 500, 0, 1, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
+    entity = ecs::Factory::createEntity(_unique_registry, ecs::EntityTypes::BACKGROUND, 500, 0, -60, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 1);
     _graphical.addSprite(entity, _sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 1), rect);
     _graphical.setSpritePosition(entity, _actual_registry->getComponents<ecs::Position>().at(entity).value().getXPosition(), _actual_registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
 

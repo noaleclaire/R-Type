@@ -52,6 +52,27 @@ namespace ecs
             try {
                 float posX = position.at(it).value().getXPosition();
                 float posY = position.at(it).value().getYPosition();
+                float veloX = position.at(it).value().getXVelocity();
+                float veloY = position.at(it).value().getYVelocity();
+                try {
+                    registry.getComponents<ecs::Controllable>().at(it);
+                    veloX = 0;
+                    veloY = 0;
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                } catch (const ExceptionComponentNull &e) {
+                } catch (const ExceptionIndexComponent &e) {
+                }
+                posX += veloX * graphics::Graphical::world_current_time;
+                posY += veloY * graphics::Graphical::world_current_time;
+                registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
+                registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 graphical.setSpritePosition(it, posX, posY);
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -60,30 +81,30 @@ namespace ecs
             }
         }
     }
-    void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> const &controllable, graphics::Graphical *graphical)
+    void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical)
     {
         for (auto &it : registry.getEntities()) {
             try {
                 controllable.at(it);
-                if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
-                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(
-                        pos - (10 * registry.getComponents<ecs::Position>().at(it).value().getYVelocity() * graphics::Graphical::current_time));
+                if (graphical->getEvent().type == sf::Event::KeyPressed) {
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                        controllable.at(it).value().setKey("z", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        controllable.at(it).value().setKey("q", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        controllable.at(it).value().setKey("s", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        controllable.at(it).value().setKey("d", true);
                 }
-                if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
-                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
-                        pos - (10 * registry.getComponents<ecs::Position>().at(it).value().getXVelocity() * graphics::Graphical::current_time));
-                }
-                if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
-                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(
-                        pos + (10 * registry.getComponents<ecs::Position>().at(it).value().getYVelocity() * graphics::Graphical::current_time));
-                }
-                if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
-                    auto pos = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
-                        pos + (10 * registry.getComponents<ecs::Position>().at(it).value().getXVelocity() * graphics::Graphical::current_time));
+                if (graphical->getEvent().type == sf::Event::KeyReleased) {
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                        controllable.at(it).value().setKey("z", false);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        controllable.at(it).value().setKey("q", false);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        controllable.at(it).value().setKey("s", false);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        controllable.at(it).value().setKey("d", false);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -97,12 +118,6 @@ namespace ecs
         for (auto &it : registry.getEntities()) {
             try {
                 if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
-                    auto posX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(
-                        posX - registry.getComponents<ecs::Position>().at(it).value().getXVelocity());
-                    // auto posY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    // registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY -
-                    // registry.getComponents<ecs::Position>().at(it).value().getYVelocity());
                     if (registry.getComponents<ecs::Position>().at(it).value().getXPosition()
                         <= -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
                         registry.getComponents<ecs::Position>().at(it).value().setXPosition(

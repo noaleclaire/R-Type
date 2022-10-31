@@ -12,7 +12,7 @@
 
 namespace graphics
 {
-    float Graphical::current_time = 0;
+    float Graphical::world_current_time = 0;
     Graphical::Graphical()
     {
         _actual_sprites_entities = &_unique_sprites_entities;
@@ -112,6 +112,6 @@ namespace graphics
     }
     void Graphical::getWorldClock()
     {
-        Graphical::current_time = _clock.restart().asSeconds();
+        Graphical::world_current_time = _world_clock.restart().asSeconds();
     }
 } // namespace graphics

@@ -18,7 +18,7 @@ namespace graphics
 {
     class Graphical {
       public:
-        static float current_time;
+        static float world_current_time;
 
         Graphical();
         ~Graphical();
@@ -112,7 +112,7 @@ namespace graphics
         sf::RenderWindow _window;
         sf::VideoMode _mode;
         Event _event;
-        sf::Clock _clock;
+        sf::Clock _world_clock;
         std::unordered_map<std::string, sf::Texture> _textures;
         std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;
