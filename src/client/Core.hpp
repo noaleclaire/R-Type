@@ -22,6 +22,7 @@ class Core {
 
   protected:
   private:
+    void _setActualRegistry();
     void _switchScenes();
     void _gameLoop();
     void _gameStop();
@@ -32,7 +33,6 @@ class Core {
     ecs::Registry _unique_registry;
     ecs::Registry _shared_registry;
     ecs::Registry *_actual_registry;
-    void _setActualRegistry(ecs::Scenes _scene);
     SpritesManager _sprites_manager;
     graphics::Graphical _graphical;
     ecs::Scenes _last_scene = ecs::Scenes::MENU;

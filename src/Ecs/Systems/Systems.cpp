@@ -36,14 +36,21 @@ namespace ecs
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
-        for (auto &it : registry.getEntities()) {
-            try {
-                drawable.at(it);
-                graphical->getWindow().draw(graphical->getAllSprites().at(it));
-            } catch (const ExceptionComponentNull &e) {
-                continue;
-            } catch (const ExceptionIndexComponent &e) {
-                continue;
+        for (std::size_t i = 0; i < registry.getEntities().size(); i++) {
+            for (auto &it : registry.getEntities()) {
+                try {
+                    drawable.at(it);
+                    registry.getComponents<ecs::Layer>().at(it);
+                    if (registry.getComponents<ecs::Layer>().at(it).value().getLayer() == i) {
+                        try {
+                            graphical->getWindow().draw(graphical->getAllSprites().at(it));
+                        } catch (const std::out_of_range &e) {}
+                    }
+                } catch (const ExceptionComponentNull &e) {
+                    continue;
+                } catch (const ExceptionIndexComponent &e) {
+                    continue;
+                }
             }
         }
     }
@@ -68,9 +75,8 @@ namespace ecs
                         veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
                     if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
                         veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                } catch (const ExceptionComponentNull &e) {
-                } catch (const ExceptionIndexComponent &e) {
-                }
+                } catch (const ExceptionComponentNull &e) {}
+                catch (const ExceptionIndexComponent &e) {}
                 posX += veloX * graphics::Graphical::world_current_time;
                 posY += veloY * graphics::Graphical::world_current_time;
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);

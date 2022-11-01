@@ -14,7 +14,7 @@
 
 namespace network
 {
-    enum CustomMessage : uint32_t { PingServer, SwitchToGame, SendGameComponent, AllGameComponentSent, RemoveClient };
+    enum CustomMessage : uint32_t { PingServer, CreateRoom, SwitchToGame, SendGameComponent, AllGameComponentSent, RemoveClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;
