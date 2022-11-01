@@ -24,8 +24,8 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
 
-    _client.registry = &_shared_registry;
     _actual_registry = &_unique_registry;
+    _client.registry = &_shared_registry;
     _client_thread = std::thread(bind(&boost::asio::io_context::run, boost::ref(io_context)));
     _client.pingServer();
 
@@ -49,7 +49,13 @@ void Core::_setActualRegistry(ecs::Scenes _scene)
 
 void Core::_switchScenes()
 {
+    if (_last_scene != ecs::Scenes::MENU && Core::actual_scene == ecs::Scenes::MENU)
+        _actual_registry->setActualScene(Core::actual_scene);
+    if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS)
+        _actual_registry->setActualScene(Core::actual_scene);
+
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
+        _actual_registry->setActualScene(Core::actual_scene);
         _client.initGame();
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
     }
