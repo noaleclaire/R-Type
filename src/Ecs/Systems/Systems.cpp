@@ -21,6 +21,8 @@ namespace ecs
                     switch (clickable.at(it).value().getFunction()) {
                         case Clickable::Function::EXIT: graphical->getWindow().close(); break;
                         case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
+                        case Clickable::Function::TOSETTINGS: Core::actual_scene = ecs::Scenes::SETTINGS; break;
+                        case Clickable::Function::TOMENU: Core::actual_scene = ecs::Scenes::MENU; break;
                         default: break;
                     }
                 }

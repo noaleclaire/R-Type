@@ -96,6 +96,14 @@ namespace graphics
         /**
          * @brief
          *
+         * @param entity
+         * @param rect
+         * @param color
+         */
+        void addRectangleShape(std::size_t entity, std::vector<float> rect = {}, sf::Color color = sf::Color::White);
+        /**
+         * @brief
+         *
          * @param registry
          */
         void handleEvents(ecs::Registry &registry);
@@ -117,5 +125,6 @@ namespace graphics
         std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> *_actual_sprites_entities;
+        std::unordered_map<std::size_t, sf::RectangleShape> _rectangleshape_entities;
     };
 } // namespace graphics

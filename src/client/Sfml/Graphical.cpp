@@ -93,6 +93,12 @@ namespace graphics
         }
         _actual_sprites_entities->at(entity).setScale(sf::Vector2f(xScale, yScale));
     }
+    void Graphical::addRectangleShape(std::size_t entity, std::vector<float> rect, sf::Color color)
+    {
+        _rectangleshape_entities.insert_or_assign(entity, sf::RectangleShape(sf::Vector2f(rect.at(2), rect.at(3))));
+        _rectangleshape_entities.at(entity).setFillColor(color);
+        _rectangleshape_entities.at(entity).setPosition(sf::Vector2f(rect.at(0), rect.at(1)));
+    }
 
     void Graphical::handleEvents(ecs::Registry &registry)
     {

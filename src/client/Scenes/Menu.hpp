@@ -33,5 +33,10 @@ class Menu : public ScenesInitializer {
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 480, 200, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
+
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 480, 350, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOSETTINGS);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
         };
 };
