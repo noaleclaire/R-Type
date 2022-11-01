@@ -19,3 +19,4 @@
 #include "Shootable.hpp"
 #include "Shooter.hpp"
 #include "Type.hpp"
+#include "Text.hpp"

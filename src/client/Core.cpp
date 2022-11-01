@@ -39,9 +39,9 @@ Core::~Core()
 {
 }
 
-void Core::_setActualRegistry(ecs::Scenes _scene)
+void Core::_setActualRegistry()
 {
-    if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS)
+    if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS)
         _actual_registry = &_unique_registry;
     else
         _actual_registry = &_shared_registry;
@@ -78,7 +78,7 @@ void Core::_gameLoop()
     try {
         while (_graphical.getWindow().isOpen()) {
             _graphical.getWorldClock();
-            _setActualRegistry(Core::actual_scene);
+            _setActualRegistry();
             _graphical.setActualSpritesEntities(Core::actual_scene);
             _switchScenes();
             _graphical.handleEvents(*_actual_registry);

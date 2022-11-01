@@ -45,6 +45,7 @@ namespace ecs
             registerComponents<ecs::Shootable>();
             registerComponents<ecs::Shooter>();
             registerComponents<ecs::Rectangle>();
+            registerComponents<ecs::Text>();
         };
         ~Registry() = default;
         /**

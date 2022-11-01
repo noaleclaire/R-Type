@@ -37,7 +37,26 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @return CustomServer&
      */
     CustomServer &operator=(const CustomServer &other) = delete;
-    void sendNetworkComponents(std::size_t entity);
+    template <class T>
+    void sendNetworkComponents(std::size_t entity, T id_msg, bool all_clients)
+    {
+        for (std::size_t i = 0; i < _registry.getNetMessageCreate().size(); i++) {
+            try {
+                network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(i)(entity, id_msg, i);
+                if (all_clients)
+                    sendToAllClients(message);
+                else
+                    send(message);
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            } catch (const ecs::ExceptionComponentNull &e) {
+                continue;
+            } catch (const ecs::ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
+   void addSceneRoomToVectorRoom(ecs::Scenes scene);
 
   protected:
     /**
@@ -50,4 +69,5 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
 
   private:
     ecs::Registry _registry;
+    std::vector<ecs::Scenes> _rooms;
 };

@@ -10,6 +10,7 @@ set(SRC
     ${SRCROOT}/Rectangle.cpp
     ${SRCROOT}/Layer.cpp
     ${SRCROOT}/Type.cpp
+    ${SRCROOT}/Text.cpp
     PARENT_SCOPE)
 
 set(INCDIRS

@@ -11,6 +11,7 @@
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
 #include "../../Ecs/Factory.hpp"
 #include "../Scenes/LobbySelector.hpp"
+#include "../Scenes/Room.hpp"
 
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, local_port)
@@ -19,6 +20,11 @@ CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short l
 
 CustomServer::~CustomServer()
 {
+}
+
+void CustomServer::addSceneRoomToVectorRoom(ecs::Scenes scene)
+{
+    _rooms.push_back(scene);
 }
 
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -35,6 +41,21 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             message.header.id = network::CustomMessage::AllGameComponentSent;
             sendToAllClients(message);
         } break;
+        case network::CustomMessage::CreateRoom: {
+            switch (_rooms.size())
+            {
+                case 0: Room::initScene(this, _registry, ecs::Scenes::ROOM1); break;
+                case 1: Room::initScene(this, _registry, ecs::Scenes::ROOM2); break;
+                case 2: Room::initScene(this, _registry, ecs::Scenes::ROOM3); break;
+                case 3: Room::initScene(this, _registry, ecs::Scenes::ROOM4); break;
+                case 4: Room::initScene(this, _registry, ecs::Scenes::ROOM5); break;
+                case 5: Room::initScene(this, _registry, ecs::Scenes::ROOM6); break;
+                default: return; break;
+            }
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::AllGameComponentSent;
+            send(message);
+        } break;
         case network::CustomMessage::RemoveClient: {
             for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
                 if (_clients_endpoint.at(i) == target_endpoint)
@@ -46,33 +67,5 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         default:
             break;
-
-            // case network::CustomMsgTypes::MessageAll:
-            // {
-            //     std::cout << "[" << client->GetID() << "]: Message All\n";
-
-            //     // Construct a new message and send it to all clients
-            //     olc::net::message<CustomMsgTypes> msg;
-            //     msg.header.id = CustomMsgTypes::ServerMessage;
-            //     msg << client->GetID();
-            //     MessageAllClients(msg, client);
-
-            // }
-            // break;
-    }
-}
-
-void CustomServer::sendNetworkComponents(std::size_t entity)
-{
-    for (std::size_t i = 0; i < _registry.getNetMessageCreate().size(); i++) {
-        try {
-            network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(i)(entity, network::CustomMessage::SendGameComponent, i);
-            sendToAllClients(message);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-        } catch (const ecs::ExceptionComponentNull &e) {
-            continue;
-        } catch (const ecs::ExceptionIndexComponent &e) {
-            continue;
-        }
     }
 }
