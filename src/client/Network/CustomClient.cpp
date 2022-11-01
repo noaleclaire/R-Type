@@ -45,6 +45,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
     switch (msg.header.id) {
         case network::CustomMessage::SendGameComponent: {
             registry->setActualScene(ecs::Scenes::GAME);
+
             std::size_t index_component_create = 0;
             msg >> index_component_create;
             registry->getNetComponentCreate().at(index_component_create)(msg);
