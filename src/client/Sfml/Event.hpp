@@ -28,5 +28,6 @@ namespace graphics
         void _handleKeyEvents(Graphical *graphical, ecs::Registry &registry);
 
         sf::Event _event;
+        bool _leftMouseHeld;
     };
 } // namespace graphics

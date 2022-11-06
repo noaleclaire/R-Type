@@ -37,6 +37,18 @@ namespace graphics
          */
         std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;
         /**
+         * @brief Get the All RectangleShape object
+         *
+         * @return std::unordered_map<std::size_t, sf::RectangleShape>
+         */
+        std::unordered_map<std::size_t, sf::RectangleShape> getAllRectangleShapes() const;
+        /**
+         * @brief Get the All Text object
+         *
+         * @return std::unordered_map<std::size_t, sf::Text>
+         */
+        std::unordered_map<std::size_t, sf::Text> getAllTexts() const;
+        /**
          * @brief Get the Video Mode object
          *
          * @return sf::VideoMode
@@ -54,6 +66,14 @@ namespace graphics
          * @return sf::Event&
          */
         sf::Event &getEvent();
+        /**
+         * @brief Get the Text String object
+         *
+         * @param entity
+         * 
+         * @return std::string
+         */
+        std::string getTextString(std::size_t entity);
 
         /* Setter */
         /**
@@ -71,6 +91,44 @@ namespace graphics
          * @param posY
          */
         void setSpritePosition(std::size_t entity, float posX, float posY);
+        /**
+         * @brief Set the Sprite Position object
+         *
+         * @param entity
+         * @param posX
+         * @param posY
+         */
+        void setRectangleShapePosition(std::size_t entity, float posX, float posY);
+        /**
+         * @brief Set the Rectangle Shape Rect object
+         *
+         * @param entity
+         * @param height
+         * @param width
+         */
+        void setRectangleShapeRect(std::size_t entity, float width, float height);
+        /**
+         * @brief Set the Rectangle Shape Color object
+         *
+         * @param entity
+         * @param color
+         */
+        void setRectangleShapeColor(std::size_t entity, sf::Color color);
+        /**
+         * @brief Set the Rectangle Shape Color object
+         *
+         * @param entity
+         * @param color
+         * @param size
+         */
+        void setRectangleShapeOutline(std::size_t entity, sf::Color color, std::size_t size);
+        /**
+         * @brief Set the Text String object
+         *
+         * @param entity
+         * @param str
+         */
+        void setTextString(std::size_t entity, std::string str);
         /**
          * @brief Set the Actual Sprites Entities object
          *
@@ -104,6 +162,15 @@ namespace graphics
         /**
          * @brief
          *
+         * @param entity
+         * @param str
+         * @param rect
+         * @param color
+         */
+        void addText(std::size_t entity, std::string str, std::vector<float> rect = {}, sf::Color color = sf::Color::White);
+        /**
+         * @brief
+         *
          * @param registry
          */
         void handleEvents(ecs::Registry &registry);
@@ -121,10 +188,12 @@ namespace graphics
         sf::VideoMode _mode;
         Event _event;
         sf::Clock _world_clock;
+        sf::Font _font;
         std::unordered_map<std::string, sf::Texture> _textures;
         std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> *_actual_sprites_entities;
         std::unordered_map<std::size_t, sf::RectangleShape> _rectangleshape_entities;
+        std::unordered_map<std::size_t, sf::Text> _text_entities;
     };
 } // namespace graphics
