@@ -108,7 +108,7 @@ namespace graphics
 
     void Graphical::setActualSpritesEntities(ecs::Scenes _scene)
     {
-        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS)
+        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS || _scene == ecs::Scenes::LISTROOM)
             _actual_sprites_entities = &_unique_sprites_entities;
         else
             _actual_sprites_entities = &_shared_sprites_entities;

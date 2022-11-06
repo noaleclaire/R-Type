@@ -14,7 +14,14 @@
 
 namespace network
 {
-    enum CustomMessage : uint32_t { PingServer, CreateRoom, SwitchToGame, SendGameComponent, AllGameComponentSent, RemoveClient };
+    enum CustomMessage : uint32_t { PingServer,
+                                CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
+                                GetRoomScene,
+                                InitListRoom, UpdateListRoom,
+                                JoinRoom, JoinRoomById, MaxPlayersInRoom,
+                                SendComponent, AllComponentSent,
+                                SwitchToGame,
+                                RemoveClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;
@@ -96,20 +103,6 @@ namespace network
          * @brief
          *
          * @tparam U
-         * @param data
-         */
-        template <class U> void pushedData(Message<T> &msg, const U &data)
-        {
-            static_assert(std::is_standard_layout<U>::value, "Data is too complex to be pushed into vector");
-            std::size_t i = msg.body.size();
-            msg.body.resize(msg.body.size() + sizeof(U));
-            std::memcpy(msg.body.data() + i, &data, sizeof(U));
-            msg.header.size = msg.size();
-        }
-        /**
-         * @brief
-         *
-         * @tparam U
          * @param msg
          * @param data
          * @return Message<T>&
@@ -122,22 +115,6 @@ namespace network
             msg.body.resize(i);
             msg.header.size = msg.size();
             return (msg);
-        }
-        /**
-         * @brief
-         *
-         * @tparam U
-         * @return U
-         */
-        template <class U> U pulledData(Message<T> &msg)
-        {
-            static_assert(std::is_standard_layout<U>::value, "Data is too complex to be pulled from vector");
-            std::size_t i = msg.body.size() - sizeof(U);
-            U data;
-            std::memcpy(&data, msg.body.data() + i, sizeof(U));
-            msg.body.resize(i);
-            msg.header.size = msg.size();
-            return (data);
         }
     };
 } // namespace network

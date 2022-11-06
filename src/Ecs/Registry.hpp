@@ -46,6 +46,7 @@ namespace ecs
             registerComponents<ecs::Shooter>();
             registerComponents<ecs::Rectangle>();
             registerComponents<ecs::Text>();
+            registerComponents<ecs::CompoScene>();
         };
         ~Registry() = default;
         /**
@@ -261,6 +262,21 @@ namespace ecs
                     return (_entities.at(_actual_scene).at(i));
             }
             throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &getEntityById(std::size_t id)");
+        };
+        std::vector<std::size_t> getEntitiesIdByEcsType(ecs::EntityTypes type)
+        {
+            std::vector<std::size_t> tmp_vector;
+            for (auto &it : _entities.at(_actual_scene)) {
+                try {
+                    if (getComponents<ecs::Type>().at(it).value().getEntityType() == type)
+                        tmp_vector.push_back(it.getId());
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    continue;
+                } catch (const ecs::ExceptionIndexComponent &e) {
+                    continue;
+                }
+            }
+            return (tmp_vector);
         };
         /**
          * @brief Get the Entities object

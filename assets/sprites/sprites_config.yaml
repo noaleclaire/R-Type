@@ -54,6 +54,14 @@ spritesheet: button.png
    rect_width: 300
    rect_height: 110
 
+spritesheet: button.png
+ room: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 300
+   rect_height: 110
+
 spritesheet: spaceships.gif
  spaceship: 0
   anim: 0

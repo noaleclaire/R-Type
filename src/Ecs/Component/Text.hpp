@@ -7,10 +7,13 @@
 
 #pragma once
 #include <memory>
+#include "AComponent.hpp"
+
+#define BUFFER_SIZE 255
 
 namespace ecs
 {
-    class Text {
+    class Text : public AComponent {
         public:
             Text(char *text);
             Text() = default;
@@ -18,11 +21,11 @@ namespace ecs
             ~Text() = default;
             Text &operator=(const Text &other) = default;
 
-            char *getText() const;
+            char *getText();
             void setText(char *text);
 
         protected:
         private:
-            char *_text;
+            char _text[BUFFER_SIZE];
     };
 }

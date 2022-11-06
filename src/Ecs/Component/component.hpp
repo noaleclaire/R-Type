@@ -20,3 +20,4 @@
 #include "Shooter.hpp"
 #include "Type.hpp"
 #include "Text.hpp"
+#include "CompoScene.hpp"
