@@ -23,6 +23,7 @@ class Core {
 
   protected:
   private:
+    void _handleUserPseudo();
     void _setActualRegistry();
     void _switchScenes();
     void _switchScenesCreateRoom();

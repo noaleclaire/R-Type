@@ -7,21 +7,25 @@
 
 #include <filesystem>
 #include "Core.hpp"
+#include "../Utilities/ParserUserInfo.hpp"
 #include "../Ecs/Systems/Systems.hpp"
 #include "../Utilities/ParserYaml.hpp"
 #include "Exceptions/Exception.hpp"
 #include "Scenes/Menu.hpp"
 #include "Scenes/Settings.hpp"
 #include "Scenes/ListRoom.hpp"
+#include "Scenes/TypePseudo.hpp"
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
+    ParserUserInfo::getUserInfo(&_user_info);
     // _sprites_manager.printSpritesData();
 
     _graphical.addAllTextures(_sprites_manager);
+    TypePseudo::initScene(_unique_registry, _sprites_manager, _graphical);
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
@@ -44,7 +48,7 @@ Core::~Core()
 
 void Core::_setActualRegistry()
 {
-    if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS || Core::actual_scene == ecs::Scenes::LISTROOM)
+    if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS || Core::actual_scene == ecs::Scenes::LISTROOM || Core::actual_scene == ecs::Scenes::TYPEPSEUDO)
         _actual_registry = &_unique_registry;
     else
         _actual_registry = &_shared_registry;
@@ -114,6 +118,8 @@ void Core::_switchScenesJoinRoom()
 
 void Core::_switchScenes()
 {
+    if (_last_scene != ecs::Scenes::TYPEPSEUDO && Core::actual_scene == ecs::Scenes::TYPEPSEUDO)
+        _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::MENU && Core::actual_scene == ecs::Scenes::MENU)
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS)
@@ -136,6 +142,20 @@ void Core::_switchScenes()
     _last_scene = Core::actual_scene;
 }
 
+void Core::_handleUserPseudo()
+{
+    if (Core::actual_scene == ecs::Scenes::TYPEPSEUDO) {
+        for (auto &it : _unique_registry.getEntities()) {
+            try {
+                if (_graphical.getTextString(it).size() > 0)
+                    std::strcpy(_user_info.pseudo, _graphical.getTextString(it).c_str());
+            } catch (const std::out_of_range &e) {}
+        }
+    }
+    if (std::strcmp(_user_info.pseudo, "") == 0)
+        Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
+}
+
 void Core::_gameStop()
 {
     _client.clientDisconnect();
@@ -152,6 +172,7 @@ void Core::_gameLoop()
     _actual_registry->setActualScene(actual_scene);
     try {
         while (_graphical.getWindow().isOpen()) {
+            _handleUserPseudo();
             _graphical.getWorldClock();
             _setActualRegistry();
             _graphical.setActualGraphicsEntities(Core::actual_scene);
@@ -169,4 +190,5 @@ void Core::_gameLoop()
         throw e;
     }
     _gameStop();
+    ParserUserInfo::saveUserInfo(&_user_info);
 }

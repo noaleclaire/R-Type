@@ -72,7 +72,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
-            registry.addComponent<ecs::TextBox>(registry.getEntityById(entity), ecs::TextBox());
+            registry.addComponent<ecs::TextBox>(registry.getEntityById(entity), ecs::TextBox(PSEUDO_SIZE));
             graphical.addRectangleShape(entity, rect, sf::Color::Green);
             graphical.setRectangleShapeOutline(entity, sf::Color::Red, 5);
 

@@ -9,7 +9,7 @@
 
 namespace ecs
 {
-    TextBox::TextBox() : _selected(false)
+    TextBox::TextBox(std::size_t max_size) : _selected(false), _max_size(max_size)
     {
     }
 
@@ -26,5 +26,15 @@ namespace ecs
     void TextBox::unselect()
     {
         _selected = false;
+    }
+
+    std::size_t TextBox::getMaxSize() const
+    {
+        return (_max_size);
+    }
+
+    void TextBox::setMaxSize(std::size_t max_size)
+    {
+        _max_size = max_size;
     }
 }
