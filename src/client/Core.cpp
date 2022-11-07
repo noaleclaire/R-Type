@@ -17,6 +17,7 @@
 #include "Scenes/TypePseudo.hpp"
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
+std::string Core::new_pseudo = "";
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
@@ -129,6 +130,8 @@ void Core::_switchScenes()
         _client.initListRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
     }
+    if (Core::actual_scene == ecs::Scenes::SETTINGS && _last_scene != ecs::Scenes::SETTINGS)
+        ecs::Systems::setUserPseudoInSettings(*_actual_registry, _graphical, _user_info.pseudo);
 
     _switchScenesJoinRoom();
     _switchScenesCreateRoom();
@@ -144,16 +147,22 @@ void Core::_switchScenes()
 
 void Core::_handleUserPseudo()
 {
-    if (Core::actual_scene == ecs::Scenes::TYPEPSEUDO) {
+    if (actual_scene == ecs::Scenes::TYPEPSEUDO) {
         for (auto &it : _unique_registry.getEntities()) {
             try {
                 if (_graphical.getTextString(it).size() > 0)
                     std::strcpy(_user_info.pseudo, _graphical.getTextString(it).c_str());
+                else
+                    std::strcpy(_user_info.pseudo, "");
             } catch (const std::out_of_range &e) {}
         }
     }
     if (std::strcmp(_user_info.pseudo, "") == 0)
         Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
+    if (Core::new_pseudo.size() > 0) {
+        std::strcpy(_user_info.pseudo, Core::new_pseudo.c_str());
+        Core::new_pseudo = "";
+    }
 }
 
 void Core::_gameStop()

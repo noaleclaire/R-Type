@@ -31,6 +31,10 @@ namespace ecs
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID: Core::actual_scene = ecs::Scenes::JOINROOMBYID; break;
+                            case Clickable::Function::CONFIRMPSEUDO:
+                                if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
+                                    Core::new_pseudo = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());
+                                break;
                             default: break;
                         }
                     }
@@ -273,6 +277,19 @@ namespace ecs
                         graphical->setBasicSprite(it);
                     }
                 } catch (const std::out_of_range &e) {}
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::TextBox>().at(it);
+                graphical.setTextString(registry.getComponents<ecs::Link>().at(it).value().getLink(), pseudo);
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {

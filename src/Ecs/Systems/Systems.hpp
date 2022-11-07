@@ -85,6 +85,14 @@ namespace ecs
          * @param graphical
          */
         static void Hover(Registry &registry, SparseArray<ecs::Hover> &hover, graphics::Graphical *graphical);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param graphical
+         * @param pseudo
+         */
+        static void setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo);
 
       private:
         static void changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);

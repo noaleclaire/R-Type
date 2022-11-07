@@ -23,7 +23,7 @@ void ParserUserInfo::getUserInfo(UserInfo *obj)
  
     // Reading from file into object "obj"
     if (file_obj.is_open())
-        file_obj.read((char *)obj, sizeof(obj));
+        file_obj >> (char *)obj;
 
     if (file_obj.is_open())
         file_obj.close();
@@ -35,11 +35,11 @@ void ParserUserInfo::saveUserInfo(UserInfo *obj)
     std::ofstream file_obj;
  
     // Opening file in append mode
-    file_obj.open(std::filesystem::current_path() / "user.cache", std::ios::app);
+    file_obj.open(std::filesystem::current_path() / "user.cache", std::ios::out | std::ios::trunc);
  
     // Writing the object's data in file
     if (file_obj.is_open())
-        file_obj.write((char*)obj, sizeof(obj));
+        file_obj << (char *)obj;
 
     if (file_obj.is_open())
         file_obj.close();
