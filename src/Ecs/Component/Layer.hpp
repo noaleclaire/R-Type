@@ -45,7 +45,7 @@ namespace ecs
          *
          * @return int
          */
-        int getLayer() const;
+        std::size_t getLayer() const;
 
         /* Setter */
         /**

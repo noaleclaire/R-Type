@@ -23,3 +23,4 @@
 #include "Type.hpp"
 #include "Text.hpp"
 #include "TextBox.hpp"
+#include "CompoScene.hpp"

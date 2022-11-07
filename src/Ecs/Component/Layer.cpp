@@ -14,7 +14,7 @@ namespace ecs
     }
 
     /* Getter */
-    int Layer::getLayer() const
+    std::size_t Layer::getLayer() const
     {
         return (_layer);
     }

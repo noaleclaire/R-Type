@@ -32,7 +32,8 @@ namespace ecs
         static Entity createEntity(Registry &registry, EntityTypes entityType, Params &&...args)
         {
             MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster}, {EntityTypes::SHOT, &createShot},
-                {EntityTypes::BUTTON, &createButton}, {EntityTypes::WALL, &createWall}, {EntityTypes::BACKGROUND, &createBackground}};
+                {EntityTypes::BUTTON, &createButton}, {EntityTypes::ROOM, &createRoom}, {EntityTypes::WALL, &createWall},
+                {EntityTypes::BACKGROUND, &createBackground}};
             MapCall::const_iterator call;
 
             call = creator.find(entityType);
@@ -145,6 +146,27 @@ namespace ecs
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BUTTON));
+            return (entity);
+        }
+        /**
+         * @brief Create a Room object
+         *
+         * @param registry
+         * @return Entity
+         */
+        static Entity createRoom(Registry &registry)
+        {
+            Entity entity = registry.spawnEntity();
+
+            registry.addComponent<ecs::Clickable>(entity, ecs::Clickable(ecs::Clickable::Function::JOINROOM));
+
+            registry.addComponent<ecs::Position>(
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Rectangle>(entity,
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::ROOM));
             return (entity);
         }
         /**
