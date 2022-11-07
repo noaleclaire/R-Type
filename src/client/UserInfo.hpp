@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define PSEUDO_SIZE 16
+
 struct UserInfo {
-    char *pseudo;
+    char pseudo[PSEUDO_SIZE];
 };

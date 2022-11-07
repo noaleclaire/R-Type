@@ -17,9 +17,9 @@ namespace ecs
         /**
          * @brief Construct a new TextBox object
          *
-         * @param TextBox
+         * @param max_size
          */
-        TextBox();
+        TextBox(std::size_t max_size = 1);
         /**
          * @brief Construct a new TextBox object
          *
@@ -55,8 +55,19 @@ namespace ecs
          * @brief Unselect the TextBox
          */
         void unselect();
+        /**
+         * @brief Unselect the TextBox
+         */
+        std::size_t getMaxSize() const;
+        /**
+         * @brief Unselect the TextBox
+         * 
+         * @param max_size
+         */
+        void setMaxSize(std::size_t max_size);
 
       private:
         bool _selected;
+        std::size_t _max_size;
     };
 } // namespace ecs

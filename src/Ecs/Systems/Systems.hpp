@@ -89,7 +89,16 @@ namespace ecs
          * @brief
          *
          * @param registry
+         * @param graphical
+         * @param pseudo
+         */
+        static void setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo);
+        /**
+         * @brief
+         *
+         * @param registry
          * @param sprites_manager
+         * @param graphical
          */
         static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
 

@@ -20,9 +20,11 @@ class Core {
     Core &operator=(const Core &other) = delete;
 
     static ecs::Scenes actual_scene;
+    static std::string new_pseudo;
 
   protected:
   private:
+    void _handleUserPseudo();
     void _setActualRegistry();
     void _switchScenes();
     void _switchScenesCreateRoom();

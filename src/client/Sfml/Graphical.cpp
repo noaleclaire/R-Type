@@ -164,7 +164,7 @@ namespace graphics
 
     void Graphical::setActualGraphicsEntities(ecs::Scenes _scene)
     {
-        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS || _scene == ecs::Scenes::LISTROOM) {
+        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS || _scene == ecs::Scenes::LISTROOM || _scene == ecs::Scenes::TYPEPSEUDO) {
             _actual_sprites_entities = &_unique_sprites_entities;
             _actual_text_entities = &_text_entities;
         } else {
