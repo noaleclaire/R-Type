@@ -21,17 +21,19 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
     // _sprites_manager.printSpritesData();
 
-    _graphical.addAllTextures(_sprites_manager);
+    _graphical.sprites_manager = &_sprites_manager;
+    _graphical.addAllTextures();
+
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _actual_registry = &_unique_registry;
+
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
     _client_thread = std::thread(bind(&boost::asio::io_context::run, boost::ref(io_context)));
     _client.pingServer();
-
     _client.graphical = &_graphical;
     _client.sprites_manager = &_sprites_manager;
 
@@ -159,6 +161,7 @@ void Core::_gameLoop()
             _graphical.handleEvents(*_actual_registry);
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Position(*_actual_registry, _actual_registry->getComponents<ecs::Position>(), _graphical);
+            ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
             _graphical.draw(*_actual_registry);
         }
     } catch (const Exception &e) {

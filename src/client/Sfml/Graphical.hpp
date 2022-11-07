@@ -153,6 +153,16 @@ namespace graphics
          * @param entity
          */
         void setBasicSprite(std::size_t entity);
+        /**
+         * @brief Set the Texture Rect Sprite
+         *
+         * @param entity
+         * @param x
+         * @param y
+         * @param width
+         * @param height
+         */
+        void setTextureRectSprite(std::size_t entity, float x, float y, float width, float height);
 
         /* Other */
         /**
@@ -160,7 +170,7 @@ namespace graphics
          *
          * @param sprites_manager
          */
-        void addAllTextures(SpritesManager &sprites_manager);
+        void addAllTextures();
         /**
          * @brief
          *
@@ -198,7 +208,13 @@ namespace graphics
          * @param registry
          */
         void draw(ecs::Registry &registry);
+        /**
+         * @brief Get the World Clock
+         *
+         */
         void getWorldClock();
+
+        SpritesManager *sprites_manager;
 
       protected:
       private:

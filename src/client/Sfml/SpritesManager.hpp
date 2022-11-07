@@ -15,10 +15,10 @@
 #include "../../Utilities/MapMemberFunctionPointer.hpp"
 #include <unordered_map>
 
-#define NB_ANIM_ATTRIBUTES (6)
+#define NB_ANIM_ATTRIBUTES (7)
 
 enum SpriteTypeAttributes { anim };
-enum SpriteAnimAttributes { rect_x, rect_y, rect_width, rect_height, nb_anim, next_anim };
+enum SpriteAnimAttributes { rect_x, rect_y, rect_width, rect_height, nb_anim, speed_anim, next_anim };
 
 class SpritesManager : public AYamlConfig {
   public:
@@ -111,22 +111,80 @@ class SpritesManager : public AYamlConfig {
      */
     void addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value);
     /**
-     * @brief Get the Texture Path object
+     * @brief Get the Texture Path
      *
      * @return std::vector<std::string> const
      */
     std::vector<std::string> const getTexturePath() const;
     /**
-     * @brief Get the Animations rect object
+     * @brief Get the Animations rect
      *
      * @param entity_type
      * @param entity_id
      * @param anim_id
      * @return std::vector<float>
      */
-    std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id);
+    std::vector<float> get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id = 0);
     /**
-     * @brief Get the Spritesheet object
+     * @brief Get the Nb Animation
+     *
+     * @param entity_type
+     * @param entity_id
+     * @param anim_id
+     * @return int
+     */
+    int getNbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id = 0);
+    /**
+     * @brief Get the Speed Animation
+     *
+     * @param entity_type
+     * @param entity_id
+     * @param anim_id
+     * @return int
+     */
+    int getSpeedAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id = 0);
+    /**
+     * @brief Get the Next Animation
+     *
+     * @param entity_type
+     * @param entity_id
+     * @param anim_id
+     * @return int
+     */
+    int getNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id = 0);
+    /**
+     * @brief Get the Animation Current Frame
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return int
+     */
+    float getAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id);
+    /**
+     * @brief Set the Animation Current Frame
+     *
+     * @param entity_type
+     * @param entity_id
+     */
+    void setAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm);
+    /**
+     * @brief Get the Index Current Animation
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return int
+     */
+    int getIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id);
+    /**
+     * @brief Set the Index Current Animation
+     *
+     * @param entity_type
+     * @param entity_id
+     * @param index
+     */
+    void setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, int index);
+    /**
+     * @brief Get the Spritesheet
      *
      * @param entity_type
      * @param entity_id
@@ -153,6 +211,8 @@ class SpritesManager : public AYamlConfig {
         std::string _spritesheet;
         std::pair<ecs::EntityTypes, std::size_t> _sprite_type_and_id;
         std::unordered_map<std::size_t, std::vector<std::optional<int>>> _animations;
+        float _anim_current_frame = 0;
+        int _index_current_anim = 0;
     };
     std::vector<SpriteData> _sprites_data;
     std::vector<std::string> _textures_path;
@@ -160,5 +220,5 @@ class SpritesManager : public AYamlConfig {
     std::string _spritesheet_tmp = "";
     ecs::EntityTypes _sprite_type_tmp;
     long unsigned int _sprite_type_id_tmp;
-    long unsigned int _sprite_type_anim_id_tmp;
+    long int _sprite_type_anim_id_tmp;
 };
