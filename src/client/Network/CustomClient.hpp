@@ -54,10 +54,40 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
+    void createPublicRoom();
+    /**
+     * @brief
+     *
+     */
+    void createPrivateRoom();
+    /**
+     * @brief
+     *
+     */
+    void initListRoom();
+    /**
+     * @brief
+     *
+     * @param scene
+     */
+    void joinRoom(ecs::Scenes scene);
+    /**
+     * @brief
+     *
+     * @param id_room
+     */
+    void joinRoomById(int id_room);
+    /**
+     * @brief
+     *
+     */
     void clientDisconnect();
     ecs::Registry *registry;
+    ecs::Registry *non_shareable_registry;
     graphics::Graphical *graphical;
     SpritesManager *sprites_manager;
+    bool error_msg_server = false;
+    std::string txt_error_msg_server;
 
   protected:
     /**
@@ -72,11 +102,17 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     /**
      * @brief
      *
+     * @param msg_error
      */
-    void _setRectAndSpriteComponent();
+    void _setErrorMessage(std::string msg_error);
     /**
      * @brief
      *
-     * @param msg
      */
+    void _setupListRoomScene(network::Message<network::CustomMessage> &msg);
+    /**
+     * @brief
+     *
+     */
+    void _setRectAndSpriteComponent();
 };

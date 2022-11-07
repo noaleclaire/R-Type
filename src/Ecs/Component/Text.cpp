@@ -6,6 +6,7 @@
 */
 
 #include <cstring>
+#include <iostream>
 #include "Text.hpp"
 
 namespace ecs

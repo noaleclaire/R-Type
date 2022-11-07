@@ -36,20 +36,20 @@ class Menu : public ScenesInitializer {
                 //join game
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 5, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 1280 - rect.at(2), btn_y, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::LISTROOM);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 5), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
             btn_y += rect.at(3) + 5;
                 //create public game
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 2, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 1280 - rect.at(2) - 186, btn_y, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CREATEPUBLICROOM);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 2), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
                 //create private game
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 1, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 1280 - rect.at(2), btn_y, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CREATEPRIVATEROOM);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 1), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
             btn_y += rect.at(3) + 5;

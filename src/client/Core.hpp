@@ -24,6 +24,8 @@ class Core {
   private:
     void _setActualRegistry();
     void _switchScenes();
+    void _switchScenesCreateRoom();
+    void _switchScenesJoinRoom();
     void _gameLoop();
     void _gameStop();
 
