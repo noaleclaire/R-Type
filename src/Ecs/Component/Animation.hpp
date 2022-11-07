@@ -6,7 +6,6 @@
 */
 
 #pragma once
-
 #include "AComponent.hpp"
 
 namespace ecs

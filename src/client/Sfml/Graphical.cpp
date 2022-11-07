@@ -96,10 +96,10 @@ namespace graphics
     }
 
     /* Other */
-    void Graphical::addAllTextures(SpritesManager &sprites_manager)
+    void Graphical::addAllTextures()
     {
         sf::Texture texture;
-        for (auto &it : sprites_manager.getTexturePath()) {
+        for (auto &it : sprites_manager->getTexturePath()) {
             if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/" + it))) {
                 if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png")))
                     throw SfmlExceptionTexture("Cannot load texture from file", "void Graphical::addAllTextures(SpritesManager &sprites_manager)");
@@ -182,20 +182,24 @@ namespace graphics
     {
         sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
 
-        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.height, rect.width, rect.height));
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(rect.width, rect.top, rect.width, rect.height));
     }
 
     void Graphical::setPressedSprite(std::size_t entity)
     {
         sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
 
-        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.height * 2, rect.width, rect.height));
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(rect.width * 2, rect.top, rect.width, rect.height));
     }
 
     void Graphical::setBasicSprite(std::size_t entity)
     {
         sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
 
-        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, 0, rect.width, rect.height));
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.top, rect.width, rect.height));
+    }
+    void Graphical::setTextureRectSprite(std::size_t entity, float x, float y, float width, float height)
+    {
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(x, y, width, height));
     }
 } // namespace graphics

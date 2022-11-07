@@ -93,6 +93,14 @@ namespace ecs
          * @param pseudo
          */
         static void setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param sprites_manager
+         * @param graphical
+         */
+        static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
 
       private:
         static void changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);
