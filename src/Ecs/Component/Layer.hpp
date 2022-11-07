@@ -17,14 +17,9 @@ namespace ecs
         /**
          * @brief Construct a new Layer object
          *
-         */
-        Layer() = default;
-        /**
-         * @brief Construct a new Layer object
-         *
          * @param layer
          */
-        Layer(std::size_t layer);
+        Layer(std::size_t layer = 0);
         /**
          * @brief Construct a new Layer object
          *
@@ -50,7 +45,7 @@ namespace ecs
          *
          * @return int
          */
-        int getLayer() const;
+        std::size_t getLayer() const;
 
         /* Setter */
         /**

@@ -8,6 +8,7 @@
 #include <typeindex>
 #include "CustomClient.hpp"
 #include "../../Ecs/Exceptions/Exception.hpp"
+#include "../Exceptions/Exception.hpp"
 
 CustomClient::CustomClient(boost::asio::io_context &io_context, std::string host, unsigned short server_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, host, server_port)
@@ -32,6 +33,43 @@ void CustomClient::initGame()
     send(msg);
 }
 
+void CustomClient::createPublicRoom()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::CreatePublicRoom;
+    send(msg);
+}
+
+void CustomClient::createPrivateRoom()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::CreatePrivateRoom;
+    send(msg);
+}
+
+void CustomClient::initListRoom()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::InitListRoom;
+    send(msg);
+}
+
+void CustomClient::joinRoom(ecs::Scenes scene)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::JoinRoom;
+    msg << scene;
+    send(msg);
+}
+
+void CustomClient::joinRoomById(int id_room)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::JoinRoomById;
+    msg << id_room;
+    send(msg);
+}
+
 void CustomClient::clientDisconnect()
 {
     network::Message<network::CustomMessage> msg;
@@ -43,17 +81,71 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
 {
     static_cast<void>(target_endpoint);
     switch (msg.header.id) {
-        case network::CustomMessage::SendGameComponent: {
-            registry->setActualScene(ecs::Scenes::GAME);
+        case network::CustomMessage::GetRoomScene: {
+            ecs::Scenes scene;
+            msg >> scene;
+            registry->setActualScene(scene);
+        } break;
+        case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
             msg >> index_component_create;
             registry->getNetComponentCreate().at(index_component_create)(msg);
         } break;
-        case network::CustomMessage::AllGameComponentSent: {
+        case network::CustomMessage::AllComponentSent: {
             _setRectAndSpriteComponent();
+        } break;
+        case network::CustomMessage::UpdateListRoom: {
+            _setupListRoomScene(msg);
+        } break;
+        case network::CustomMessage::MaxRoomLimit: {
+            _setErrorMessage("Nombre de rooms max atteint");
+        } break;
+        case network::CustomMessage::MaxPlayersInRoom: {
+            _setErrorMessage("Nombre de joueurs max dans cette room atteint");
         } break;
         default: break;
     }
+}
+
+void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> &msg)
+{
+    ecs::Scenes tmp_scene = non_shareable_registry->getActualScene();
+    non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
+    std::size_t nb_rooms = 0;
+    std::size_t tmp_nb_rooms = 0;
+    std::size_t nb_player_in_room = 0;
+    ecs::Scenes room_scene;
+    msg >> nb_rooms;
+    for (auto &it : non_shareable_registry->getEntities()) {
+        try {
+            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                non_shareable_registry->removeComponent<ecs::Drawable>(it);
+                non_shareable_registry->removeComponent<ecs::CompoScene>(it);
+                non_shareable_registry->removeComponent<ecs::Text>(it);
+            }
+        } catch (const ecs::Exception &e) {
+            continue;
+        }
+    }
+    for (auto &it : non_shareable_registry->getEntities()) {
+        try {
+            if (tmp_nb_rooms == nb_rooms)
+                break;
+            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
+                msg >> room_scene;
+                non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
+                msg >> nb_player_in_room;
+                non_shareable_registry->addComponent<ecs::Text>(it, ecs::Text(const_cast<char *>(std::to_string(nb_player_in_room).c_str())));
+                std::cout << "nb_players: " << non_shareable_registry->getComponents<ecs::Text>().at(it).value().getText() << " in room scene: " << room_scene << std::endl;
+                tmp_nb_rooms++;
+            }
+        } catch (const ecs::Exception &e) {
+            continue;
+        }
+    }
+    non_shareable_registry->setActualScene(tmp_scene);
+    std::cout << std::endl;
 }
 
 void CustomClient::_setRectAndSpriteComponent()
@@ -75,6 +167,14 @@ void CustomClient::_setRectAndSpriteComponent()
             graphical->setSpritePosition(it, registry->getComponents<ecs::Position>().at(it).value().getXPosition(), registry->getComponents<ecs::Position>().at(it).value().getYPosition());
         } catch (const ecs::Exception &e) {
             continue;
+        } catch (const Exception &e) {
+            continue;
         }
     }
+}
+
+void CustomClient::_setErrorMessage(std::string msg_error)
+{
+    error_msg_server = true;
+    txt_error_msg_server = msg_error;
 }

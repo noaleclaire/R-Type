@@ -12,13 +12,15 @@
 #include "../Exceptions/ExceptionNoAnimAttribute.hpp"
 #include "../Exceptions/ExceptionNoSpriteAnim.hpp"
 #include "../Exceptions/ExceptionNotANumber.hpp"
+#include "../Exceptions/ExceptionSpriteIdExists.hpp"
+#include "../Exceptions/ExceptionSpriteIdDoesntExists.hpp"
 
 SpritesManager::SpritesManager()
 {
     _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
         {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
             std::make_pair("background", ecs::EntityTypes::BACKGROUND), std::make_pair("button", ecs::EntityTypes::BUTTON),
-            std::make_pair("wall", ecs::EntityTypes::WALL)},
+            std::make_pair("room", ecs::EntityTypes::ROOM), std::make_pair("wall", ecs::EntityTypes::WALL)},
         {std::make_pair("anim", SpriteTypeAttributes::anim)},
         {std::make_pair("rect_x", SpriteAnimAttributes::rect_x), std::make_pair("rect_y", SpriteAnimAttributes::rect_y),
             std::make_pair("rect_width", SpriteAnimAttributes::rect_width), std::make_pair("rect_height", SpriteAnimAttributes::rect_height),
@@ -39,6 +41,7 @@ void SpritesManager::initMapFunctionPointer()
     _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("button", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("room", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("wall", &SpritesManager::addSpriteTypeId);
 
     _map_fptr.insert("anim", &SpritesManager::addSpriteAnim);
@@ -167,11 +170,18 @@ void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &spri
     try {
         _sprite_type_id_tmp = std::stoi(sprite_type_id, &pos);
         _sprite_type_tmp = getSpriteType(sprite_type);
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == _sprite_type_tmp && it._sprite_type_and_id.second == _sprite_type_id_tmp)
+                throw ExceptionSpriteIdExists("the id of this type of sprite : " + sprite_type + " already exists", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
+        }
+        if (_spritesheet_tmp == "")
+            _spritesheet_tmp = "missing_texture.png";
         _sprites_data.push_back(
             {_spritesheet_tmp, std::make_pair(_sprite_type_tmp, _sprite_type_id_tmp), std::unordered_map<std::size_t, std::vector<std::optional<int>>>{}});
+        _spritesheet_tmp = "";
     } catch (const std::invalid_argument &e) {
         throw ExceptionNotANumber(
-            "the id of the sprite is not an integer", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
+            "the id of the sprite type : " + sprite_type + " is not an integer", "void SpritesManager::addSpriteTypeId(std::string &sprite_type, std::string &sprite_type_id)");
     }
 }
 
@@ -253,7 +263,7 @@ std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_t
         throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
             "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
     }
-    return (attrs);
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
 }
 
 std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)
@@ -263,5 +273,5 @@ std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::s
             return (it._spritesheet);
         }
     }
-    return ("");
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)");
 }

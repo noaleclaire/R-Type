@@ -10,7 +10,7 @@
 
 namespace graphics
 {
-    Event::Event()
+    Event::Event() : _leftMouseHeld(false)
     {
     }
 
@@ -30,14 +30,31 @@ namespace graphics
             _handleKeyEvents(graphical, registry);
             if (_event.type == sf::Event::Closed)
                 graphical->getWindow().close();
+            if (_event.type == sf::Event::TextEntered) {
+                ecs::Systems::TextBox(registry, registry.getComponents<ecs::TextBox>(), graphical);
+            }
         }
     }
 
     void Event::_handleMouseButtonEvents(Graphical *graphical, ecs::Registry &registry)
     {
-        if (_event.type == sf::Event::MouseButtonReleased) {
+        if (_event.type == sf::Event::MouseButtonPressed) {
             if (_event.mouseButton.button == sf::Mouse::Button::Left)
-                ecs::Systems::Clickable(registry, registry.getComponents<ecs::Clickable>(), graphical);
+                _leftMouseHeld = true;
+        }
+        if (_leftMouseHeld)
+                ecs::Systems::ClickableHeld(registry, registry.getComponents<ecs::Clickable>(), graphical);
+        if (_event.type == sf::Event::MouseButtonReleased) {
+            if (_event.mouseButton.button == sf::Mouse::Button::Left) {
+                _leftMouseHeld = false;
+                ecs::Systems::ClickableReleased(registry, registry.getComponents<ecs::Clickable>(), graphical);
+            }
+        } else if (_event.type == sf::Event::MouseButtonPressed) {
+            if (_event.mouseButton.button == sf::Mouse::Button::Left) {
+                ecs::Systems::ClickablePressed(registry, registry.getComponents<ecs::Clickable>(), graphical);
+            }
+        } else {
+            ecs::Systems::Hover(registry, registry.getComponents<ecs::Hover>(), graphical);
         }
     }
 

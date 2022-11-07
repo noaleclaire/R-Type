@@ -9,7 +9,10 @@ set(SRC
     ${SRCROOT}/Shootable.cpp
     ${SRCROOT}/Rectangle.cpp
     ${SRCROOT}/Layer.cpp
+    ${SRCROOT}/Link.cpp
     ${SRCROOT}/Type.cpp
+    ${SRCROOT}/Text.cpp
+    ${SRCROOT}/TextBox.cpp
     PARENT_SCOPE)
 
 set(INCDIRS
