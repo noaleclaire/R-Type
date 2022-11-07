@@ -35,16 +35,16 @@ spritesheet: background.jpg
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 1280
+   rect_width: 1337
    rect_height: 720
 
-spritesheet: moon.png
+spritesheet: logo.png
  background: 1
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 1280
-   rect_height: 720
+   rect_width: 1085
+   rect_height: 193
 
 spritesheet: button.png
  button: 0
@@ -78,3 +78,51 @@ spritesheet: nsm
    rect_y: 0
    rect_width: 72
    rect_height: 72
+
+spritesheet: create_private_game_btn.png
+ button: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 177
+   rect_height: 75
+
+spritesheet: create_public_game_btn.png
+ button: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 192
+   rect_height: 75
+
+spritesheet: exit_btn.png
+ button: 3
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 378
+   rect_height: 54
+
+spritesheet: htp_btn.png
+ button: 4
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 378
+   rect_height: 54
+
+spritesheet: joingame_btn.png
+ button: 5
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 378
+   rect_height: 53
+
+spritesheet: settings_btn.png
+ button: 6
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 378
+   rect_height: 53

@@ -39,13 +39,16 @@ namespace ecs
             registerComponents<ecs::Controllable>();
             registerComponents<ecs::Drawable>();
             registerComponents<ecs::Type>();
+            registerComponents<ecs::Hover>();
             registerComponents<ecs::Killable>();
             registerComponents<ecs::Layer>();
+            registerComponents<ecs::Link>();
             registerComponents<ecs::Position>();
             registerComponents<ecs::Shootable>();
             registerComponents<ecs::Shooter>();
             registerComponents<ecs::Rectangle>();
             registerComponents<ecs::Text>();
+            registerComponents<ecs::TextBox>();
             registerComponents<ecs::CompoScene>();
         };
         ~Registry() = default;
