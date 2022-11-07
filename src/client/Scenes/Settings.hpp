@@ -40,6 +40,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Green);
 
@@ -49,6 +50,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Red);
 
@@ -57,6 +59,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             graphical.addText(entity, "10%", rect);
 
             //TextBox
@@ -67,6 +70,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             registry.addComponent<ecs::TextBox>(registry.getEntityById(entity), ecs::TextBox());
             graphical.addRectangleShape(entity, rect, sf::Color::Green);
@@ -77,6 +81,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             graphical.addText(entity, "", rect);
         }
 };
