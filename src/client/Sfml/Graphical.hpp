@@ -135,6 +135,18 @@ namespace graphics
          * @param _scene
          */
         void setActualSpritesEntities(ecs::Scenes _scene);
+        /**
+         * @brief Set the hover sprite for the entity
+         *
+         * @param entity
+         */
+        void setHoverSprite(std::size_t entity);
+        /**
+         * @brief Set the basic sprite for the entity
+         *
+         * @param entity
+         */
+        void setBasicSprite(std::size_t entity);
 
         /* Other */
         /**

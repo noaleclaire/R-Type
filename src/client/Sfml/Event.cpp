@@ -28,6 +28,7 @@ namespace graphics
         while (graphical->getWindow().pollEvent(_event)) {
             _handleMouseButtonEvents(graphical, registry);
             _handleKeyEvents(graphical, registry);
+            ecs::Systems::Hover(registry, registry.getComponents<ecs::Hover>(), graphical);
             if (_event.type == sf::Event::Closed)
                 graphical->getWindow().close();
             if (_event.type == sf::Event::TextEntered) {

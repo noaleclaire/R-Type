@@ -12,6 +12,7 @@
 #include "Collider.hpp"
 #include "Controllable.hpp"
 #include "Drawable.hpp"
+#include "Hover.hpp"
 #include "Killable.hpp"
 #include "Layer.hpp"
 #include "Link.hpp"

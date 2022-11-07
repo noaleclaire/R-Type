@@ -168,8 +168,23 @@ namespace graphics
         else
             _actual_sprites_entities = &_shared_sprites_entities;
     }
+
     void Graphical::getWorldClock()
     {
         Graphical::world_current_time = _world_clock.restart().asSeconds();
+    }
+
+    void Graphical::setHoverSprite(std::size_t entity)
+    {
+        sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
+
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.height, rect.width, rect.height));
+    }
+
+    void Graphical::setBasicSprite(std::size_t entity)
+    {
+        sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
+
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, 0, rect.width, rect.height));
     }
 } // namespace graphics

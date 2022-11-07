@@ -39,6 +39,7 @@ namespace ecs
             registerComponents<ecs::Controllable>();
             registerComponents<ecs::Drawable>();
             registerComponents<ecs::Type>();
+            registerComponents<ecs::Hover>();
             registerComponents<ecs::Killable>();
             registerComponents<ecs::Layer>();
             registerComponents<ecs::Link>();

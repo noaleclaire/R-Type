@@ -234,4 +234,27 @@ namespace ecs
             }
         }
     }
+    void Systems::Hover(Registry &registry, SparseArray<ecs::Hover> &hover, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                hover.at(it);
+                try {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
+                        graphical->setHoverSprite(it);
+                    } else {
+                        graphical->setBasicSprite(it);
+                    }
+                } catch (const ExceptionComponentNull &e) {
+                    continue;
+                } catch (const ExceptionIndexComponent &e) {
+                    continue;
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
 } // namespace ecs
