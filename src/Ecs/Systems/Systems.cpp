@@ -32,6 +32,7 @@ namespace ecs
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID: Core::actual_scene = ecs::Scenes::JOINROOMBYID; break;
                             default: break;
+                        }
                     }
                 } catch (const std::out_of_range &e) {}
                 try {
