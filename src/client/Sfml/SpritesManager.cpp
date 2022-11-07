@@ -24,7 +24,8 @@ SpritesManager::SpritesManager()
         {std::make_pair("anim", SpriteTypeAttributes::anim)},
         {std::make_pair("rect_x", SpriteAnimAttributes::rect_x), std::make_pair("rect_y", SpriteAnimAttributes::rect_y),
             std::make_pair("rect_width", SpriteAnimAttributes::rect_width), std::make_pair("rect_height", SpriteAnimAttributes::rect_height),
-            std::make_pair("nb_anim", SpriteAnimAttributes::nb_anim), std::make_pair("next_anim", SpriteAnimAttributes::next_anim)}};
+            std::make_pair("nb_anim", SpriteAnimAttributes::nb_anim), std::make_pair("speed_anim", SpriteAnimAttributes::speed_anim),
+            std::make_pair("next_anim", SpriteAnimAttributes::next_anim)}};
 
     initMapFunctionPointer();
 }
@@ -50,6 +51,7 @@ void SpritesManager::initMapFunctionPointer()
     _map_fptr.insert("rect_width", &SpritesManager::addSpriteAnimAttributes);
     _map_fptr.insert("rect_height", &SpritesManager::addSpriteAnimAttributes);
     _map_fptr.insert("nb_anim", &SpritesManager::addSpriteAnimAttributes);
+    _map_fptr.insert("speed_anim", &SpritesManager::addSpriteAnimAttributes);
     _map_fptr.insert("next_anim", &SpritesManager::addSpriteAnimAttributes);
 }
 
@@ -192,6 +194,9 @@ void SpritesManager::addSpriteAnim(std::string &sprite_type_anim, std::string &s
     std::size_t pos{};
     try {
         _sprite_type_anim_id_tmp = std::stoi(sprite_type_anim_id, &pos);
+        if (_sprite_type_anim_id_tmp < 0)
+            throw ExceptionNotANumber("the id of the anim of the sprite is not greater than -1",
+            "void SpritesManager::addSpriteAnim(std::string &sprite_type_anim, std::string &sprite_type_anim_id)");
         for (auto &it : _sprites_data) {
             if (it._sprite_type_and_id.first == _sprite_type_tmp && it._sprite_type_and_id.second == _sprite_type_id_tmp) {
                 it._animations.emplace(_sprite_type_anim_id_tmp, std::vector<std::optional<int>>(NB_ANIM_ATTRIBUTES, std::nullopt));
@@ -256,14 +261,110 @@ std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_t
                     return (attrs);
                 } else
                     throw ExceptionNoAnimAttribute("No value for one or more of the anim attributes rect",
-                        "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+                        "std::size_t SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
             }
         }
     } catch (const std::out_of_range &e) {
         throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
-            "std::size_t SpritesManager::get_Animations(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+            "std::size_t SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
     }
     throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_Animations_rect(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
+}
+
+int SpritesManager::getNbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)
+{
+    try {
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+                if (it._animations.at(anim_id).at(nb_anim))
+                    return (it._animations.at(anim_id).at(nb_anim).value());
+                else
+                    return (1);
+            }
+        }
+    } catch (const std::out_of_range &e) {
+        throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
+            "std::size_t SpritesManager::getNbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_NbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
+}
+
+int SpritesManager::getSpeedAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)
+{
+    try {
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+                if (it._animations.at(anim_id).at(speed_anim))
+                    return (it._animations.at(anim_id).at(speed_anim).value());
+                else
+                    return (1);
+            }
+        }
+    } catch (const std::out_of_range &e) {
+        throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
+            "std::size_t SpritesManager::getNbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_NbAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
+}
+
+int SpritesManager::getNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)
+{
+    try {
+        for (auto &it : _sprites_data) {
+            if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+                if (it._animations.at(anim_id).at(next_anim))
+                    return (it._animations.at(anim_id).at(next_anim).value());
+                else
+                    return (-1);
+            }
+        }
+    } catch (const std::out_of_range &e) {
+        throw ExceptionNoSpriteAnim("No sprite anim in SpriteData",
+            "std::size_t SpritesManager::getNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, SpriteAnimAttributes attr)");
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::vector<float> SpritesManager::get_NextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, std::size_t anim_id)");
+}
+
+float SpritesManager::getAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._anim_current_frame);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::getAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._anim_current_frame = increm;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+int SpritesManager::getIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._index_current_anim);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::getIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, int index)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._index_current_anim = index;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
 }
 
 std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)

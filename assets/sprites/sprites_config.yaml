@@ -1,11 +1,12 @@
 # spritesheet: name_of_the_spritesheet
 #   {type_of_the_sprite}: id_of_the_sprite
 #     anim: id_of_the_animation
-#       rect_x: ... (optional)
-#       rect_y: ... (optional)
-#       rect_width: ... (optional)
-#       rect_height: ... (optional)
+#       rect_x: ... (not optional)
+#       rect_y: ... (not optional)
+#       rect_width: ... (not optional)
+#       rect_height: ... (not optional)
 #       nb_anim: ... (optional)
+#       speed_anim: ... (optional)
 #       next_anim: ... (optional)
 #       ...
 #     ...
@@ -22,6 +23,7 @@
 #   rect_width: 32
 #   rect_height: 17
 #   nb_anim: 5
+#   speed_anim: 2
 #   next_anim: 1
 #  anim: 1
 #   rect_x: 2
@@ -92,7 +94,7 @@ spritesheet: create_public_game_btn.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 192
+   rect_width: 191
    rect_height: 75
 
 spritesheet: exit_btn.png

@@ -7,6 +7,7 @@
 
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
+#include "../../client/Exceptions/Exception.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
 #include <cmath>
@@ -59,11 +60,12 @@ namespace ecs
                 clickable.at(it);
                 registry.getComponents<ecs::Type>().at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
-                    && registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON) {
-                        graphical->setPressedSprite(it);
-                    } else {
-                        graphical->setBasicSprite(it);
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON) {
+                            graphical->setPressedSprite(it);
+                        } else {
+                            graphical->setBasicSprite(it);
+                        }
                     }
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
@@ -265,16 +267,62 @@ namespace ecs
         for (auto &it : registry.getEntities()) {
             try {
                 hover.at(it);
+                registry.getComponents<ecs::Type>().at(it);
                 try {
+                    graphical->setBasicSprite(it);
                     if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
-                        graphical->setHoverSprite(it);
-                    } else {
-                        graphical->setBasicSprite(it);
+                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON)
+                            graphical->setHoverSprite(it);
                     }
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
+    {
+        ecs::EntityTypes entity_type;
+        std::size_t entity_id = 0;
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::Animation>().at(it);
+                registry.getComponents<ecs::Type>().at(it);
+                registry.getComponents<ecs::Rectangle>().at(it);
+                entity_type = registry.getComponents<ecs::Type>().at(it).value().getEntityType();
+                entity_id = registry.getComponents<ecs::Type>().at(it).value().getEntityID();
+
+                sprites_manager.setAnimationCurrentFrame(entity_type, entity_id,
+                    sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) +
+                    graphics::Graphical::world_current_time *
+                    sprites_manager.getSpeedAnimation(entity_type, entity_id,
+                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))
+                );
+
+                registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(
+                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
+                    static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
+                );
+                std::cout << registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle() << std::endl;
+                if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
+                sprites_manager.getNbAnimation(entity_type, entity_id,
+                sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
+                    if (sprites_manager.getNextAnimation(entity_type, entity_id,
+                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1)
+                        sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
+                        sprites_manager.getNextAnimation(entity_type, entity_id,
+                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
+                    sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
+                }
+                graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
+                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle());
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            } catch (const ::Exception &e) {
                 continue;
             }
         }
