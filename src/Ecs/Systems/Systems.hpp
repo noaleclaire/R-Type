@@ -36,6 +36,14 @@ namespace ecs
          * @param clickable
          * @param graphical
          */
+        static void ClickablePressed(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param clickable
+         * @param graphical
+         */
         static void ClickableHeld(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical);
         /**
          * @brief

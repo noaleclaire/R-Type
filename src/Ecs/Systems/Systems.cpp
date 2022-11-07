@@ -32,16 +32,38 @@ namespace ecs
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID: Core::actual_scene = ecs::Scenes::JOINROOMBYID; break;
                             default: break;
+                        }
                     }
                 } catch (const std::out_of_range &e) {}
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::TEST2:
+                            case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
                                 break;
                             default: break;
                         }
+                    }
+                } catch (const std::out_of_range &e) {}
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::ClickablePressed(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                clickable.at(it);
+                registry.getComponents<ecs::Type>().at(it);
+                try {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON) {
+                        graphical->setPressedSprite(it);
+                    } else {
+                        graphical->setBasicSprite(it);
                     }
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
@@ -72,7 +94,7 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::TEST: changeVolume(registry, it, graphical); break;
+                            case Clickable::Function::CHANGEVOLUME: changeVolume(registry, it, graphical); break;
                             default: break;
                         }
                     }
@@ -249,11 +271,7 @@ namespace ecs
                     } else {
                         graphical->setBasicSprite(it);
                     }
-                } catch (const ExceptionComponentNull &e) {
-                    continue;
-                } catch (const ExceptionIndexComponent &e) {
-                    continue;
-                }
+                } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {

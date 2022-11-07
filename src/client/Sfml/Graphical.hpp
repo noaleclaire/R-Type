@@ -70,7 +70,7 @@ namespace graphics
          * @brief Get the Text String object
          *
          * @param entity
-         * 
+         *
          * @return std::string
          */
         std::string getTextString(std::size_t entity);
@@ -134,13 +134,19 @@ namespace graphics
          *
          * @param _scene
          */
-        void setActualSpritesEntities(ecs::Scenes _scene);
+        void setActualGraphicsEntities(ecs::Scenes _scene);
         /**
          * @brief Set the hover sprite for the entity
          *
          * @param entity
          */
         void setHoverSprite(std::size_t entity);
+        /**
+         * @brief Set the Pressed Sprite object
+         *
+         * @param entity
+         */
+        void setPressedSprite(std::size_t entity);
         /**
          * @brief Set the basic sprite for the entity
          *
@@ -207,5 +213,7 @@ namespace graphics
         std::unordered_map<std::size_t, sf::Sprite> *_actual_sprites_entities;
         std::unordered_map<std::size_t, sf::RectangleShape> _rectangleshape_entities;
         std::unordered_map<std::size_t, sf::Text> _text_entities;
+        std::unordered_map<std::size_t, sf::Text> _shared_text_entities;
+        std::unordered_map<std::size_t, sf::Text> *_actual_text_entities;
     };
 } // namespace graphics

@@ -50,6 +50,7 @@ namespace ecs
             registerComponents<ecs::Text>();
             registerComponents<ecs::TextBox>();
             registerComponents<ecs::CompoScene>();
+            registerComponents<ecs::Animation>();
         };
         ~Registry() = default;
         /**

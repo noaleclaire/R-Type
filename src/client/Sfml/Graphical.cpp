@@ -16,6 +16,7 @@ namespace graphics
     Graphical::Graphical()
     {
         _actual_sprites_entities = &_unique_sprites_entities;
+        _actual_text_entities = &_text_entities;
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
@@ -44,7 +45,7 @@ namespace graphics
 
     std::unordered_map<std::size_t, sf::Text> Graphical::getAllTexts() const
     {
-        return (_text_entities);
+        return (*_actual_text_entities);
     }
 
     sf::VideoMode Graphical::getVideoMode() const
@@ -64,7 +65,7 @@ namespace graphics
 
     std::string Graphical::getTextString(std::size_t entity)
     {
-        return (_text_entities.at(entity).getString());
+        return (_actual_text_entities->at(entity).getString());
     }
 
     /* Setter */
@@ -133,10 +134,10 @@ namespace graphics
     }
     void Graphical::addText(std::size_t entity, std::string str, std::vector<float> rect, sf::Color color)
     {
-        _text_entities.insert_or_assign(entity, sf::Text(str, _font));
-        _text_entities.at(entity).setPosition(rect.at(0), rect.at(1));
-        _text_entities.at(entity).setCharacterSize(rect.at(2));
-        _text_entities.at(entity).setFillColor(color);
+        _actual_text_entities->insert_or_assign(entity, sf::Text(str, _font));
+        _actual_text_entities->at(entity).setPosition(rect.at(0), rect.at(1));
+        _actual_text_entities->at(entity).setCharacterSize(rect.at(2));
+        _actual_text_entities->at(entity).setFillColor(color);
     }
 
     void Graphical::setRectangleShapeRect(std::size_t entity, float width, float height)
@@ -146,7 +147,7 @@ namespace graphics
 
     void Graphical::setTextString(std::size_t entity, std::string str)
     {
-        _text_entities.at(entity).setString(str);
+        _actual_text_entities->at(entity).setString(str);
     }
 
     void Graphical::handleEvents(ecs::Registry &registry)
@@ -161,12 +162,15 @@ namespace graphics
         _window.display();
     }
 
-    void Graphical::setActualSpritesEntities(ecs::Scenes _scene)
+    void Graphical::setActualGraphicsEntities(ecs::Scenes _scene)
     {
-        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS || _scene == ecs::Scenes::LISTROOM)
+        if (_scene == ecs::Scenes::MENU || _scene == ecs::Scenes::SETTINGS || _scene == ecs::Scenes::LISTROOM) {
             _actual_sprites_entities = &_unique_sprites_entities;
-        else
+            _actual_text_entities = &_text_entities;
+        } else {
             _actual_sprites_entities = &_shared_sprites_entities;
+            _actual_text_entities = &_shared_text_entities;
+        }
     }
 
     void Graphical::getWorldClock()
@@ -179,6 +183,13 @@ namespace graphics
         sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
 
         _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.height, rect.width, rect.height));
+    }
+
+    void Graphical::setPressedSprite(std::size_t entity)
+    {
+        sf::IntRect rect = _actual_sprites_entities->at(entity).getTextureRect();
+
+        _actual_sprites_entities->at(entity).setTextureRect(sf::IntRect(0, rect.height * 2, rect.width, rect.height));
     }
 
     void Graphical::setBasicSprite(std::size_t entity)

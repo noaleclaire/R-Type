@@ -28,7 +28,6 @@ namespace graphics
         while (graphical->getWindow().pollEvent(_event)) {
             _handleMouseButtonEvents(graphical, registry);
             _handleKeyEvents(graphical, registry);
-            ecs::Systems::Hover(registry, registry.getComponents<ecs::Hover>(), graphical);
             if (_event.type == sf::Event::Closed)
                 graphical->getWindow().close();
             if (_event.type == sf::Event::TextEntered) {
@@ -50,6 +49,12 @@ namespace graphics
                 _leftMouseHeld = false;
                 ecs::Systems::ClickableReleased(registry, registry.getComponents<ecs::Clickable>(), graphical);
             }
+        } else if (_event.type == sf::Event::MouseButtonPressed) {
+            if (_event.mouseButton.button == sf::Mouse::Button::Left) {
+                ecs::Systems::ClickablePressed(registry, registry.getComponents<ecs::Clickable>(), graphical);
+            }
+        } else {
+            ecs::Systems::Hover(registry, registry.getComponents<ecs::Hover>(), graphical);
         }
     }
 

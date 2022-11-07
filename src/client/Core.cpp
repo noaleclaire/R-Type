@@ -61,7 +61,7 @@ void Core::_switchScenesCreateRoom()
             Core::actual_scene = ecs::Scenes::MENU;
             _setActualRegistry();
             _actual_registry->setActualScene(Core::actual_scene);
-            _graphical.setActualSpritesEntities(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
         } else
             Core::actual_scene = _actual_registry->getActualScene();
     }
@@ -74,7 +74,7 @@ void Core::_switchScenesCreateRoom()
             Core::actual_scene = ecs::Scenes::MENU;
             _setActualRegistry();
             _actual_registry->setActualScene(Core::actual_scene);
-            _graphical.setActualSpritesEntities(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
         } else
             Core::actual_scene = _actual_registry->getActualScene();
     }
@@ -94,7 +94,7 @@ void Core::_switchScenesJoinRoom()
             Core::actual_scene = ecs::Scenes::LISTROOM;
             _setActualRegistry();
             _actual_registry->setActualScene(Core::actual_scene);
-            _graphical.setActualSpritesEntities(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
         }
     }
     if (_last_scene != ecs::Scenes::JOINROOMBYID && Core::actual_scene == ecs::Scenes::JOINROOMBYID) {
@@ -106,7 +106,7 @@ void Core::_switchScenesJoinRoom()
             Core::actual_scene = ecs::Scenes::LISTROOM;
             _setActualRegistry();
             _actual_registry->setActualScene(Core::actual_scene);
-            _graphical.setActualSpritesEntities(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
         } else
             Core::actual_scene = _actual_registry->getActualScene();
     }
@@ -154,7 +154,7 @@ void Core::_gameLoop()
         while (_graphical.getWindow().isOpen()) {
             _graphical.getWorldClock();
             _setActualRegistry();
-            _graphical.setActualSpritesEntities(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
             _switchScenes();
             _graphical.handleEvents(*_actual_registry);
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());

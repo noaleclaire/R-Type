@@ -35,7 +35,7 @@ class Settings : public ScenesInitializer {
 
             rect = {700, 300, 200, 80};
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::TEST));
+            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGEVOLUME));
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
@@ -62,7 +62,7 @@ class Settings : public ScenesInitializer {
             //TextBox
             rect = {300, 100, 200, 80};
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::TEST2));
+            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::SELECTTEXTBOX));
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));

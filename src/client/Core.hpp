@@ -10,6 +10,7 @@
 #include <string>
 #include <unordered_map>
 #include "Network/CustomClient.hpp"
+#include "UserInfo.hpp"
 
 class Core {
   public:
@@ -30,6 +31,7 @@ class Core {
     void _gameStop();
 
     boost::asio::io_context &_io_context;
+    UserInfo _user_info;
     CustomClient _client;
     std::thread _client_thread;
     ecs::Registry _unique_registry;

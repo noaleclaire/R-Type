@@ -24,3 +24,4 @@
 #include "Text.hpp"
 #include "TextBox.hpp"
 #include "CompoScene.hpp"
+#include "Animation.hpp"
