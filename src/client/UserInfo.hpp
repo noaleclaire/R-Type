@@ -11,4 +11,6 @@
 
 struct UserInfo {
     char pseudo[PSEUDO_SIZE];
+    int music_volume;
+    int sfx_volume;
 };

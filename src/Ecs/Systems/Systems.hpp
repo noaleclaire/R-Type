@@ -91,8 +91,10 @@ namespace ecs
          * @param registry
          * @param graphical
          * @param pseudo
+         * @param music_volume
+         * @param sfx_volume
          */
-        static void setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo);
+        static void setUserInfoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo, int music_volume, int sfx_volume);
         /**
          * @brief
          *
@@ -103,7 +105,7 @@ namespace ecs
         static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
 
       private:
-        static void changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);
-        static void unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox);
+        static int _changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);
+        static void _unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox);
     };
 } // namespace ecs
