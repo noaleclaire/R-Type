@@ -153,17 +153,7 @@ void Core::_switchScenes()
 
 void Core::_handleUserPseudo()
 {
-    if (actual_scene == ecs::Scenes::TYPEPSEUDO) {
-        for (auto &it : _unique_registry.getEntities()) {
-            try {
-                if (_graphical.getTextString(it).size() > 0)
-                    std::strcpy(_user_info.pseudo, _graphical.getTextString(it).c_str());
-                else
-                    std::strcpy(_user_info.pseudo, "");
-            } catch (const std::out_of_range &e) {}
-        }
-    }
-    if (std::strcmp(_user_info.pseudo, "") == 0)
+    if (std::strcmp(_user_info.pseudo, "") == 0 && Core::new_pseudo == "")
         Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
     if (Core::new_pseudo.size() > 0) {
         std::strcpy(_user_info.pseudo, Core::new_pseudo.c_str());

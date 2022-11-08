@@ -20,6 +20,7 @@ class Settings : public ScenesInitializer {
             std::vector<float> rect;
             std::size_t entity;
             std::size_t tmp_entity;
+            std::size_t tmp_width;
 
             registry.setActualScene(ecs::Scenes::SETTINGS);
 
@@ -106,7 +107,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             graphical.addText(entity, "10%", rect);
             //TextBox
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 7, 0);
             rect = {394, 277, rect.at(2) - 27, rect.at(3) - 25};
             entity = registry.spawnEntity();
             registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::SELECTTEXTBOX));
@@ -117,7 +118,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             registry.addComponent<ecs::TextBox>(registry.getEntityById(entity), ecs::TextBox(PSEUDO_SIZE));
-            graphical.addRectangleShape(entity, rect, sf::Color::Green);
+            graphical.addRectangleShape(entity, rect, sf::Color::Black);
                 //Text in
             rect = {rect.at(0) + 5, rect.at(1) + 5, 30};
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
@@ -127,30 +128,33 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             graphical.addText(entity, "", rect);
-            //Barres (background)
-                //Barre enter new name
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
+            //Bars (background)
+                //Bar enter new name
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 7, 0);
+            tmp_width = rect.at(2);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 376, 264, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 7, 0);
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 6), rect);
-                //Barre volume music
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 7), rect);
+                //Bar volume music
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 376, 349, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 7, 0);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 6), rect);
-                //Barre volume sfx
+                //Bar volume sfx
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 376, 434, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 7, 0);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 6), rect);
             //Buttons
                 //back arrow -> changer le sprite
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 7, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 280, 173, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 4);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOMENU);
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
-            //     //confirm new pseudo
-            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
-            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 700, 100, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
-            // registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CONFIRMPSEUDO);
-            // registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(tmp_entity));
-            // graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
+            registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 7), rect);
+                //confirm new pseudo
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 7, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 376 + tmp_width + 5, 262, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 4);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CONFIRMPSEUDO);
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(tmp_entity));
+            registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 7), rect);
         }
 };

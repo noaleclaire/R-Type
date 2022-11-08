@@ -88,6 +88,30 @@ spritesheet: setting_sound_bar.png
    rect_width: 611
    rect_height: 74
 
+spritesheet: setting_enter_name_bar.png
+ background: 7
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 485
+   rect_height: 74
+
+spritesheet: type_pseudo_bar.png
+ background: 8
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 701
+   rect_height: 85
+
+spritesheet: how_to_play.png
+ background: 9
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 828
+   rect_height: 621
+
 spritesheet: button.png
  button: 0
   anim: 0
@@ -168,3 +192,11 @@ spritesheet: settings_btn.png
    rect_y: 0
    rect_width: 378
    rect_height: 53
+
+spritesheet: back_button.png
+ button: 7
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 100
+   rect_height: 79
