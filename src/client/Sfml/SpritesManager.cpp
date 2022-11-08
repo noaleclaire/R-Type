@@ -19,9 +19,10 @@ SpritesManager::SpritesManager()
 {
     _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
         {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
-            std::make_pair("background", ecs::EntityTypes::BACKGROUND), std::make_pair("button", ecs::EntityTypes::BUTTON),
-            std::make_pair("room", ecs::EntityTypes::ROOM), std::make_pair("wall", ecs::EntityTypes::WALL),
-            std::make_pair("textbox", ecs::EntityTypes::TEXTBOX), std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
+            std::make_pair("shot", ecs::EntityTypes::SHOT), std::make_pair("background", ecs::EntityTypes::BACKGROUND),
+            std::make_pair("button", ecs::EntityTypes::BUTTON), std::make_pair("room", ecs::EntityTypes::ROOM),
+            std::make_pair("wall", ecs::EntityTypes::WALL), std::make_pair("textbox", ecs::EntityTypes::TEXTBOX),
+            std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
         {std::make_pair("anim", SpriteTypeAttributes::anim)},
         {std::make_pair("rect_x", SpriteAnimAttributes::rect_x), std::make_pair("rect_y", SpriteAnimAttributes::rect_y),
             std::make_pair("rect_width", SpriteAnimAttributes::rect_width), std::make_pair("rect_height", SpriteAnimAttributes::rect_height),
@@ -41,6 +42,7 @@ void SpritesManager::initMapFunctionPointer()
 
     _map_fptr.insert("spaceship", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("button", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("room", &SpritesManager::addSpriteTypeId);
