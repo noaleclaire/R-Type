@@ -13,7 +13,8 @@ namespace ecs
 {
     class Clickable : public AComponent {
       public:
-        enum Function { EXIT, TOGAME, TOSETTINGS, TOMENU, CREATEPUBLICROOM, CREATEPRIVATEROOM, LISTROOM, JOINROOM, JOINROOMBYID, CHANGEVOLUME, SELECTTEXTBOX, CONFIRMPSEUDO };
+        enum Function { EXIT, TOGAME, TOSETTINGS, TOMENU, TOHTP, CREATEPUBLICROOM, CREATEPRIVATEROOM,
+                        LISTROOM, JOINROOM, JOINROOMBYID, CHANGEVOLUME, SELECTTEXTBOX, CONFIRMPSEUDO };
         /**
          * @brief Construct a new Clickable object
          *

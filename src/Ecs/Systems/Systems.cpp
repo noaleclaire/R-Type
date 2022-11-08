@@ -27,6 +27,7 @@ namespace ecs
                             case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
                             case Clickable::Function::TOSETTINGS: Core::actual_scene = ecs::Scenes::SETTINGS; break;
                             case Clickable::Function::TOMENU: Core::actual_scene = ecs::Scenes::MENU; break;
+                            case Clickable::Function::TOHTP: Core::actual_scene = ecs::Scenes::HOWTOPLAY; break;
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
