@@ -15,6 +15,7 @@
 #include "Scenes/Settings.hpp"
 #include "Scenes/ListRoom.hpp"
 #include "Scenes/TypePseudo.hpp"
+#include "Scenes/HowToPlay.hpp"
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
@@ -29,6 +30,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _graphical.addAllTextures();
     TypePseudo::initScene(_unique_registry, _sprites_manager, _graphical);
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
+    HowToPlay::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
 
@@ -50,7 +52,8 @@ Core::~Core()
 
 void Core::_setActualRegistry()
 {
-    if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS || Core::actual_scene == ecs::Scenes::LISTROOM || Core::actual_scene == ecs::Scenes::TYPEPSEUDO)
+    if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS || Core::actual_scene == ecs::Scenes::LISTROOM ||
+        Core::actual_scene == ecs::Scenes::TYPEPSEUDO || Core::actual_scene == ecs::Scenes::HOWTOPLAY)
         _actual_registry = &_unique_registry;
     else
         _actual_registry = &_shared_registry;
@@ -124,6 +127,8 @@ void Core::_switchScenes()
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::MENU && Core::actual_scene == ecs::Scenes::MENU)
         _actual_registry->setActualScene(Core::actual_scene);
+    if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
+        _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS)
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::LISTROOM && Core::actual_scene == ecs::Scenes::LISTROOM) {
@@ -148,17 +153,7 @@ void Core::_switchScenes()
 
 void Core::_handleUserPseudo()
 {
-    if (actual_scene == ecs::Scenes::TYPEPSEUDO) {
-        for (auto &it : _unique_registry.getEntities()) {
-            try {
-                if (_graphical.getTextString(it).size() > 0)
-                    std::strcpy(_user_info.pseudo, _graphical.getTextString(it).c_str());
-                else
-                    std::strcpy(_user_info.pseudo, "");
-            } catch (const std::out_of_range &e) {}
-        }
-    }
-    if (std::strcmp(_user_info.pseudo, "") == 0)
+    if (std::strcmp(_user_info.pseudo, "") == 0 && Core::new_pseudo == "")
         Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
     if (Core::new_pseudo.size() > 0) {
         std::strcpy(_user_info.pseudo, Core::new_pseudo.c_str());

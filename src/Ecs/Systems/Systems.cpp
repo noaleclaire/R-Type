@@ -27,6 +27,7 @@ namespace ecs
                             case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
                             case Clickable::Function::TOSETTINGS: Core::actual_scene = ecs::Scenes::SETTINGS; break;
                             case Clickable::Function::TOMENU: Core::actual_scene = ecs::Scenes::MENU; break;
+                            case Clickable::Function::TOHTP: Core::actual_scene = ecs::Scenes::HOWTOPLAY; break;
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
@@ -123,7 +124,7 @@ namespace ecs
         float volume = 0.0f;
 
         registry.getComponents<ecs::Rectangle>().at(linked_entity).value().setWidthRectangle(graphical->getEvent().mouseMove.x - entity_posX);
-        graphical->setRectangleShapeRect(linked_entity, registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle(), 80);
+        graphical->setRectangleShapeRect(linked_entity, registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle());
         volume = std::ceil((registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle() * 100)/registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle());
         graphical->setTextString(linked_text, std::to_string(static_cast<int>(volume)) + "%");
     }
