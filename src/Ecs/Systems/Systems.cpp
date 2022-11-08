@@ -122,7 +122,7 @@ namespace ecs
         float volume = 0.0f;
 
         registry.getComponents<ecs::Rectangle>().at(linked_entity).value().setWidthRectangle(graphical->getEvent().mouseMove.x - entity_posX);
-        graphical->setRectangleShapeRect(linked_entity, registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle(), 80);
+        graphical->setRectangleShapeRect(linked_entity, registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle());
         volume = std::ceil((registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle() * 100)/registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle());
         graphical->setTextString(linked_text, std::to_string(static_cast<int>(volume)) + "%");
     }

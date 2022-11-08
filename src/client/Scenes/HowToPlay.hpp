@@ -15,7 +15,6 @@ class HowToPlay : public ScenesInitializer {
 
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
-            //NE PAS METTRE 2 TEXTES DANS CETTE SCENE
             std::vector<float> rect;
             std::size_t entity;
 

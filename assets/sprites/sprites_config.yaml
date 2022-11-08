@@ -48,6 +48,46 @@ spritesheet: logo.png
    rect_width: 1085
    rect_height: 193
 
+spritesheet: black_filter.png
+ background: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: logo_btn_background.png
+ background: 3
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: settings_box.png
+ background: 4
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 761
+   rect_height: 414
+
+spritesheet: type_pseudo_box.png
+ background: 5
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 866
+   rect_height: 281
+
+spritesheet: setting_sound_bar.png
+ background: 6
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 611
+   rect_height: 74
+
 spritesheet: button.png
  button: 0
   anim: 0
