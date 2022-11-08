@@ -21,7 +21,7 @@ std::string Core::new_pseudo = "";
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
-    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
+    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
     ParserUserInfo::getUserInfo(&_user_info);
     // _sprites_manager.printSpritesData();
 

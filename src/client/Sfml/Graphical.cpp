@@ -106,7 +106,7 @@ namespace graphics
             }
             _textures.insert(std::make_pair(it, texture));
         }
-        if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png")))
+        if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png").string()))
             throw SfmlExceptionTexture("Cannot load texture from file", "void Graphical::addAllTextures(SpritesManager &sprites_manager)");
         _textures.insert(std::make_pair("missing_texture.png", texture));
     }
