@@ -16,7 +16,7 @@ namespace ecs
 {
     void Systems::ClickableReleased(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
     {
-        unselectAllTextBoxes(registry, registry.getComponents<ecs::TextBox>());
+        _unselectAllTextBoxes(registry, registry.getComponents<ecs::TextBox>());
         for (auto &it : registry.getEntities()) {
             try {
                 clickable.at(it);
@@ -80,7 +80,7 @@ namespace ecs
             }
         }
     }
-    void Systems::unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox)
+    void Systems::_unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox)
     {
         for (auto &it : registry.getEntities()) {
             try {
@@ -101,7 +101,8 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::CHANGEVOLUME: changeVolume(registry, it, graphical); break;
+                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); break;
+                            case Clickable::Function::CHANGESFXVOLUME: Core::new_sfx_volume = _changeVolume(registry, it, graphical); break;
                             default: break;
                         }
                     }
@@ -114,7 +115,7 @@ namespace ecs
         }
     }
 
-    void Systems::changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical)
+    int Systems::_changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical)
     {
         std::size_t linked_entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
         std::size_t linked_text = registry.getComponents<ecs::Link>().at(linked_entity).value().getLink();
@@ -125,6 +126,7 @@ namespace ecs
         graphical->setRectangleShapeRect(linked_entity, registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle());
         volume = std::ceil((registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle() * 100)/registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle());
         graphical->setTextString(linked_text, std::to_string(static_cast<int>(volume)) + "%");
+        return (volume);
     }
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
@@ -288,12 +290,16 @@ namespace ecs
             }
         }
     }
-    void Systems::setUserPseudoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo)
+    void Systems::setUserInfoInSettings(Registry &registry, graphics::Graphical &graphical, std::string pseudo, int music_volume, int sfx_volume)
     {
         for (auto &it : registry.getEntities()) {
             try {
-                registry.getComponents<ecs::TextBox>().at(it);
-                graphical.setTextString(registry.getComponents<ecs::Link>().at(it).value().getLink(), pseudo);
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::PSEUDO)
+                    graphical.setTextString(it, pseudo);
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MUSIC)
+                    graphical.setTextString(it, std::to_string(music_volume).append("%"));
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SFX)
+                    graphical.setTextString(it, std::to_string(sfx_volume).append("%"));
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {

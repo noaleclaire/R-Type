@@ -11,8 +11,8 @@
 
 class ParserUserInfo {
     public:
-        static void getUserInfo(UserInfo *obj);
-        static void saveUserInfo(UserInfo *obj);
+        static void getUserInfo(UserInfo &obj);
+        static void saveUserInfo(UserInfo &obj);
 
     private:
 };
