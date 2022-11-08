@@ -79,6 +79,21 @@ class Settings : public ScenesInitializer {
                     //Shape background
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
             rect = {394, 447, rect.at(2) - 27, rect.at(3) - 25};
+            graphical.addText(entity, "", rect);
+            //Buttons
+                //back arrow
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 6, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 10, 10, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 6, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOMENU);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
+                //confirm new pseudo
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 700, 100, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 0, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CONFIRMPSEUDO);
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(tmp_entity));
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
+            //Shape volume
+            rect = {700, 300, 200, 80};
             entity = registry.spawnEntity();
             registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGEVOLUME));
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));

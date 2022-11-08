@@ -160,6 +160,18 @@ class TypePseudo : public ScenesInitializer {
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 231 + tmp_width + 5, 358, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 4);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOMENU);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 7), rect);
+                //join game
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 5, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 928 - rect.at(2), btn_y, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 5, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOMENU);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 5), rect);
+            registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+            btn_y += rect.at(3) + 5;
+                //exit
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 3, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 928 - rect.at(2), btn_y, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::EXIT);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 3), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
                 //confirm pseudo -> duplicata of go to menu but non drawable
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 7, 0);

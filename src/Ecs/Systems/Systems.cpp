@@ -63,10 +63,12 @@ namespace ecs
         for (auto &it : registry.getEntities()) {
             try {
                 clickable.at(it);
+                registry.getComponents<ecs::Pressed>().at(it);
                 registry.getComponents<ecs::Type>().at(it);
                 try {
                     if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
-                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON) {
+                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
+                        && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3) {
                             graphical->setPressedSprite(it);
                         } else {
                             graphical->setBasicSprite(it);
@@ -277,7 +279,8 @@ namespace ecs
                 try {
                     graphical->setBasicSprite(it);
                     if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
-                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON)
+                        if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
+                        && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 2)
                             graphical->setHoverSprite(it);
                     }
                 } catch (const std::out_of_range &e) {}
@@ -305,6 +308,7 @@ namespace ecs
     {
         ecs::EntityTypes entity_type;
         std::size_t entity_id = 0;
+        std::vector<float> rect;
         for (auto &it : registry.getEntities()) {
             try {
                 registry.getComponents<ecs::Animation>().at(it);
@@ -324,15 +328,20 @@ namespace ecs
                     registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
                     static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
                 );
-                std::cout << registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle() << std::endl;
                 if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
                 sprites_manager.getNbAnimation(entity_type, entity_id,
                 sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
                     if (sprites_manager.getNextAnimation(entity_type, entity_id,
-                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1)
+                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1) {
                         sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
                         sprites_manager.getNextAnimation(entity_type, entity_id,
                         sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
+                        rect = sprites_manager.get_Animations_rect(entity_type, entity_id, sprites_manager.getIndexCurrentAnimation(entity_type, entity_id));
+                        registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(rect_x));
+                        registry.getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(rect_y));
+                        registry.getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(rect_width));
+                        registry.getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(rect_height));
+                    }
                     sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
                 }
                 graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
