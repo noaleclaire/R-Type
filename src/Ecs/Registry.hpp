@@ -23,7 +23,6 @@
 #include "Exceptions/ExceptionIndexComponent.hpp"
 #include "Exceptions/ExceptionSparseArrayUnobtainable.hpp"
 #include "../Network/Message.hpp"
-#include <unistd.h>
 
 //convert to milliseconds with std::chrono::milliseconds() operator
 #define TRANSFER_TIME_COMPONENT 5
@@ -51,6 +50,7 @@ namespace ecs
             registerComponents<ecs::TextBox>();
             registerComponents<ecs::CompoScene>();
             registerComponents<ecs::Animation>();
+            registerComponents<ecs::Pressed>();
         };
         ~Registry() = default;
         /**

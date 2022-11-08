@@ -54,13 +54,13 @@ class Settings : public ScenesInitializer {
             graphical.addText(entity, "", rect);
             //Buttons
                 //back arrow
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 10, 10, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 6, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 10, 10, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 6, 2);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOMENU);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
                 //confirm new pseudo
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 0, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 700, 100, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 700, 100, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 0, 2);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CONFIRMPSEUDO);
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(tmp_entity));
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 0), rect);
