@@ -32,6 +32,7 @@
 #   rect_height: 27
 #   nb_anim: 15
 #   next_anim: 0
+s
 spritesheet: background.jpg
  background: 0
   anim: 0
