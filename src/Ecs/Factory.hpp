@@ -138,14 +138,15 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Clickable>(entity, ecs::Clickable());
+            registry.addComponent<ecs::Pressed>(entity, ecs::Pressed());
 
             registry.addComponent<ecs::Position>(
                 entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
             registry.addComponent<ecs::Rectangle>(entity,
                 ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BUTTON));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::BUTTON, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
             return (entity);
         }
         /**

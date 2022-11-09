@@ -20,7 +20,7 @@ namespace graphics
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
-        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/airstrike.ttf"));
+        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf"));
     }
 
     Graphical::~Graphical()
@@ -100,13 +100,13 @@ namespace graphics
     {
         sf::Texture texture;
         for (auto &it : sprites_manager->getTexturePath()) {
-            if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/" + it))) {
-                if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png")))
+            if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/" + it).string())) {
+                if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png").string()))
                     throw SfmlExceptionTexture("Cannot load texture from file", "void Graphical::addAllTextures(SpritesManager &sprites_manager)");
             }
             _textures.insert(std::make_pair(it, texture));
         }
-        if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png")))
+        if (!texture.loadFromFile(std::filesystem::current_path().append("assets/sprites/missing_texture.png").string()))
             throw SfmlExceptionTexture("Cannot load texture from file", "void Graphical::addAllTextures(SpritesManager &sprites_manager)");
         _textures.insert(std::make_pair("missing_texture.png", texture));
     }

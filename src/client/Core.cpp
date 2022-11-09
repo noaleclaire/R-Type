@@ -19,16 +19,16 @@
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
+std::string Core::room_id = "";
 int Core::new_music_volume = -1;
 int Core::new_sfx_volume = - 1;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
-    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path() / "assets/sprites/sprites_config.yaml");
-    ParserUserInfo::getUserInfo(_user_info);
+    ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
+    ParserUserInfo::getUserInfo(&_user_info);
     Core::new_music_volume = _user_info.music_volume;
     Core::new_sfx_volume = _user_info.sfx_volume;
-    // _sprites_manager.printSpritesData();
 
     _graphical.sprites_manager = &_sprites_manager;
     _graphical.addAllTextures();
@@ -66,7 +66,7 @@ void Core::_setActualRegistry()
 void Core::_switchScenesCreateRoom()
 {
     if (_last_scene != ecs::Scenes::PUBLICROOM && Core::actual_scene == ecs::Scenes::PUBLICROOM) {
-        _client.createPublicRoom();
+        _client.createPublicRoom(_user_info.pseudo);
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
@@ -111,7 +111,7 @@ void Core::_switchScenesJoinRoom()
         }
     }
     if (_last_scene != ecs::Scenes::JOINROOMBYID && Core::actual_scene == ecs::Scenes::JOINROOMBYID) {
-        _client.joinRoomById(0); // change id_room !!!
+        _client.joinRoomById(std::stoi(Core::room_id));
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen

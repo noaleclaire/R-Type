@@ -54,7 +54,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
-    void createPublicRoom();
+    void createPublicRoom(char *player_name);
     /**
      * @brief
      *
@@ -115,4 +115,9 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void _setRectAndSpriteComponent();
+    /**
+     * @brief
+     *
+     */
+    void _setTextComponent();
 };

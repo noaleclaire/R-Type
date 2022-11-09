@@ -25,8 +25,8 @@ void signalHandler(int signum)
 
 void executeSystemSetupCmd()
 {
-    if (!std::filesystem::is_regular_file(std::filesystem::current_path() / "setup_server.sh"))
-        throw ExceptionFileNotFound("setup_server.sh not found in : " + std::string(std::filesystem::current_path()), "void executeSystemSetupCmd()");
+    if (!std::filesystem::is_regular_file(std::filesystem::current_path().append("setup_server.sh")))
+        throw ExceptionFileNotFound("setup_server.sh not found in : " + std::filesystem::current_path().string(), "void executeSystemSetupCmd()");
     std::string validation;
     std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
     std::cin >> validation;

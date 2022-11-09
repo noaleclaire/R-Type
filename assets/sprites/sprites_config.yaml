@@ -32,101 +32,6 @@
 #   rect_height: 27
 #   nb_anim: 15
 #   next_anim: 0
-spritesheet: background.jpg
- background: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 1337
-   rect_height: 720
-
-spritesheet: logo.png
- background: 1
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 1085
-   rect_height: 193
-
-spritesheet: black_filter.png
- background: 2
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 1280
-   rect_height: 720
-
-spritesheet: logo_btn_background.png
- background: 3
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 1280
-   rect_height: 720
-
-spritesheet: settings_box.png
- background: 4
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 761
-   rect_height: 414
-
-spritesheet: type_pseudo_box.png
- background: 5
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 866
-   rect_height: 281
-
-spritesheet: setting_sound_bar.png
- background: 6
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 611
-   rect_height: 74
-
-spritesheet: setting_enter_name_bar.png
- background: 7
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 485
-   rect_height: 74
-
-spritesheet: type_pseudo_bar.png
- background: 8
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 701
-   rect_height: 85
-
-spritesheet: how_to_play.png
- background: 9
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 828
-   rect_height: 621
-
-spritesheet: button.png
- button: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 300
-   rect_height: 110
-
-spritesheet: button.png
- room: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 300
-   rect_height: 110
 
 spritesheet: spaceships.gif
  spaceship: 0
@@ -145,58 +50,258 @@ spritesheet: nsm
    rect_width: 72
    rect_height: 72
 
-spritesheet: create_private_game_btn.png
- button: 1
+# ------------------------BACKGROUNDS------------------------
+spritesheet: backgrounds/background.jpg
+ background: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1337
+   rect_height: 720
+
+spritesheet: backgrounds/logo.png
+ background: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1085
+   rect_height: 193
+
+spritesheet: backgrounds/black_filter.png
+ background: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/logo_btn_background.png
+ background: 3
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/settings_box.png
+ background: 4
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 761
+   rect_height: 414
+
+spritesheet: backgrounds/type_pseudo_box.png
+ background: 5
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 866
+   rect_height: 281
+
+spritesheet: backgrounds/setting_sound_bar.png
+ background: 6
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 611
+   rect_height: 74
+
+spritesheet: backgrounds/setting_enter_name_bar.png
+ background: 7
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 485
+   rect_height: 74
+
+spritesheet: backgrounds/type_pseudo_bar.png
+ background: 8
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 701
+   rect_height: 85
+
+spritesheet: backgrounds/how_to_play.png
+ background: 9
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 828
+   rect_height: 621
+
+spritesheet: backgrounds/logo_menu_join.png
+ background: 10
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 419
+   rect_height: 132
+
+spritesheet: backgrounds/private_room_logo.png
+ background: 11
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 214
+   rect_height: 79
+
+spritesheet: backgrounds/bg_private_room_zone.png
+ background: 12
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 320
+   rect_height: 231
+
+spritesheet: backgrounds/public_mainframe.png
+ background: 13
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 679
+   rect_height: 495
+
+# ------------------------BUTTONS------------------------
+spritesheet: buttons/create_private_game_btn.png
+ button: 0
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 177
    rect_height: 75
+   nb_anim: 3
 
-spritesheet: create_public_game_btn.png
- button: 2
+spritesheet: buttons/create_public_game_btn.png
+ button: 1
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 191
    rect_height: 75
+   nb_anim: 3
 
-spritesheet: exit_btn.png
+spritesheet: buttons/exit_btn.png
+ button: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 378
+   rect_height: 54
+   nb_anim: 3
+
+spritesheet: buttons/htp_btn.png
  button: 3
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 378
    rect_height: 54
+   nb_anim: 3
 
-spritesheet: htp_btn.png
+spritesheet: buttons/joingame_btn.png
  button: 4
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 378
-   rect_height: 54
+   rect_height: 53
+   nb_anim: 3
 
-spritesheet: joingame_btn.png
+spritesheet: buttons/settings_btn.png
  button: 5
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 378
    rect_height: 53
+   nb_anim: 3
 
-spritesheet: settings_btn.png
+spritesheet: buttons/back_button.png
  button: 6
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 378
-   rect_height: 53
-
-spritesheet: back_button.png
- button: 7
   anim: 0
    rect_x: 0
    rect_y: 0
    rect_width: 100
    rect_height: 79
+   nb_anim: 3
+
+spritesheet: buttons/private_join_btn.png
+ button: 7
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 177
+   rect_height: 78
+
+spritesheet: buttons/versus_btn.png
+ button: 8
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 303
+   rect_height: 104
+   nb_anim: 3
+
+spritesheet: buttons/coop_btn.png
+ button: 9
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 215
+   rect_height: 89
+   nb_anim: 3
+
+spritesheet: buttons/achievement_btn.png
+ button: 10
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 99
+   rect_height: 96
+   nb_anim: 3
+
+spritesheet: buttons/confirm_btn.png
+ button: 11
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 100
+   rect_height: 79
+   nb_anim: 3
+
+# ------------------------ROOMS------------------------
+spritesheet: rooms/public_game_select_room.png
+ room: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 655
+   rect_height: 115
+
+# ------------------------ROOMMODES------------------------
+spritesheet: roommodes/coop_logo.png
+ roommode: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 127
+   rect_height: 53
+
+spritesheet: roommodes/versus_logo.png
+ roommode: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 147
+   rect_height: 53
+
+# ------------------------TEXTBOXS------------------------
+spritesheet: textboxs/textbox_room_id.png
+ textbox: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 223
+   rect_height: 68

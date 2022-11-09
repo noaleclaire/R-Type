@@ -8,6 +8,7 @@
 #include "ParserYaml.hpp"
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "Exceptions/ExceptionBadYamlWord.hpp"
 #include "Exceptions/ExceptionFileNotFound.hpp"
 
