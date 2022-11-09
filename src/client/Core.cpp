@@ -21,12 +21,12 @@ ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
 int Core::new_music_volume = -1;
-int Core::new_sfx_volume = - 1;
+int Core::new_sfx_volume = -1;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
-    ParserUserInfo::getUserInfo(&_user_info);
+    ParserUserInfo::getUserInfo(_user_info);
     Core::new_music_volume = _user_info.music_volume;
     Core::new_sfx_volume = _user_info.sfx_volume;
 
