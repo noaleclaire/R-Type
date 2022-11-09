@@ -33,10 +33,12 @@ void CustomClient::initGame()
     send(msg);
 }
 
-void CustomClient::createPublicRoom()
+void CustomClient::createPublicRoom(char *player_name)
 {
+    ecs::Text player_name_class(const_cast<char *>(player_name));
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreatePublicRoom;
+    msg << player_name_class;
     send(msg);
 }
 
@@ -93,15 +95,19 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::AllComponentSent: {
             _setRectAndSpriteComponent();
+            _setTextComponent();
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);
         } break;
         case network::CustomMessage::MaxRoomLimit: {
-            _setErrorMessage("Nombre de rooms max atteint");
+            _setErrorMessage("Max Number Of Rooms Were Already Be Created");
         } break;
         case network::CustomMessage::MaxPlayersInRoom: {
-            _setErrorMessage("Nombre de joueurs max dans cette room atteint");
+            _setErrorMessage("Max Number Of Players In This Room Reached");
+        } break;
+        case network::CustomMessage::RoomDoesntExists: {
+            _setErrorMessage("This Room Doesn't Exists");
         } break;
         default: break;
     }
@@ -113,7 +119,6 @@ void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> 
     non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
     std::size_t nb_rooms = 0;
     std::size_t tmp_nb_rooms = 0;
-    std::size_t nb_player_in_room = 0;
     ecs::Scenes room_scene;
     msg >> nb_rooms;
     for (auto &it : non_shareable_registry->getEntities()) {
@@ -121,7 +126,8 @@ void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> 
             if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
                 non_shareable_registry->removeComponent<ecs::Drawable>(it);
                 non_shareable_registry->removeComponent<ecs::CompoScene>(it);
-                non_shareable_registry->removeComponent<ecs::Text>(it);
+                non_shareable_registry->removeComponent<ecs::Drawable>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()));
+                non_shareable_registry->removeComponent<ecs::Text>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()));
             }
         } catch (const ecs::Exception &e) {
             continue;
@@ -135,17 +141,24 @@ void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> 
                 non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
                 msg >> room_scene;
                 non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
-                msg >> nb_player_in_room;
-                non_shareable_registry->addComponent<ecs::Text>(it, ecs::Text(const_cast<char *>(std::to_string(nb_player_in_room).c_str())));
-                std::cout << "nb_players: " << non_shareable_registry->getComponents<ecs::Text>().at(it).value().getText() << " in room scene: " << room_scene << std::endl;
                 tmp_nb_rooms++;
+                non_shareable_registry->addComponent<ecs::Drawable>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()), ecs::Drawable());
+                ecs::Text info_text;
+                msg >> info_text;
+                non_shareable_registry->addComponent<ecs::Text>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()), ecs::Text());
+                non_shareable_registry->getComponents<ecs::Text>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().setText(info_text.getText());
+                graphical->addText(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()),
+                non_shareable_registry->getComponents<ecs::Text>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getText(),
+                {non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getXRectangle(),
+                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getYRectangle(),
+                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getWidthRectangle()});
             }
+
         } catch (const ecs::Exception &e) {
             continue;
         }
     }
     non_shareable_registry->setActualScene(tmp_scene);
-    std::cout << std::endl;
 }
 
 void CustomClient::_setRectAndSpriteComponent()
@@ -168,6 +181,20 @@ void CustomClient::_setRectAndSpriteComponent()
         } catch (const ecs::Exception &e) {
             continue;
         } catch (const Exception &e) {
+            continue;
+        }
+    }
+}
+
+void CustomClient::_setTextComponent()
+{
+    for (auto &it : registry->getEntities()) {
+        try {
+            graphical->addText(it, registry->getComponents<ecs::Text>().at(it).value().getText(),
+            {registry->getComponents<ecs::Rectangle>().at(it).value().getXRectangle(),
+            registry->getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
+            registry->getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()});
+        } catch (const ecs::Exception &e) {
             continue;
         }
     }

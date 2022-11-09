@@ -136,15 +136,15 @@ spritesheet: backgrounds/logo_menu_join.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 419
+   rect_height: 132
 
 spritesheet: backgrounds/private_room_logo.png
  background: 11
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
+   rect_width: 214
    rect_height: 79
 
 spritesheet: backgrounds/bg_private_room_zone.png
@@ -152,16 +152,16 @@ spritesheet: backgrounds/bg_private_room_zone.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 320
+   rect_height: 231
 
 spritesheet: backgrounds/public_mainframe.png
  background: 13
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 679
+   rect_height: 495
 
 # ------------------------BUTTONS------------------------
 spritesheet: buttons/create_private_game_btn.png
@@ -223,8 +223,8 @@ spritesheet: buttons/back_button.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 378
-   rect_height: 53
+   rect_width: 100
+   rect_height: 79
    nb_anim: 3
 
 spritesheet: buttons/private_join_btn.png
@@ -232,20 +232,38 @@ spritesheet: buttons/private_join_btn.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 177
+   rect_height: 78
 
 spritesheet: buttons/versus_btn.png
  button: 8
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 303
+   rect_height: 104
    nb_anim: 3
 
 spritesheet: buttons/coop_btn.png
  button: 9
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 215
+   rect_height: 89
+   nb_anim: 3
+
+spritesheet: buttons/achievement_btn.png
+ button: 10
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 99
+   rect_height: 96
+   nb_anim: 3
+
+spritesheet: buttons/confirm_btn.png
+ button: 11
   anim: 0
    rect_x: 0
    rect_y: 0
@@ -254,36 +272,36 @@ spritesheet: buttons/coop_btn.png
    nb_anim: 3
 
 # ------------------------ROOMS------------------------
-spritesheet: public_game_select_room.png
+spritesheet: rooms/public_game_select_room.png
  room: 0
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 300
-   rect_height: 110
+   rect_width: 655
+   rect_height: 115
 
 # ------------------------ROOMMODES------------------------
-spritesheet: versus_logo.png
+spritesheet: roommodes/coop_logo.png
  roommode: 0
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 127
+   rect_height: 53
 
-spritesheet: coop_logo.png
+spritesheet: roommodes/versus_logo.png
  roommode: 1
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 100
-   rect_height: 79
+   rect_width: 147
+   rect_height: 53
 
 # ------------------------TEXTBOXS------------------------
-spritesheet: textboxs/textbox_private_room_id.png
+spritesheet: textboxs/textbox_room_id.png
  textbox: 0
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 300
-   rect_height: 110
+   rect_width: 223
+   rect_height: 68

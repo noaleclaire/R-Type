@@ -18,7 +18,7 @@ namespace network
                                 CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
                                 GetRoomScene,
                                 InitListRoom, UpdateListRoom,
-                                JoinRoom, JoinRoomById, MaxPlayersInRoom,
+                                JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
                                 SendComponent, AllComponentSent,
                                 SwitchToGame,
                                 RemoveClient };

@@ -21,6 +21,7 @@ class Core {
 
     static ecs::Scenes actual_scene;
     static std::string new_pseudo;
+    static std::string room_id;
 
   protected:
   private:

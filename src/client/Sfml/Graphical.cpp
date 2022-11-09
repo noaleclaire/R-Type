@@ -20,7 +20,7 @@ namespace graphics
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
-        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/airstrike.ttf"));
+        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf"));
     }
 
     Graphical::~Graphical()

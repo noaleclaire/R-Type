@@ -11,8 +11,6 @@
 
 #define BUFFER_SIZE 255
 
-#define BUFFER_SIZE 255
-
 namespace ecs
 {
     class Text : public AComponent {

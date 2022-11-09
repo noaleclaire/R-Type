@@ -60,7 +60,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
         }
     }
 
-   void updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool private_room, udp::endpoint client_endpoint);
+   void updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool private_room, std::string player_name, udp::endpoint client_endpoint);
 
   protected:
     /**
@@ -72,7 +72,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
-    void _createRoom(udp::endpoint target_endpoint, bool private_room = false);
+    void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
     void _getInfoForListRoomScene(network::Message<network::CustomMessage> &msg);
     void _joinRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
@@ -86,5 +86,5 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param std::vector is a vector of pair which contains every endpoint of the players in this room scene
      *                    and the bool is the indicator for if the player is the host of this room or not
      */
-    std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>>> _rooms;
+    std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string>> _rooms;
 };
