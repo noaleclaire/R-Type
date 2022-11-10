@@ -22,7 +22,6 @@ jobs:
         run: |
           python --version
           sudo pip install conan
-          sudo apt-get updatelibfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
 
       - name: Set and Update conan profile
         shell: bash
