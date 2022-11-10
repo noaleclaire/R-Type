@@ -19,7 +19,8 @@ SpritesManager::SpritesManager()
 {
     _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
         {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
-            std::make_pair("shot", ecs::EntityTypes::SHOT), std::make_pair("background", ecs::EntityTypes::BACKGROUND),
+            std::make_pair("basic_monster", ecs::EntityTypes::BASIC_MONSTER), std::make_pair("shot", ecs::EntityTypes::SHOT),
+             std::make_pair("basic_shot", ecs::EntityTypes::BASIC_SHOT), std::make_pair("background", ecs::EntityTypes::BACKGROUND),
             std::make_pair("button", ecs::EntityTypes::BUTTON), std::make_pair("room", ecs::EntityTypes::ROOM),
             std::make_pair("wall", ecs::EntityTypes::WALL), std::make_pair("textbox", ecs::EntityTypes::TEXTBOX),
             std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
@@ -42,7 +43,9 @@ void SpritesManager::initMapFunctionPointer()
 
     _map_fptr.insert("spaceship", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("basic_monster", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("basic_shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("button", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("room", &SpritesManager::addSpriteTypeId);
@@ -317,7 +320,7 @@ int SpritesManager::getNextAnimation(ecs::EntityTypes entity_type, std::size_t e
     try {
         for (auto &it : _sprites_data) {
             if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
-                if (it._animations.at(anim_id).at(next_anim))
+                if (it._animations.at(anim_id).at(next_anim) && it._do_next_anim)
                     return (it._animations.at(anim_id).at(next_anim).value());
                 else
                     return (-1);
@@ -366,6 +369,27 @@ void SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std:
     for (auto &it : _sprites_data) {
         if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
             it._index_current_anim = index;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+bool SpritesManager::doNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._do_next_anim);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setDoNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, bool do_next_anim)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._do_next_anim = do_next_anim;
             return;
         }
     }

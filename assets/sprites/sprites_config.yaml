@@ -305,3 +305,23 @@ spritesheet: textboxs/textbox_room_id.png
    rect_y: 0
    rect_width: 223
    rect_height: 68
+
+# ------------------------MONSTERS------------------------
+spritesheet: monsters/basic_monster.png
+ basic_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 336
+   rect_height: 132
+   nb_anim: 3
+
+
+# ------------------------SHOTS------------------------
+spritesheet: shots/basic_shot.png
+ basic_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 223
+   rect_height: 68

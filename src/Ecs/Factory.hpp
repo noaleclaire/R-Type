@@ -99,7 +99,7 @@ namespace ecs
                 ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
             return (entity);
         }
         /**

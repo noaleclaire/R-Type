@@ -184,6 +184,23 @@ class SpritesManager : public AYamlConfig {
      */
     void setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, int index);
     /**
+     * @brief 
+     * 
+     * @param entity_type 
+     * @param entity_id 
+     * @return true 
+     * @return false 
+     */
+    bool doNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id);
+    /**
+     * @brief Set the Do Next Animation object
+     * 
+     * @param entity_type 
+     * @param entity_id 
+     * @param do_next_anim 
+     */
+    void setDoNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, bool do_next_anim);
+    /**
      * @brief Get the Spritesheet
      *
      * @param entity_type
@@ -213,6 +230,7 @@ class SpritesManager : public AYamlConfig {
         std::unordered_map<std::size_t, std::vector<std::optional<int>>> _animations;
         float _anim_current_frame = 0;
         int _index_current_anim = 0;
+        bool _do_next_anim = false;
     };
     std::vector<SpriteData> _sprites_data;
     std::vector<std::string> _textures_path;
