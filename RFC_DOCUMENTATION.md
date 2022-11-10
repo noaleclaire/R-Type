@@ -26,31 +26,31 @@ game.
     Type of message send or receive:
     
     PingServer :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to verify the connexion to a server
+    &nbsp;-> This action is used to verify the connexion to a server
 
     RemoveClient :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to remove a client in a server
+    &nbsp;-> This action is used to remove a client in a server
 
     AllComponentSent :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to send all components created in the server to the client
+    &nbsp;-> This action is used to send all components created in the server to the client
 
     CreatePublicRoom :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to create a plublic room in a server
+    &nbsp;-> This action is used to create a plublic room in a server
 
     CreatePrivateRoom :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to create a private room in a server
+    &nbsp;-> This action is used to create a private room in a server
 
     InitListRoom :   
-    &nbsp;&nbsp;&nbsp;-> This action is used to send all room avaible
+    &nbsp;-> This action is used to send all room avaible
 
     JoinRoomById :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to join a private room
+    &nbsp;-> This action is used to join a private room
     
     MaxRoomLimit :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the maximum number of rooms have been created
+    &nbsp;-> This action is used to notify the client that the maximum number of rooms have been created
 
     MaxPlayersInRoom :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the room cannot accept more clients
+    &nbsp;-> This action is used to notify the client that the room cannot accept more clients
 
     RoomDoesntExists :  
-    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the room doesn't exist
+    &nbsp;-> This action is used to notify the client that the room doesn't exist
