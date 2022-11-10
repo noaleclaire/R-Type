@@ -11,6 +11,7 @@
 #include "../../Ecs/Registry.hpp"
 #include "../../Ecs/Exceptions/ExceptionComponentNull.hpp"
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
+#include "../Utilities/LevelManager.hpp"
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -87,4 +88,5 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      *                    and the bool is the indicator for if the player is the host of this room or not
      */
     std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string>> _rooms;
+    std::vector<LevelManager> _levels;
 };
