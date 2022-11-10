@@ -42,6 +42,7 @@ OS="`uname`"
 case $OS in
   'Linux')
     OS='Linux'
+    rm -d -rf build
     mkdir build && cd build
     for (( i = 30; i < 38; i++ ));
         do echo -ne "\033[0;"$i"m \033[1;"$i"m...Entering BUILD directory..."; printf "\r"
