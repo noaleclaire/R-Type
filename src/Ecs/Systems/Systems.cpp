@@ -21,7 +21,8 @@ namespace ecs
             try {
                 clickable.at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         switch (clickable.at(it).value().getFunction()) {
                             case Clickable::Function::EXIT: graphical->getWindow().close(); break;
                             case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
@@ -38,6 +39,7 @@ namespace ecs
                                     Core::actual_scene = ecs::Scenes::JOINROOMBYID;
                                 }
                                 break;
+                            case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
                                     Core::new_pseudo = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());
@@ -76,7 +78,8 @@ namespace ecs
                 registry.getComponents<ecs::Pressed>().at(it);
                 registry.getComponents<ecs::Type>().at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3) {
                             graphical->setPressedSprite(it);
@@ -243,9 +246,11 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
+                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::PARALLAX
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
                     if (registry.getComponents<ecs::Position>().at(it).value().getXPosition()
-                        <= -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                    + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() < 1) {
                         registry.getComponents<ecs::Position>().at(it).value().setXPosition(
                             registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle());
                     }
@@ -297,7 +302,8 @@ namespace ecs
                 registry.getComponents<ecs::Type>().at(it);
                 try {
                     graphical->setBasicSprite(it);
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3)
                             graphical->setHoverSprite(it);

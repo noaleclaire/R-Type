@@ -19,6 +19,7 @@ namespace network
                                 GetRoomScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
+                                QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
                                 SwitchToGame,
                                 RemoveClient };

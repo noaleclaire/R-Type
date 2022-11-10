@@ -47,6 +47,7 @@ void SpritesManager::initMapFunctionPointer()
     _map_fptr.insert("shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("basic_shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("parallax", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("button", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("room", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("wall", &SpritesManager::addSpriteTypeId);

@@ -85,6 +85,9 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param bool this second bool is the indicator for if the room scene is private or not
      * @param std::vector is a vector of pair which contains every endpoint of the players in this room scene
      *                    and the bool is the indicator for if the player is the host of this room or not
+     * @param std::string is the name of the host of the room scene
+     * @param bool is the mode of the room scene (coop by default)
      */
-    std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string>> _rooms;
+    std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string, bool>> _rooms;
+    std::unordered_map<udp::endpoint, std::string> _players_names;
 };
