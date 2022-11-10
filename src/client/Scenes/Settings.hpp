@@ -50,7 +50,8 @@ class Settings : public ScenesInitializer {
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
             rect = {394, 362, rect.at(2) - 27, rect.at(3) - 25};
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGEVOLUME));
+            tmp_width = rect.at(2);
+            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGEMUSICVOLUME));
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
@@ -59,7 +60,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Black);
                     //Shape volume changer
-            rect.at(2) /= 10;
+            rect.at(2) = rect.at(2) * Core::new_music_volume/100;
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
@@ -69,19 +70,20 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Red);
                     //Text volume value
-            rect = {rect.at(0) + rect.at(2) * 5 - 5, rect.at(1) + 3, 30};
+            rect = {rect.at(0) + tmp_width/2 - 5, rect.at(1) + 3, 30};
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(6));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
-            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::MUSIC));
             graphical.addText(entity, "10%", rect);
                 //SFX
                     //Shape background
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 6, 0);
             rect = {394, 447, rect.at(2) - 27, rect.at(3) - 25};
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGEVOLUME));
+            tmp_width = rect.at(2);
+            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::CHANGESFXVOLUME));
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
@@ -90,7 +92,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Black);
                     //Shape volume changer
-            rect.at(2) /= 10;
+            rect.at(2) = rect.at(2) * Core::new_sfx_volume/100;
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
@@ -100,12 +102,12 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addRectangleShape(entity, rect, sf::Color::Red);
                     //Text volume value
-            rect = {rect.at(0) + rect.at(2) * 5 - 5, rect.at(1) + 3, 30};
+            rect = {rect.at(0) + tmp_width/2 - 5, rect.at(1) + 3, 30};
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(6));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
-            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SFX));
             graphical.addText(entity, "10%", rect);
             //TextBox
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 7, 0);
@@ -127,7 +129,7 @@ class Settings : public ScenesInitializer {
             registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(5));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
-            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::PSEUDO));
             graphical.addText(entity, "", rect);
             //Bars (background)
                 //Bar enter new name

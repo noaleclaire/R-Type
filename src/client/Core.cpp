@@ -20,12 +20,15 @@
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
+int Core::new_music_volume = -1;
+int Core::new_sfx_volume = - 1;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
-    ParserUserInfo::getUserInfo(&_user_info);
-    // _sprites_manager.printSpritesData();
+    ParserUserInfo::getUserInfo(_user_info);
+    Core::new_music_volume = _user_info.music_volume;
+    Core::new_sfx_volume = _user_info.sfx_volume;
 
     _graphical.sprites_manager = &_sprites_manager;
     _graphical.addAllTextures();
@@ -133,7 +136,7 @@ void Core::_switchScenes()
     if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS) {
-        ecs::Systems::setUserPseudoInSettings(*_actual_registry, _graphical, _user_info.pseudo);
+        ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
         _actual_registry->setActualScene(Core::actual_scene);
     }
     if (_last_scene != ecs::Scenes::LISTROOM && Core::actual_scene == ecs::Scenes::LISTROOM) {
@@ -162,13 +165,21 @@ void Core::_switchScenes()
     _last_scene = Core::actual_scene;
 }
 
-void Core::_handleUserPseudo()
+void Core::_updateUserInfo()
 {
     if (std::strcmp(_user_info.pseudo, "") == 0 && Core::new_pseudo == "")
         Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
     if (Core::new_pseudo.size() > 0) {
         std::strcpy(_user_info.pseudo, Core::new_pseudo.c_str());
         Core::new_pseudo = "";
+    }
+    if (Core::new_music_volume > - 1) {
+        _user_info.music_volume = Core::new_music_volume;
+        Core::new_music_volume = - 1;
+    }
+    if (Core::new_sfx_volume > - 1) {
+        _user_info.sfx_volume = Core::new_sfx_volume;
+        Core::new_sfx_volume = - 1;
     }
 }
 
@@ -188,7 +199,7 @@ void Core::_gameLoop()
     _actual_registry->setActualScene(actual_scene);
     try {
         while (_graphical.getWindow().isOpen()) {
-            _handleUserPseudo();
+            _updateUserInfo();
             _graphical.getWorldClock();
             _setActualRegistry();
             _graphical.setActualGraphicsEntities(Core::actual_scene);
@@ -207,5 +218,5 @@ void Core::_gameLoop()
         throw e;
     }
     _gameStop();
-    ParserUserInfo::saveUserInfo(&_user_info);
+    ParserUserInfo::saveUserInfo(_user_info);
 }
