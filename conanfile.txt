@@ -1,6 +1,6 @@
 [requires]
 asio/1.16.0
-sfml/2.5.1
+sfml/2.5.1@#6e0be9a96dad469cc779b089a6446337
 boost/1.80.0
 
 [options]
