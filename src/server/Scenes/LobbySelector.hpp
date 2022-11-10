@@ -12,9 +12,23 @@
 class CustomServer;
 class LobbySelector : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Lobby Selector object
+         * 
+         */
         LobbySelector() = default;
+        /**
+         * @brief Destroy the Lobby Selector object
+         * 
+         */
         ~LobbySelector() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param server 
+         * @param registry 
+         * @param client_endpoint 
+         */
         static void initScene(CustomServer *server, ecs::Registry &registry, udp::endpoint client_endpoint)
         {
             std::size_t entity;
