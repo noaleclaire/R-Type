@@ -25,9 +25,10 @@ class ListRoom : public ScenesInitializer {
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
-                //Parallaxe
+                //Parallax
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, rect.at(2), 0, -80, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 1, 0);
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 0), rect);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::PARALLAX);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::PARALLAX, 0), rect);
             //Logo
                 //logo menu join
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 10, 0);
@@ -42,7 +43,7 @@ class ListRoom : public ScenesInitializer {
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 12, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 22, 348, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2, 12);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 12), rect);
-                //public mainframe
+                //bg public mainframe
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 13, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 356, 170, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2, 13);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BACKGROUND, 13), rect);
@@ -101,32 +102,27 @@ class ListRoom : public ScenesInitializer {
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::ROOM, 368, 192, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3);
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOM, 0), rect);
-            //     //logo mode of the room
-            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
-            // entity = registry.spawnEntity();
-            // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
-            // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
-            // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
-            // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
                 //player name + nb players in room
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(570, 203, 60, 0));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addText(entity, "", {registry.getComponents<ecs::Rectangle>().at(entity).value().getXRectangle(),
             registry.getComponents<ecs::Rectangle>().at(entity).value().getYRectangle(), registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()});
+                //logo mode of the room
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
+            entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
+            registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(393, 223));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE, 0));
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOMMODE, 0), rect);
             //Room2
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOM, 0, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::ROOM, 368, 317, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3);
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOM, 0), rect);
-            //     //logo mode of the room
-            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
-            // entity = registry.spawnEntity();
-            // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
-            // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
-            // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
-            // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
                 //player name + nb players in room
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(570, 314, 60, 0));
@@ -134,18 +130,18 @@ class ListRoom : public ScenesInitializer {
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
             graphical.addText(entity, "", {registry.getComponents<ecs::Rectangle>().at(entity).value().getXRectangle(),
             registry.getComponents<ecs::Rectangle>().at(entity).value().getYRectangle(), registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()});
+            //     //logo mode of the room
+            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
+            // entity = registry.spawnEntity();
+            // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
+            // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
+            // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
+            // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
             //Room3
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOM, 0, 0);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::ROOM, 368, 423, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3);
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOM, 0), rect);
-            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
-            // entity = registry.spawnEntity();
-            //     //logo mode of the room
-            // entity = registry.spawnEntity();
-            // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
-            // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
-            // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
                 //nb players in room
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
@@ -154,18 +150,18 @@ class ListRoom : public ScenesInitializer {
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
             graphical.addText(entity, "", {registry.getComponents<ecs::Rectangle>().at(entity).value().getXRectangle(),
             registry.getComponents<ecs::Rectangle>().at(entity).value().getYRectangle(), registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()});
-            //Room4
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOM, 0, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::ROOM, 368, 538, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3);
-            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOM, 0), rect);
             // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
+            // entity = registry.spawnEntity();
             //     //logo mode of the room
             // entity = registry.spawnEntity();
             // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
             // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
             // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
-            // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
+            //Room4
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOM, 0, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::ROOM, 368, 538, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 3);
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::ROOM, 0), rect);
                 //nb players in room
             entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
             registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(570, 551, 60, 0));
@@ -173,5 +169,12 @@ class ListRoom : public ScenesInitializer {
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
             graphical.addText(entity, "", {registry.getComponents<ecs::Rectangle>().at(entity).value().getXRectangle(),
             registry.getComponents<ecs::Rectangle>().at(entity).value().getYRectangle(), registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()});
+            // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::ROOMMODE, 0, 0);
+            //     //logo mode of the room
+            // entity = registry.spawnEntity();
+            // registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(0, 0));
+            // registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
+            // registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
+            // registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE));
         };
 };

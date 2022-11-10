@@ -14,10 +14,10 @@
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, local_port)
 {
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM1, false, false, std::vector<std::pair<udp::endpoint, bool>>(), ""));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM2, false, false, std::vector<std::pair<udp::endpoint, bool>>(), ""));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM3, false, false, std::vector<std::pair<udp::endpoint, bool>>(), ""));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM4, false, false, std::vector<std::pair<udp::endpoint, bool>>(), ""));
+    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM1, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
+    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM2, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
+    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM3, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
+    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM4, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
 }
 
 CustomServer::~CustomServer()
@@ -26,12 +26,13 @@ CustomServer::~CustomServer()
 
 void CustomServer::updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool private_room, std::string player_name, udp::endpoint client_endpoint)
 {
+    _players_names.insert_or_assign(client_endpoint, player_name);
     for (std::size_t i = 0; i < _rooms.size(); i++) {
         if (std::get<0>(_rooms.at(i)) == room_scene) {
             std::get<1>(_rooms.at(i)) = true;
             std::get<2>(_rooms.at(i)) = private_room;
             std::get<3>(_rooms.at(i)).push_back(std::make_pair(client_endpoint, true));
-            std::get<4>(_rooms.at(i)) = player_name;
+            std::get<4>(_rooms.at(i)) = _players_names.at(client_endpoint);
             return;
         }
     }
@@ -67,6 +68,9 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::JoinRoomById: {
             _joinRoomById(target_endpoint, msg);
+        } break;
+        case network::CustomMessage::QuitRoomServer: {
+            _quitRoom(target_endpoint);
         } break;
         case network::CustomMessage::RemoveClient: {
             _quitRoom(target_endpoint);
@@ -114,6 +118,7 @@ void CustomServer::_getInfoForListRoomScene(network::Message<network::CustomMess
     std::string rooms_text;
     for (int i = _rooms.size() - 1; i >= 0; i--) {
         if (std::get<1>(_rooms.at(i)) == true && std::get<2>(_rooms.at(i)) == false) {
+            message << std::get<5>(_rooms.at(i));
             rooms_text = std::get<4>(_rooms.at(i)) + "         " + std::to_string(std::get<3>(_rooms.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
             ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
             message << player_name_class;
@@ -127,7 +132,11 @@ void CustomServer::_getInfoForListRoomScene(network::Message<network::CustomMess
 void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     ecs::Scenes room_scene;
+    ecs::Text player_name_class;
+    std::string player_name;
     msg >> room_scene;
+    msg >> player_name_class;
+    player_name = player_name_class.getText();
     for (std::size_t i = 0; i < _rooms.size(); i++) {
         if (std::get<0>(_rooms.at(i)) == room_scene && std::get<3>(_rooms.at(i)).size() == NB_MAX_PLAYERS_PER_ROOM) {
             network::Message<network::CustomMessage> error_message;
@@ -136,6 +145,7 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
             return;
         } else if (std::get<0>(_rooms.at(i)) == room_scene) {
             std::get<3>(_rooms.at(i)).push_back(std::make_pair(target_endpoint, false));
+            _players_names.insert_or_assign(target_endpoint, player_name);
             break;
         }
     }
@@ -154,7 +164,11 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
 void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     int id_room = 0;
+    ecs::Text player_name_class;
+    std::string player_name;
     msg >> id_room;
+    msg >> player_name_class;
+    player_name = player_name_class.getText();
     std::string room_id;
     for (std::size_t i = 0; i < _rooms.size(); i++) {
         if (std::get<1>(_rooms.at(i)) == true) {
@@ -167,8 +181,9 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
                         error_message.header.id = network::CustomMessage::MaxPlayersInRoom;
                         send(error_message, target_endpoint);
                         return;
-                    } else
-                        std::get<3>(_rooms.at(i)).push_back(std::make_pair(target_endpoint, false));
+                    }
+                    std::get<3>(_rooms.at(i)).push_back(std::make_pair(target_endpoint, false));
+                    _players_names.insert_or_assign(target_endpoint, player_name);
                     network::Message<network::CustomMessage> message;
                     message.header.id = network::CustomMessage::GetRoomScene;
                     message << std::get<0>(_rooms.at(i));
@@ -203,10 +218,17 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 if (std::get<3>(_rooms.at(i)).at(j).second == true && std::get<3>(_rooms.at(i)).size() > 1) {
                     try {
                         std::get<3>(_rooms.at(i)).at(j+1).second = true;
+                        std::get<4>(_rooms.at(i)) = _players_names.at(std::get<3>(_rooms.at(i)).at(j+1).first);
                     } catch (const std::out_of_range &e) {
                         std::get<3>(_rooms.at(i)).at(j-1).second = true;
+                        std::get<4>(_rooms.at(i)) = _players_names.at(std::get<3>(_rooms.at(i)).at(j-1).first);
                     }
                 }
+                network::Message<network::CustomMessage> message;
+                message.header.id = network::CustomMessage::QuitRoomClient;
+                message << std::get<0>(_rooms.at(i));
+                send(message, std::get<3>(_rooms.at(i)).at(j).first);
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
                 std::get<3>(_rooms.at(i)).erase(std::next(std::get<3>(_rooms.at(i)).begin(), j));
                 if (std::get<3>(_rooms.at(i)).size() == 0) {
                     std::get<1>(_rooms.at(i)) = false;
@@ -214,9 +236,9 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                     for (auto &it : _registry.getEntities())
                         _registry.killEntity(it);
                 }
-                network::Message<network::CustomMessage> message;
-                _getInfoForListRoomScene(message);
-                sendToAllClients(message);
+                network::Message<network::CustomMessage> message2;
+                _getInfoForListRoomScene(message2);
+                sendToAllClients(message2);
                 return;
             }
         }

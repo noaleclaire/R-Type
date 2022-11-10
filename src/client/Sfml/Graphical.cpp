@@ -17,6 +17,7 @@ namespace graphics
     {
         _actual_sprites_entities = &_unique_sprites_entities;
         _actual_text_entities = &_text_entities;
+        _actual_rectangleshape_entities = &_rectangleshape_entities;
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
@@ -40,7 +41,7 @@ namespace graphics
 
     std::unordered_map<std::size_t, sf::RectangleShape> Graphical::getAllRectangleShapes() const
     {
-        return (_rectangleshape_entities);
+        return (*_actual_rectangleshape_entities);
     }
 
     std::unordered_map<std::size_t, sf::Text> Graphical::getAllTexts() const
@@ -168,9 +169,11 @@ namespace graphics
             _scene == ecs::Scenes::TYPEPSEUDO || _scene == ecs::Scenes::HOWTOPLAY) {
             _actual_sprites_entities = &_unique_sprites_entities;
             _actual_text_entities = &_text_entities;
+            _actual_rectangleshape_entities = &_rectangleshape_entities;
         } else {
             _actual_sprites_entities = &_shared_sprites_entities;
             _actual_text_entities = &_shared_text_entities;
+            _actual_rectangleshape_entities = &_shared_rectangleshape_entities;
         }
     }
 

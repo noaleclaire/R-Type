@@ -228,6 +228,8 @@ namespace graphics
         std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;
         std::unordered_map<std::size_t, sf::Sprite> *_actual_sprites_entities;
         std::unordered_map<std::size_t, sf::RectangleShape> _rectangleshape_entities;
+        std::unordered_map<std::size_t, sf::RectangleShape> _shared_rectangleshape_entities;
+        std::unordered_map<std::size_t, sf::RectangleShape> *_actual_rectangleshape_entities;
         std::unordered_map<std::size_t, sf::Text> _text_entities;
         std::unordered_map<std::size_t, sf::Text> _shared_text_entities;
         std::unordered_map<std::size_t, sf::Text> *_actual_text_entities;
