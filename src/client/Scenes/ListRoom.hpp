@@ -10,9 +10,23 @@
 
 class ListRoom : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new List Room object
+         * 
+         */
         ListRoom() = default;
+        /**
+         * @brief Destroy the List Room object
+         * 
+         */
         ~ListRoom() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;

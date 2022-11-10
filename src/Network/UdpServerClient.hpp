@@ -15,7 +15,6 @@
 #include <thread>
 #include <vector>
 #include "Message.hpp"
-#include "Queue.hpp"
 
 using boost::asio::ip::udp;
 
@@ -311,6 +310,13 @@ namespace network
             _clients_endpoint.push_back(client_endpoint);
             return (_clients_endpoint.back());
         }
+        /**
+         * @brief 
+         * 
+         * @param client_endpoint 
+         * @return true 
+         * @return false 
+         */
         bool hasClientEndpoint(udp::endpoint client_endpoint)
         {
             for (auto &it : _clients_endpoint) {

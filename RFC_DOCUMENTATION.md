@@ -43,11 +43,11 @@ ________________________________________________________________________________
 
 ###    - 2. Entities management - Entity Creation
 
-        AllComponentSent :  
-        This action is used to setup information about components
-
         SendComponent :   
         This action is used to send all components created in the server to the client
+
+        AllComponentSent :  
+        This action is used to setup information about components
     
 ###    - 3. Room management
 
