@@ -28,6 +28,7 @@ jobs:
         run: |
           conan profile new default --detect
           mkdir build && cd build
+          apt-get install libudev
           conan install .. --build=missing -c tools.system.package_manager:sudo=True -c tools.system.package_manager:mode=install
 
       - name: Build Test Linux
@@ -37,4 +38,4 @@ jobs:
           export CONAN_SYSREQUIRES_SUDO="1"
           cmake -DCMAKE_C_COMPILER=/usr/bin/gcc-11 ${{ github.workspace }}
           cmake ${{ github.workspace }} -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-          cmake --build ${{ github.workspace }}/build -j
+          cmake --build ${{ github.workspace }}/build -j 10
