@@ -31,7 +31,7 @@ game.
     RemoveClient : 
     -> This action is used to remove a client in a server
 
-    AllComponentSent :\n
+    AllComponentSent :  
     -> This action is used to send all components created in the server to the client
 
     CreatePublicRoom : 
