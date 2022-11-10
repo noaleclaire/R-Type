@@ -12,6 +12,7 @@
 #include "../../Ecs/Exceptions/ExceptionComponentNull.hpp"
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
 #include "../Utilities/LevelManager.hpp"
+#include <chrono>
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -63,6 +64,34 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
 
    void updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool private_room, std::string player_name, udp::endpoint client_endpoint);
 
+    /**
+     * @brief Get the start time of the current level
+     *
+     * @param level_nb
+     * @return std::chrono::time_point<std::chrono::system_clock>
+     */
+    std::chrono::time_point<std::chrono::system_clock> getStartTime(std::size_t level_nb) const;
+    /**
+     * @brief Get the last update time of the current level
+     *
+     * @param level_nb
+     * @return std::chrono::time_point<std::chrono::system_clock>
+     */
+    std::chrono::time_point<std::chrono::system_clock> getLastTime(std::size_t level_nb) const;
+    /**
+     * @brief Set the last update time of the current level
+     *
+     * @param level_nb
+     * @param new_time
+     */
+    void setLastTime(std::size_t level_nb, std::chrono::time_point<std::chrono::system_clock> new_time);
+    /**
+     * @brief Start times of the current level
+     *
+     * @param level_nb
+     */
+    void startTimes(std::size_t level_nb);
+
   protected:
     /**
      * @brief
@@ -89,4 +118,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      */
     std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string>> _rooms;
     std::vector<LevelManager> _levels;
+    std::vector<std::chrono::time_point<std::chrono::system_clock>> _start_times;
+    std::vector<std::chrono::time_point<std::chrono::system_clock>> _last_times;
 };

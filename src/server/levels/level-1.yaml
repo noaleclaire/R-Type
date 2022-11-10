@@ -5,6 +5,7 @@
 #   velocity_x: -80 -> x velocity
 #   velocity_y: -10 -> y velocity
 #   shooter: 0 -> 0: false, 1:true
+#   layer: 0
 
 monster: 0
  time: 1000
@@ -13,3 +14,4 @@ monster: 0
  velocity_x: -80
  velocity_y: -10
  shooter: 0
+ layer: 1

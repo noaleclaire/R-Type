@@ -10,6 +10,7 @@
 #include "../../Ecs/Factory.hpp"
 #include "../Scenes/LobbySelector.hpp"
 #include "../Scenes/Room.hpp"
+#include "../Scenes/Game.hpp"
 #include <filesystem>
 #include "../Utilities/ParserYaml.hpp"
 
@@ -43,6 +44,27 @@ void CustomServer::updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool priv
             return;
         }
     }
+}
+
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getStartTime(std::size_t level_nb) const
+{
+    return (_start_times.at(level_nb));
+}
+
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getLastTime(std::size_t level_nb) const
+{
+    return (_last_times.at(level_nb));
+}
+
+void CustomServer::setLastTime(std::size_t level_nb, std::chrono::time_point<std::chrono::system_clock> new_time)
+{
+    _last_times.at(level_nb) = new_time;
+}
+
+void CustomServer::startTimes(std::size_t level_nb)
+{
+    _start_times.at(level_nb) = std::chrono::system_clock::now();
+    _last_times.at(level_nb) = std::chrono::system_clock::now();
 }
 
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
