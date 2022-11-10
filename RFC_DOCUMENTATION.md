@@ -1,4 +1,4 @@
-# RFC Documentation {#page_one}
+# RFC Documentation {#page_}
 
 ## Network
 
@@ -26,31 +26,31 @@ game.
     Type of message send or receive:
     
     PingServer :  
-        -> This action is used to verify the connexion to a server
+    &nbsp;&nbsp;&nbsp;-> This action is used to verify the connexion to a server
 
     RemoveClient :  
-        -> This action is used to remove a client in a server
+    &nbsp;&nbsp;&nbsp;-> This action is used to remove a client in a server
 
     AllComponentSent :  
-        -> This action is used to send all components created in the server to the client
+    &nbsp;&nbsp;&nbsp;-> This action is used to send all components created in the server to the client
 
     CreatePublicRoom :  
-        -> This action is used to create a plublic room in a server
+    &nbsp;&nbsp;&nbsp;-> This action is used to create a plublic room in a server
 
     CreatePrivateRoom :  
-        -> This action is used to create a private room in a server
+    &nbsp;&nbsp;&nbsp;-> This action is used to create a private room in a server
 
     InitListRoom :   
-        -> This action is used to send all room avaible
+    &nbsp;&nbsp;&nbsp;-> This action is used to send all room avaible
 
     JoinRoomById :  
-        -> This action is used to join a private room
+    &nbsp;&nbsp;&nbsp;-> This action is used to join a private room
     
     MaxRoomLimit :  
-        -> This action is used to notify the client that the maximum number of rooms have been created
+    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the maximum number of rooms have been created
 
     MaxPlayersInRoom :  
-        -> This action is used to notify the client that the room cannot accept more clients
+    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the room cannot accept more clients
 
     RoomDoesntExists :  
-        -> This action is used to notify the client that the room doesn't exist
+    &nbsp;&nbsp;&nbsp;-> This action is used to notify the client that the room doesn't exist
