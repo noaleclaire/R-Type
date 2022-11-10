@@ -10,9 +10,23 @@
 
 class HowToPlay : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new How To Play object
+         * 
+         */
         HowToPlay() = default;
+        /**
+         * @brief Destroy the How To Play object
+         * 
+         */
         ~HowToPlay() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;
