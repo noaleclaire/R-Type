@@ -28,7 +28,6 @@ jobs:
         run: |
           conan profile new default --detect
           mkdir build && cd build
-          sudo apt-get install libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
           conan install .. --build=missing -c tools.system.package_manager:sudo=True -c tools.system.package_manager:mode=install
 
       - name: Build Test Linux
