@@ -82,19 +82,19 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             ecs::Scenes client_scene;
             msg >> client_scene;
             std::cout << client_scene << std::endl;
-            if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
-                network::Message<network::CustomMessage> message;
-                message.header.id = network::CustomMessage::NotEnoughPlayer;
-                send(message, target_endpoint);
-                return;
-            }
+            // if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
+            //     network::Message<network::CustomMessage> message;
+            //     message.header.id = network::CustomMessage::NotEnoughPlayer;
+            //     send(message, target_endpoint);
+            //     return;
+            // }
             switch (client_scene) {
                 case ecs::Scenes::ROOM1:
                     std::cout << "initScene: " << std::endl;
                     Game::initScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
                     std::cout << "updateScene: " << std::endl;
                     // std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
-                    Game::updateScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)));
+                    // Game::updateScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)));
                     std::cout << "after" << std::endl;
                     break;
                 case ecs::Scenes::ROOM2:

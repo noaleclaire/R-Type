@@ -166,6 +166,7 @@ void Core::_switchScenes()
         _client.initGame(_last_scene);
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         Core::actual_scene = _actual_registry->getActualScene();
+        std::cout << Core::actual_scene << std::endl;
     }
 
     _last_scene = Core::actual_scene;

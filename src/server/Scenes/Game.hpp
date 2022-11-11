@@ -50,20 +50,26 @@ class Game : public ScenesInitializer {
             }
 
             registry.setActualScene(scene);
-            for (std::size_t client_id = 0; client_id < clients_endpoint.size(); client_id++) {
-                entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * client_id + 1, 2, client_id);
-                for (std::size_t tmp_client = 0; tmp_client < clients_endpoint.size(); tmp_client++) {
-                    try {
-                        if (tmp_client == client_id) {
-                            registry.addComponent<ecs::Controllable>(registry.getEntityById(entity), ecs::Controllable());
-                        } else {
-                            registry.removeComponent<ecs::Controllable>(registry.getEntityById(entity));
-                        }
-                    } catch (const ecs::ExceptionComponentNull &e) {
-                    } catch (const ecs::ExceptionIndexComponent &e) {}
-                    server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, clients_endpoint.at(tmp_client).first);
-                }
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120, 2, 0);
+            for (auto &client_endpoint : clients_endpoint) {
+                server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint.first);
+                message.header.id = network::CustomMessage::AllComponentSent;
+                server->send(message, client_endpoint.first);
             }
+            // for (std::size_t client_id = 0; client_id < clients_endpoint.size(); client_id++) {
+            //     entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * (client_id + 1), 2, client_id);
+            //     for (std::size_t tmp_client = 0; tmp_client < clients_endpoint.size(); tmp_client++) {
+            //         try {
+            //             if (tmp_client == client_id) {
+            //                 registry.addComponent<ecs::Controllable>(registry.getEntityById(entity), ecs::Controllable());
+            //             } else {
+            //                 registry.removeComponent<ecs::Controllable>(registry.getEntityById(entity));
+            //             }
+            //         } catch (const ecs::ExceptionComponentNull &e) {
+            //         } catch (const ecs::ExceptionIndexComponent &e) {}
+            //         server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, clients_endpoint.at(tmp_client).first);
+            //     }
+            // }
             for (auto &it : level.getEntitiesDatas()) {
                 entity = ecs::Factory::createEntity(registry, it._entity_type_and_id.first, it._attributes.at(EntityAttributes::position_x).value(), it._attributes.at(EntityAttributes::position_y).value(),
                     it._attributes.at(EntityAttributes::velocity_x).value(), it._attributes.at(EntityAttributes::velocity_y).value(), 0, 0, 0, 0, it._attributes.at(EntityAttributes::layer).value(), it._entity_type_and_id.second);
