@@ -47,6 +47,8 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.graphical = &_graphical;
     _client.sprites_manager = &_sprites_manager;
     _client.user_info = &_user_info;
+    _client.actual_scene = &Core::actual_scene;
+    _graphical.client = &_client;
 
     _gameLoop();
 }
@@ -101,7 +103,7 @@ void Core::_switchScenesJoinRoom()
     (_last_scene != ecs::Scenes::ROOM3 && Core::actual_scene == ecs::Scenes::ROOM3) ||
     (_last_scene != ecs::Scenes::ROOM4 && Core::actual_scene == ecs::Scenes::ROOM4)) {
         _actual_registry->setActualScene(Core::actual_scene);
-        _client.joinRoom(Core::actual_scene);
+        _client.joinRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen

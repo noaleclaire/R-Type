@@ -30,6 +30,11 @@ namespace ecs {
                 return (_scene);
             };
 
+            friend bool operator==(const CompoScene &lhs, const CompoScene &rhs)
+            {
+                return lhs._scene == rhs._scene;
+            }
+
         protected:
         private:
             ecs::Scenes _scene;

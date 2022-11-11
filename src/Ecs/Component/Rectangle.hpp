@@ -98,6 +98,10 @@ namespace ecs
          */
         void setHeightRectangle(float height);
 
+        friend bool operator==(const Rectangle &lhs, const Rectangle &rhs)
+        {
+            return lhs._x == rhs._x && lhs._y == rhs._y && lhs._width == rhs._width && lhs._height == rhs._height;
+        }
       private:
         float _x;
         float _y;

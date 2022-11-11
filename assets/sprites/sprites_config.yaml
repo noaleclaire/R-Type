@@ -335,6 +335,14 @@ spritesheet: buttons/arrow2.png
    rect_width: 45
    rect_height: 45
 
+spritesheet: buttons/refresh_btn.png
+ button: 15
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 88
+   rect_height: 89
+
 # ------------------------ROOMS------------------------
 spritesheet: rooms/public_game_select_room.png
  room: 0

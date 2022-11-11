@@ -13,8 +13,9 @@ namespace ecs
 {
     class Clickable : public AComponent {
       public:
-        enum Function { EXIT, TOGAME, TOSETTINGS, TOMENU, TOHTP, QUITROOM, CREATEPUBLICROOM, CREATEPRIVATEROOM,
-                        LISTROOM, JOINROOM, JOINROOMBYID, CHANGEMUSICVOLUME, CHANGESFXVOLUME, SELECTTEXTBOX, CONFIRMPSEUDO };
+        enum Function { EXIT, TOGAME, TOSETTINGS, TOMENU, TOHTP, QUITROOM, SWITCHROOMMODE, FILTERBYROOMMODEVERSUS, FILTERBYROOMMODECOOP, REFRESHFILTERSROOM,
+                        CREATEPUBLICROOM, CREATEPRIVATEROOM, LISTROOM, JOINROOM, JOINROOMBYID,
+                        CHANGEMUSICVOLUME, CHANGESFXVOLUME, SELECTTEXTBOX, CONFIRMPSEUDO };
         /**
          * @brief Construct a new Clickable object
          *
@@ -56,6 +57,10 @@ namespace ecs
          */
         void setFunction(Function function);
 
+        friend bool operator==(const Clickable &lhs, const Clickable &rhs)
+        {
+            return lhs._function == rhs._function;
+        }
       private:
         Function _function;
     };

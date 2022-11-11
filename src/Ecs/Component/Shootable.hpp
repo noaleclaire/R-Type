@@ -54,6 +54,10 @@ namespace ecs
          */
         void setAngle(int angle);
 
+        friend bool operator==(const Shootable &lhs, const Shootable &rhs)
+        {
+            return lhs._angle == rhs._angle;
+        }
       private:
         int _angle;
     };

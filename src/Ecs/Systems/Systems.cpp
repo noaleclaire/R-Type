@@ -32,6 +32,18 @@ namespace ecs
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
+                            case Clickable::Function::FILTERBYROOMMODECOOP:
+                                graphical->client->filterByRoomModeCoop();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::FILTERBYROOMMODEVERSUS:
+                                graphical->client->filterByRoomModeVersus();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::REFRESHFILTERSROOM:
+                                graphical->client->initListRoom();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0) {
@@ -40,6 +52,10 @@ namespace ecs
                                 }
                                 break;
                             case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
+                            case Clickable::Function::SWITCHROOMMODE:
+                                graphical->client->switchRoomMode();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
                                     Core::new_pseudo = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());

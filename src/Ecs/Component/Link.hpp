@@ -55,6 +55,10 @@ namespace ecs
          */
         void setLink(std::size_t entity);
 
+        friend bool operator==(const Link &lhs, const Link &rhs)
+        {
+            return lhs._entity == rhs._entity;
+        }
       private:
         std::size_t _entity;
     };

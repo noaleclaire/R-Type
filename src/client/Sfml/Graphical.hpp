@@ -14,6 +14,7 @@
 #include "Event.hpp"
 #include "SpritesManager.hpp"
 
+class CustomClient;
 namespace graphics
 {
     class Graphical {
@@ -214,6 +215,7 @@ namespace graphics
          */
         void getWorldClock();
 
+        CustomClient *client;
         SpritesManager *sprites_manager;
 
       protected:

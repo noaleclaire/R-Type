@@ -69,12 +69,12 @@ class Room : public ScenesInitializer {
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
                 //arrow switch mode 1
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 311, 165, 0, 0, 0, 0, 13, 3);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::JOINROOMBYID);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SWITCHROOMMODE);
             registry.removeComponent<ecs::Pressed>(registry.getEntityById(entity));
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
                 //arrow switch mode 2
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 47, 165, 0, 0, 0, 0, 14, 3);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::JOINROOMBYID);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SWITCHROOMMODE);
             registry.removeComponent<ecs::Drawable>(registry.getEntityById(entity));
             registry.removeComponent<ecs::Pressed>(registry.getEntityById(entity));
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
