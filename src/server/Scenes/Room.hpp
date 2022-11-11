@@ -17,9 +17,26 @@ using time_point = std::chrono::system_clock::time_point;
 class CustomServer;
 class Room : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Room object
+         * 
+         */
         Room() = default;
+        /**
+         * @brief Destroy the Room object
+         * 
+         */
         ~Room() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param server 
+         * @param registry 
+         * @param which_room 
+         * @param client_endpoint 
+         * @param private_room 
+         * @param player_name 
+         */
         static void initScene(CustomServer *server, ecs::Registry &registry, ecs::Scenes which_room, udp::endpoint client_endpoint, bool private_room, std::string player_name)
         {
             std::size_t entity;

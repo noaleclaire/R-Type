@@ -41,8 +41,20 @@ namespace ecs
          * @return Controllable&
          */
         Controllable &operator=(const Controllable &other) = default;
-
+        /**
+         * @brief Set the Key object
+         * 
+         * @param key 
+         * @param state 
+         */
         void setKey(std::string key, bool state);
+        /**
+         * @brief Get the Key object
+         * 
+         * @param key 
+         * @return true 
+         * @return false 
+         */
         bool getKey(std::string key) const;
 
         friend bool operator==(const Controllable &lhs, const Controllable &rhs)

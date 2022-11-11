@@ -1,0 +1,15 @@
+# monster: 0 -> entity type: id spritesheet
+#   time: 1000 -> spawn time (ms)
+#   position_x: 100 -> spawn x position
+#   position_y: 150 -> spawn y position
+#   velocity_x: -80 -> x velocity
+#   velocity_y: -10 -> y velocity
+#   shooter: 0 -> 0: false, 1:true
+
+monster: 0
+ time: 800
+ position_x: 80
+ position_y: 125
+ velocity_x: -65
+ velocity_y: -8
+ shooter: 1

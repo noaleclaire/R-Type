@@ -10,6 +10,8 @@
 #include "../../Ecs/Factory.hpp"
 #include "../Scenes/LobbySelector.hpp"
 #include "../Scenes/Room.hpp"
+#include <filesystem>
+#include "../Utilities/ParserYaml.hpp"
 
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, local_port)
@@ -18,6 +20,12 @@ CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short l
     _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM2, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
     _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM3, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
     _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM4, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
+
+    for (std::size_t level_nb = 1; level_nb <= 5; level_nb++) {
+        LevelManager level;
+        ParserYaml::parseYaml(level, std::filesystem::current_path().append("src/server/levels/level-" + std::to_string(level_nb) + ".yaml").string());
+        _levels.push_back(level);
+    }
 }
 
 CustomServer::~CustomServer()

@@ -10,9 +10,23 @@
 
 class Menu : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Menu object
+         * 
+         */
         Menu() = default;
+        /**
+         * @brief Destroy the Menu object
+         * 
+         */
         ~Menu() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;

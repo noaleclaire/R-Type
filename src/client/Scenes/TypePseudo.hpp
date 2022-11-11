@@ -10,9 +10,23 @@
 
 class TypePseudo : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Type Pseudo object
+         * 
+         */
         TypePseudo() = default;
+        /**
+         * @brief Destroy the Type Pseudo object
+         * 
+         */
         ~TypePseudo() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;

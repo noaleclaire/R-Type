@@ -355,12 +355,20 @@ namespace ecs
         {
             return (_actual_scene);
         };
-
+        /**
+         * @brief Get the Net Message Create object
+         * 
+         * @return std::vector<std::function<network::Message<network::CustomMessage>(std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create)>> 
+         */
         std::vector<std::function<network::Message<network::CustomMessage>(std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create)>> getNetMessageCreate() const
         {
             return (_net_message_create);
         }
-
+        /**
+         * @brief Get the Net Component Create object
+         * 
+         * @return std::vector<std::function<void(network::Message<network::CustomMessage> message)>> 
+         */
         std::vector<std::function<void(network::Message<network::CustomMessage> message)>> getNetComponentCreate() const
         {
             return (_net_component_create);
