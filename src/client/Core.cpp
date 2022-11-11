@@ -27,18 +27,21 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
 {
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
     ParserUserInfo::getUserInfo(_user_info);
+
     Core::new_music_volume = _user_info.music_volume;
     Core::new_sfx_volume = _user_info.sfx_volume;
 
     _graphical.sprites_manager = &_sprites_manager;
     _graphical.addAllTextures();
+
+    _actual_registry = &_unique_registry;
+
     TypePseudo::initScene(_unique_registry, _sprites_manager, _graphical);
-    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
     HowToPlay::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
+    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
 
-    _actual_registry = &_unique_registry;
 
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
@@ -46,6 +49,10 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.pingServer();
     _client.graphical = &_graphical;
     _client.sprites_manager = &_sprites_manager;
+    _client.user_info = &_user_info;
+    _client.actual_scene = &Core::actual_scene;
+
+    _graphical.client = &_client;
 
     _gameLoop();
 }
@@ -66,8 +73,8 @@ void Core::_setActualRegistry()
 void Core::_switchScenesCreateRoom()
 {
     if (_last_scene != ecs::Scenes::PUBLICROOM && Core::actual_scene == ecs::Scenes::PUBLICROOM) {
-        _client.createPublicRoom(_user_info.pseudo);
-        std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        _client.createPublicRoom();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -99,7 +106,8 @@ void Core::_switchScenesJoinRoom()
     (_last_scene != ecs::Scenes::ROOM2 && Core::actual_scene == ecs::Scenes::ROOM2) ||
     (_last_scene != ecs::Scenes::ROOM3 && Core::actual_scene == ecs::Scenes::ROOM3) ||
     (_last_scene != ecs::Scenes::ROOM4 && Core::actual_scene == ecs::Scenes::ROOM4)) {
-        _client.joinRoom(Core::actual_scene);
+        _actual_registry->setActualScene(Core::actual_scene);
+        _client.joinRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
@@ -133,15 +141,23 @@ void Core::_switchScenes()
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
         _actual_registry->setActualScene(Core::actual_scene);
-    if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS)
+    if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS) {
+        ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
         _actual_registry->setActualScene(Core::actual_scene);
+    }
     if (_last_scene != ecs::Scenes::LISTROOM && Core::actual_scene == ecs::Scenes::LISTROOM) {
         _actual_registry->setActualScene(Core::actual_scene);
         _client.initListRoom();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(200)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
     }
-    if (Core::actual_scene == ecs::Scenes::SETTINGS && _last_scene != ecs::Scenes::SETTINGS)
-        ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
+    if (_last_scene != ecs::Scenes::QUITROOM && Core::actual_scene == ecs::Scenes::QUITROOM) {
+        _client.quitRoom();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        Core::actual_scene = ecs::Scenes::LISTROOM;
+        _setActualRegistry();
+        _actual_registry->setActualScene(Core::actual_scene);
+        _graphical.setActualGraphicsEntities(Core::actual_scene);
+    }
 
     _switchScenesJoinRoom();
     _switchScenesCreateRoom();
@@ -195,8 +211,8 @@ void Core::_gameLoop()
             _graphical.setActualGraphicsEntities(Core::actual_scene);
             _switchScenes();
             _graphical.handleEvents(*_actual_registry);
-            ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Position(*_actual_registry, _actual_registry->getComponents<ecs::Position>(), _graphical);
+            ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
             _graphical.draw(*_actual_registry);
         }

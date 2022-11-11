@@ -57,6 +57,10 @@ namespace ecs
          */
         bool getKey(std::string key) const;
 
+        friend bool operator==(const Controllable &lhs, const Controllable &rhs)
+        {
+            return lhs._z == rhs._z && lhs._q == rhs._q && lhs._s == rhs._s && lhs._d == rhs._d;
+        }
       private:
         bool _z;
         bool _q;

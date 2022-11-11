@@ -36,5 +36,12 @@ namespace ecs
          * @return Collider&
          */
         Collider &operator=(const Collider &other) = default;
+
+        friend bool operator==(const Collider &lhs, const Collider &rhs)
+        {
+            static_cast<void>(lhs);
+            static_cast<void>(rhs);
+            return true;
+        }
     };
 } // namespace ecs

@@ -7,6 +7,7 @@
 
 #pragma once
 #include <memory>
+#include <cstring>
 #include "AComponent.hpp"
 
 #define BUFFER_SIZE 255
@@ -57,6 +58,10 @@ namespace ecs
              */
             void setText(char *text);
 
+            friend bool operator==(const Text &lhs, const Text &rhs)
+            {
+                return std::strcmp(lhs._text, rhs._text) == 0;
+            }
         protected:
         private:
             char _text[BUFFER_SIZE];

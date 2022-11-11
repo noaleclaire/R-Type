@@ -36,5 +36,12 @@ namespace ecs
          * @return Shooter&
          */
         Shooter &operator=(const Shooter &other) = default;
+
+        friend bool operator==(const Shooter &lhs, const Shooter &rhs)
+        {
+            static_cast<void>(lhs);
+            static_cast<void>(rhs);
+            return true;
+        }
     };
 } // namespace ecs

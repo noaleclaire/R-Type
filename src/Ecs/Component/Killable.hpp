@@ -36,5 +36,12 @@ namespace ecs
          * @return Killable&
          */
         Killable &operator=(const Killable &other) = default;
+
+        friend bool operator==(const Killable &lhs, const Killable &rhs)
+        {
+            static_cast<void>(lhs);
+            static_cast<void>(rhs);
+            return true;
+        }
     };
 } // namespace ecs

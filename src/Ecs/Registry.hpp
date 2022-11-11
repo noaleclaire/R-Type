@@ -51,6 +51,7 @@ namespace ecs
             registerComponents<ecs::CompoScene>();
             registerComponents<ecs::Animation>();
             registerComponents<ecs::Pressed>();
+            registerComponents<ecs::CompoServer>();
         };
         ~Registry() = default;
         /**
@@ -69,8 +70,23 @@ namespace ecs
             _components_eraser.push_back([&](Entity &entity) {
                 try {
                     std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).erase(entity);
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    throw ExceptionComponentNull("Component doesn't exist", "_components_eraser -> [&](Entity &entity)");
                 } catch (const ExceptionIndexComponent &e) {
                     throw ExceptionIndexComponent("Cannot erase this component, bad index", "_components_eraser -> [&](Entity &entity)");
+                }
+            });
+            _components_compare.push_back([&](Entity &entity, Registry &tmp_registry) {
+                try {
+                    if (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity).value()
+                    == tmp_registry.getComponents<Component>().at(entity).value()) {
+                        return (true);
+                    } else
+                        return (false);
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    throw ExceptionComponentNull("Component doesn't exist", "_components_compare -> [&](Entity &entity, Registry &tmp_registry)");
+                } catch (const ExceptionIndexComponent &e) {
+                    throw ExceptionIndexComponent("Cannot get this component, bad index", "_components_compare -> [&](Entity &entity, Registry &tmp_registry)");
                 }
             });
             _net_message_create.push_back([&](std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create) {
@@ -78,7 +94,7 @@ namespace ecs
                     network::Message<network::CustomMessage> message;
                     message.header.id = header_id;
                     std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity);
-                    message << std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity).value() << entity << index_component_create;
+                    message << std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).at(entity).value() << entity << entity << index_component_create;
                     return (message);
                 } catch (const ecs::ExceptionComponentNull &e) {
                     throw ExceptionComponentNull("Component doesn't exist", "_net_message_create -> [&](std::size_t entity, network::CustomMessage header_id, std::size_t index_component_create)");
@@ -242,6 +258,8 @@ namespace ecs
             for (auto &it : _components_eraser) {
                 try {
                     it(entity);
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    continue;
                 } catch (const ExceptionIndexComponent &e) {
                     continue;
                 }
@@ -356,9 +374,15 @@ namespace ecs
             return (_net_component_create);
         }
 
+        std::vector<std::function<bool(Entity &, Registry &)>> getComponentCompare() const
+        {
+            return (_components_compare);
+        };
+
       private:
         std::unordered_map<std::type_index, std::any> _components_arrays;
         std::vector<std::function<void(Entity &)>> _components_eraser;
+        std::vector<std::function<bool(Entity &, Registry &)>> _components_compare;
         std::unordered_map<ecs::Scenes, std::vector<Entity>> _entities;
         std::vector<std::size_t> _dead_entities;
         ecs::Scenes _actual_scene = ecs::Scenes::MENU;
