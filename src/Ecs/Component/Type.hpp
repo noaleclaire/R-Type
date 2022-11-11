@@ -73,6 +73,10 @@ namespace ecs
          */
         void setEntityID(std::size_t);
 
+        friend bool operator==(const Type &lhs, const Type &rhs)
+        {
+            return lhs._entityType == rhs._entityType && lhs._entityID == rhs._entityID;
+        }
       private:
         EntityTypes _entityType;
         std::size_t _entityID;

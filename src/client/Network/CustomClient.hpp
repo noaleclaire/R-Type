@@ -11,6 +11,7 @@
 #include "../../Ecs/Registry.hpp"
 #include "../Sfml/Graphical.hpp"
 #include "../Sfml/SpritesManager.hpp"
+#include "../UserInfo.hpp"
 
 class CustomClient : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -54,7 +55,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
-    void createPublicRoom(char *player_name);
+    void createPublicRoom();
     /**
      * @brief
      *
@@ -70,7 +71,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      * @param scene
      */
-    void joinRoom(ecs::Scenes scene);
+    void joinRoom();
     /**
      * @brief
      *
@@ -81,11 +82,33 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
+    void quitRoom();
+    /**
+     * @brief
+     *
+     */
+    void switchRoomMode();
+    /**
+     * @brief
+     *
+     */
+    void filterByRoomModeVersus();
+    /**
+     * @brief
+     *
+     */
+    void filterByRoomModeCoop();
+    /**
+     * @brief
+     *
+     */
     void clientDisconnect();
     ecs::Registry *registry;
     ecs::Registry *non_shareable_registry;
     graphics::Graphical *graphical;
     SpritesManager *sprites_manager;
+    UserInfo *user_info;
+    ecs::Scenes *actual_scene;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
 
@@ -120,4 +143,17 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void _setTextComponent();
+    /**
+     * @brief
+     *
+     */
+    void _setParallax();
+    /**
+     * @brief
+     *
+     * @param scene
+     */
+    void _killEntities(ecs::Scenes scene);
+
+    std::vector<ecs::Entity> _tmp_entities_registry;
 };

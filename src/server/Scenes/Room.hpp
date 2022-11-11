@@ -51,9 +51,58 @@ class Room : public ScenesInitializer {
             server->send(message, client_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
 
+            //Backgrounds
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, 0, 0, 0, 0, 1, 0);
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 1280, 0, -80, 0, 0, 0, 0, 0, 1, 0);
+                //Parallax
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, 0, 0, 0, 0, 1, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::PARALLAX);
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+            //Logo
+                //logo lobby
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 260, 28, 0, 0, 0, 0, 0, 0, 2, 14);
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+            //Zone
+                //bg lobby mode frame
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 87, 154, 0, 0, 0, 0, 0, 0, 3, 15);
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+                //bg lobby player frame
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 25, 116, 0, 0, 0, 0, 0, 0, 2, 16);
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+                //bg planet level info
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 771, 512, 0, 0, 0, 0, 0, 0, 2, 17);
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+
+            //Buttons
+                //back arrow
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 34, 31, 0, 0, 0, 0, 6, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::QUITROOM);
+            registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+                //lobby start button
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 25, 634, 0, 0, 0, 0, 12, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::JOINROOMBYID);
+            registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+                //arrow switch mode 1
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 311, 165, 0, 0, 0, 0, 13, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SWITCHROOMMODE);
+            registry.removeComponent<ecs::Pressed>(registry.getEntityById(entity));
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+                //arrow switch mode 2
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 47, 165, 0, 0, 0, 0, 14, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SWITCHROOMMODE);
+            registry.removeComponent<ecs::Drawable>(registry.getEntityById(entity));
+            registry.removeComponent<ecs::Pressed>(registry.getEntityById(entity));
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
+
+            //Roommodes
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(126, 161));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(0, 0, 0, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(4));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE, 0));
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
 
             std::time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -68,7 +117,7 @@ class Room : public ScenesInitializer {
             str_hash = "Room ID: " + str_hash;
             entity = registry.spawnEntity();
             registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>(str_hash.c_str())));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(0, 0, 30, 0));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(935, 110, 40, 0));
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMID));

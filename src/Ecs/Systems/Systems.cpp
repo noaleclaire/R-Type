@@ -21,7 +21,8 @@ namespace ecs
             try {
                 clickable.at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         switch (clickable.at(it).value().getFunction()) {
                             case Clickable::Function::EXIT: graphical->getWindow().close(); break;
                             case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
@@ -31,12 +32,29 @@ namespace ecs
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
+                            case Clickable::Function::FILTERBYROOMMODECOOP:
+                                graphical->client->filterByRoomModeCoop();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::FILTERBYROOMMODEVERSUS:
+                                graphical->client->filterByRoomModeVersus();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::REFRESHFILTERSROOM:
+                                graphical->client->initListRoom();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0) {
                                     Core::room_id = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());
                                     Core::actual_scene = ecs::Scenes::JOINROOMBYID;
                                 }
+                                break;
+                            case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
+                            case Clickable::Function::SWITCHROOMMODE:
+                                graphical->client->switchRoomMode();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
                                 break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
@@ -76,7 +94,8 @@ namespace ecs
                 registry.getComponents<ecs::Pressed>().at(it);
                 registry.getComponents<ecs::Type>().at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3) {
                             graphical->setPressedSprite(it);
@@ -243,9 +262,11 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
+                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::PARALLAX
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
                     if (registry.getComponents<ecs::Position>().at(it).value().getXPosition()
-                        <= -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                    + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() < 1) {
                         registry.getComponents<ecs::Position>().at(it).value().setXPosition(
                             registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle());
                     }
@@ -297,7 +318,8 @@ namespace ecs
                 registry.getComponents<ecs::Type>().at(it);
                 try {
                     graphical->setBasicSprite(it);
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3)
                             graphical->setHoverSprite(it);

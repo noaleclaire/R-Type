@@ -26,3 +26,4 @@
 #include "CompoScene.hpp"
 #include "Animation.hpp"
 #include "Pressed.hpp"
+#include "CompoServer.hpp"

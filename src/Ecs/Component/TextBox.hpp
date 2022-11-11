@@ -61,11 +61,15 @@ namespace ecs
         std::size_t getMaxSize() const;
         /**
          * @brief Unselect the TextBox
-         * 
+         *
          * @param max_size
          */
         void setMaxSize(std::size_t max_size);
 
+        friend bool operator==(const TextBox &lhs, const TextBox &rhs)
+        {
+            return lhs._selected == rhs._selected && lhs._max_size == rhs._max_size;
+        }
       private:
         bool _selected;
         std::size_t _max_size;

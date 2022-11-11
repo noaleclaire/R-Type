@@ -56,7 +56,14 @@ spritesheet: backgrounds/background.jpg
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 1337
+   rect_width: 1327
+   rect_height: 720
+spritesheet: backgrounds/background.jpg
+ parallax: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1327
    rect_height: 720
 
 spritesheet: backgrounds/logo.png
@@ -162,6 +169,47 @@ spritesheet: backgrounds/public_mainframe.png
    rect_y: 0
    rect_width: 679
    rect_height: 495
+
+spritesheet: backgrounds/lobby_logo_top.png
+ background: 14
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 761
+   rect_height: 84
+
+spritesheet: backgrounds/lobby_mode_frame.png
+ background: 15
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 224
+   rect_height: 75
+
+spritesheet: backgrounds/lobby_player_frame.png
+ background: 16
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 353
+   rect_height: 518
+
+spritesheet: backgrounds/planet_level_info.png
+ background: 17
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 360
+   rect_height: 198
+
+spritesheet: planets/sun.png
+ background: 18
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 244
+   rect_height: 244
+   nb_anim: 30
 
 # ------------------------BUTTONS------------------------
 spritesheet: buttons/create_private_game_btn.png
@@ -270,6 +318,84 @@ spritesheet: buttons/confirm_btn.png
    rect_width: 100
    rect_height: 79
    nb_anim: 3
+
+spritesheet: buttons/lobby_start_button.png
+ button: 12
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 348
+   rect_height: 83
+   nb_anim: 3
+
+spritesheet: buttons/arrow1.png
+ button: 13
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 45
+   rect_height: 45
+
+spritesheet: buttons/arrow2.png
+ button: 14
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 45
+   rect_height: 45
+
+spritesheet: buttons/refresh_btn.png
+ button: 15
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 88
+   rect_height: 89
+
+spritesheet: planets/black_hole.png
+ button: 16
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 218
+   rect_height: 146
+   nb_anim: 30
+
+spritesheet: planets/rock_planet.png
+ button: 17
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 218
+   rect_height: 146
+   nb_anim: 30
+
+spritesheet: planets/fire_planet.png
+ button: 18
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 30
+
+spritesheet: planets/ice_planet.png
+ button: 19
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 30
+
+spritesheet: planets/forest_planet.png
+ button: 20
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 30
 
 # ------------------------ROOMS------------------------
 spritesheet: rooms/public_game_select_room.png

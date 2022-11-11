@@ -55,6 +55,10 @@ namespace ecs
          */
         void setLayer(std::size_t layer);
 
+        friend bool operator==(const Layer &lhs, const Layer &rhs)
+        {
+            return lhs._layer == rhs._layer;
+        }
       private:
         std::size_t _layer;
     };

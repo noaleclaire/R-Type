@@ -36,5 +36,12 @@ namespace ecs
          * @return Hover&
          */
         Hover &operator=(const Hover &other) = default;
+
+        friend bool operator==(const Hover &lhs, const Hover &rhs)
+        {
+            static_cast<void>(lhs);
+            static_cast<void>(rhs);
+            return true;
+        }
     };
 } // namespace ecs
