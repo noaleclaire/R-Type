@@ -33,15 +33,6 @@
 #   nb_anim: 15
 #   next_anim: 0
 
-spritesheet: spaceships.gif
- spaceship: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 132
-   rect_height: 72
-   nb_anim: 4
-
 spritesheet: nsm
  monster: 0
   anim: 0
@@ -431,3 +422,40 @@ spritesheet: textboxs/textbox_room_id.png
    rect_y: 0
    rect_width: 223
    rect_height: 68
+
+# ------------------------SPACESHIPS------------------------
+spritesheet: spaceships/spaceship-1.png
+ spaceship: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 6
+
+spritesheet: spaceships/spaceship-2.png
+ spaceship: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 6
+
+spritesheet: spaceships/spaceship-3.png
+ spaceship: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 6
+
+spritesheet: spaceships/spaceship-4.png
+ spaceship: 3
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 6
