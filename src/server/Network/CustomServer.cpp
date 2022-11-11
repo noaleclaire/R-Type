@@ -48,25 +48,25 @@ void CustomServer::updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool priv
     }
 }
 
-std::chrono::time_point<std::chrono::system_clock> CustomServer::getStartTime(std::size_t level_nb) const
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getStartTime(ecs::Scenes scene) const
 {
-    return (_start_times.at(level_nb));
+    return (_start_times.at(scene));
 }
 
-std::chrono::time_point<std::chrono::system_clock> CustomServer::getLastTime(std::size_t level_nb) const
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getLastTime(ecs::Scenes scene) const
 {
-    return (_last_times.at(level_nb));
+    return (_last_times.at(scene));
 }
 
-void CustomServer::setLastTime(std::size_t level_nb, std::chrono::time_point<std::chrono::system_clock> new_time)
+void CustomServer::setLastTime(ecs::Scenes scene, std::chrono::time_point<std::chrono::system_clock> new_time)
 {
-    _last_times.at(level_nb) = new_time;
+    _last_times.at(scene) = new_time;
 }
 
-void CustomServer::startTimes(std::size_t level_nb)
+void CustomServer::startTimes(ecs::Scenes scene)
 {
-    _start_times.at(level_nb) = std::chrono::system_clock::now();
-    _last_times.at(level_nb) = std::chrono::system_clock::now();
+    _start_times.at(scene) = std::chrono::system_clock::now();
+    _last_times.at(scene) = _start_times.at(scene);
 }
 
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -78,51 +78,63 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SwitchToGame: {
-            LobbySelector::initScene(this, _registry, target_endpoint);
-            network::Message<network::CustomMessage> message;
-            message.header.id = network::CustomMessage::AllComponentSent;
-            sendToAllClients(message);
+            ecs::Scenes client_scene;
+            msg >> client_scene;
+            if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
+                network::Message<network::CustomMessage> message;
+                message.header.id = network::CustomMessage::NotEnoughPlayer;
+                send(message, target_endpoint);
+                return;
+            }
+            switch (client_scene) {
+                case ecs::Scenes::ROOM1:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM2:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM3:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM4:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                default:
+                    break;
+            }
         } break;
         case network::CustomMessage::CreatePublicRoom: {
-            std::cout << "a" << std::endl;
             _createRoom(msg, target_endpoint);
-            std::cout << "b" << std::endl;
         } break;
         case network::CustomMessage::CreatePrivateRoom: {
             _createRoom(msg, target_endpoint, true);
         } break;
         case network::CustomMessage::InitListRoom: {
-            std::cout << "1" << std::endl;
             int room_filter_mode;
             msg >> room_filter_mode;
             _rooms_filter_mode.insert_or_assign(target_endpoint, room_filter_mode);
             network::Message<network::CustomMessage> message;
             _getInfoForListRoomScene(target_endpoint, message);
             send(message, target_endpoint);
-            std::cout << "2" << std::endl;
         } break;
         case network::CustomMessage::JoinRoom: {
-            std::cout << "c" << std::endl;
             _joinRoom(target_endpoint, msg);
-            std::cout << "d" << std::endl;
         } break;
         case network::CustomMessage::JoinRoomById: {
             _joinRoomById(target_endpoint, msg);
         } break;
         case network::CustomMessage::QuitRoomServer: {
-            std::cout << "e" << std::endl;
             _quitRoom(target_endpoint);
-            std::cout << "f" << std::endl;
         } break;
         case network::CustomMessage::SwitchRoomMode: {
-            std::cout << "g" << std::endl;
             _updateRoom(target_endpoint, msg);
-            std::cout << "h" << std::endl;
         } break;
         case network::CustomMessage::RemoveClient: {
-            std::cout << "i" << std::endl;
             _quitRoom(target_endpoint);
-            std::cout << "j" << std::endl;
             //CHANGE THESE BECAUSE IT DOESN'T DECOONECT OTHERWISE OR STD::OUT_OF_RANGE
             // for (auto it = _rooms_filter_mode.begin(); it != _rooms_filter_mode.end();) {
             //     if (it->first == target_endpoint)

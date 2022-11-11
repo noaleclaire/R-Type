@@ -81,32 +81,32 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
    void updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool private_room, std::string player_name, udp::endpoint client_endpoint);
 
     /**
-     * @brief Get the start time of the current level
+     * @brief Get the start time of the current scene
      *
-     * @param level_nb
+     * @param scene
      * @return std::chrono::time_point<std::chrono::system_clock>
      */
-    std::chrono::time_point<std::chrono::system_clock> getStartTime(std::size_t level_nb) const;
+    std::chrono::time_point<std::chrono::system_clock> getStartTime(ecs::Scenes scene) const;
     /**
-     * @brief Get the last update time of the current level
+     * @brief Get the last update time of the current scene
      *
-     * @param level_nb
+     * @param scene
      * @return std::chrono::time_point<std::chrono::system_clock>
      */
-    std::chrono::time_point<std::chrono::system_clock> getLastTime(std::size_t level_nb) const;
+    std::chrono::time_point<std::chrono::system_clock> getLastTime(ecs::Scenes scene) const;
     /**
-     * @brief Set the last update time of the current level
+     * @brief Set the last update time of the current scene
      *
-     * @param level_nb
+     * @param scene
      * @param new_time
      */
-    void setLastTime(std::size_t level_nb, std::chrono::time_point<std::chrono::system_clock> new_time);
+    void setLastTime(ecs::Scenes scene, std::chrono::time_point<std::chrono::system_clock> new_time);
     /**
-     * @brief Start times of the current level
+     * @brief Start times of the current scene
      *
-     * @param level_nb
+     * @param scene
      */
-    void startTimes(std::size_t level_nb);
+    void startTimes(ecs::Scenes scene);
 
   protected:
     /**
@@ -143,6 +143,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     std::unordered_map<udp::endpoint, std::string> _players_names;
  
     std::vector<LevelManager> _levels;
-    std::vector<std::chrono::time_point<std::chrono::system_clock>> _start_times;
-    std::vector<std::chrono::time_point<std::chrono::system_clock>> _last_times;
+    std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _start_times;
+    std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _last_times;
 };

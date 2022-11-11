@@ -23,7 +23,7 @@ namespace network
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
                                 SwitchToGame,
-                                RemoveClient };
+                                RemoveClient, NotEnoughPlayer };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;

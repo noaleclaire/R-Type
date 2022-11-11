@@ -81,7 +81,7 @@ class Room : public ScenesInitializer {
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
                 //lobby start button
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 25, 634, 0, 0, 0, 0, 12, 2);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::JOINROOMBYID);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint);
                 //arrow switch mode 1
