@@ -155,6 +155,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @param scene
      */
     void _killEntities(ecs::Scenes scene);
+    void _killOneEntity(std::size_t entity);
 
     std::vector<ecs::Entity> _tmp_entities_registry;
 };
