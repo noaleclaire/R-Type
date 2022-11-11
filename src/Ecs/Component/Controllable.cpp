@@ -9,7 +9,7 @@
 
 namespace ecs
 {
-    Controllable::Controllable(bool z, bool q, bool s, bool d) : _z(z), _q(q), _s(s), _d(d)
+    Controllable::Controllable() : _z(false), _q(false), _s(false), _d(false), _space(false)
     {
     }
 
@@ -23,6 +23,8 @@ namespace ecs
             _s = state;
         if (key == "d")
             _d = state;
+        if (key == "space")
+            _space = state;
     }
 
     bool Controllable::getKey(std::string key) const
@@ -35,6 +37,8 @@ namespace ecs
             return (_s);
         if (key == "d")
             return (_d);
+        if (key == "space")
+            return (_space);
         return (false);
     }
 }

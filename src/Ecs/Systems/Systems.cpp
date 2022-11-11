@@ -240,6 +240,8 @@ namespace ecs
                         controllable.at(it).value().setKey("s", true);
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
                         controllable.at(it).value().setKey("d", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", true);//do not put it in the release
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
@@ -251,6 +253,8 @@ namespace ecs
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
                         controllable.at(it).value().setKey("d", false);
                 }
+                if (controllable.at(it).value().getKey("space") == true)
+                    _createShot(registry, it);
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -258,6 +262,17 @@ namespace ecs
             }
         }
     }
+
+    void Systems::_createShot(Registry &registry, std::size_t entity)
+    {
+        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(500)/*change this by the value of the wished shot type*/) {
+            //envoyer un signal au server qui lui va creer le tir ?
+            //ajouter au shot un ecs::Link(shooter_id)
+            std::cout << "shot" << std::endl;
+            registry.getComponents<ecs::Controllable>().at(entity).value().setKey("space", false);
+        }
+    }
+
     void Systems::Parallaxe(Registry &registry, SparseArray<ecs::Type> const &type)
     {
         for (auto &it : registry.getEntities()) {

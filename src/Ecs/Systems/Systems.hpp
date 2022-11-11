@@ -105,7 +105,27 @@ namespace ecs
         static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
 
       private:
+        /**
+         * @brief Create a shot
+         *
+         * @param registry
+         * @param entity
+         */
+        static void _createShot(Registry &registry, std::size_t entity);
+        /**
+         * @brief Calcul and return the volume based on two shapes
+         *
+         * @param registry
+         * @param entity
+         * @param graphical
+         */
         static int _changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);
+        /**
+         * @brief Unselect all textbox in the scene
+         *
+         * @param registry
+         * @param textBox
+         */
         static void _unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox);
     };
 } // namespace ecs

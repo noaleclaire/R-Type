@@ -65,8 +65,8 @@ void CustomServer::setLastTime(ecs::Scenes scene, std::chrono::time_point<std::c
 
 void CustomServer::startTimes(ecs::Scenes scene)
 {
-    _start_times.at(scene) = std::chrono::system_clock::now();
-    _last_times.at(scene) = _start_times.at(scene);
+    _start_times.insert_or_assign(scene, std::chrono::system_clock::now());
+    _last_times.insert_or_assign(scene, _start_times.at(scene));
 }
 
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -80,6 +80,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::SwitchToGame: {
             ecs::Scenes client_scene;
             msg >> client_scene;
+            std::cout << client_scene << std::endl;
             if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
                 network::Message<network::CustomMessage> message;
                 message.header.id = network::CustomMessage::NotEnoughPlayer;
@@ -88,8 +89,12 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             }
             switch (client_scene) {
                 case ecs::Scenes::ROOM1:
+                    std::cout << "initScene: " << std::endl;
                     Game::initScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
-                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
+                    std::cout << "updateScene: " << std::endl;
+                    // std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
+                    Game::updateScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)));
+                    std::cout << "after" << std::endl;
                     break;
                 case ecs::Scenes::ROOM2:
                     Game::initScene(this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
