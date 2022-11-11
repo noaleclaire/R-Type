@@ -26,10 +26,11 @@ void CustomClient::pingServer()
     send(msg);
 }
 
-void CustomClient::initGame()
+void CustomClient::initGame(ecs::Scenes room)
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::SwitchToGame;
+    msg << room;
     send(msg);
 }
 
@@ -161,6 +162,9 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::RoomDoesntExists: {
             _setErrorMessage("This Room Doesn't Exists");
+        } break;
+        case network::CustomMessage::NotEnoughPlayer: {
+            _setErrorMessage("Not Enough Player In This Room");
         } break;
         default: break;
     }

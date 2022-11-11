@@ -49,8 +49,9 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     /**
      * @brief
      *
+     * @param room
      */
-    void initGame();
+    void initGame(ecs::Scenes room);
     /**
      * @brief
      *

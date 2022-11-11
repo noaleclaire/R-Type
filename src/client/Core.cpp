@@ -163,9 +163,9 @@ void Core::_switchScenes()
     _switchScenesCreateRoom();
 
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
-        _actual_registry->setActualScene(Core::actual_scene);
-        _client.initGame();
+        _client.initGame(_last_scene);
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        Core::actual_scene = _actual_registry->getActualScene();
     }
 
     _last_scene = Core::actual_scene;

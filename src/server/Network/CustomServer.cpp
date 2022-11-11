@@ -12,6 +12,8 @@
 #include "../../Ecs/Factory.hpp"
 #include "../Scenes/LobbySelector.hpp"
 #include "../Scenes/Room.hpp"
+#include "../Scenes/Game.hpp"
+#include <filesystem>
 #include "../Utilities/ParserYaml.hpp"
 
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
@@ -48,6 +50,27 @@ void CustomServer::updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool priv
     }
 }
 
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getStartTime(ecs::Scenes scene) const
+{
+    return (_start_times.at(scene));
+}
+
+std::chrono::time_point<std::chrono::system_clock> CustomServer::getLastTime(ecs::Scenes scene) const
+{
+    return (_last_times.at(scene));
+}
+
+void CustomServer::setLastTime(ecs::Scenes scene, std::chrono::time_point<std::chrono::system_clock> new_time)
+{
+    _last_times.at(scene) = new_time;
+}
+
+void CustomServer::startTimes(ecs::Scenes scene)
+{
+    _start_times.at(scene) = std::chrono::system_clock::now();
+    _last_times.at(scene) = _start_times.at(scene);
+}
+
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     switch (msg.header.id) {
@@ -57,10 +80,34 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SwitchToGame: {
-            LobbySelector::initScene(this, _registry, target_endpoint);
-            network::Message<network::CustomMessage> message;
-            message.header.id = network::CustomMessage::AllComponentSent;
-            sendToAllClients(message);
+            ecs::Scenes client_scene;
+            msg >> client_scene;
+            if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
+                network::Message<network::CustomMessage> message;
+                message.header.id = network::CustomMessage::NotEnoughPlayer;
+                send(message, target_endpoint);
+                return;
+            }
+            switch (client_scene) {
+                case ecs::Scenes::ROOM1:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM2:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM3:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                case ecs::Scenes::ROOM4:
+                    Game::initScene(this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
+                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene))));
+                    break;
+                default:
+                    break;
+            }
         } break;
         case network::CustomMessage::CreatePublicRoom: {
             _createRoom(msg, target_endpoint);

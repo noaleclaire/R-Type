@@ -16,12 +16,16 @@
 #include "MapMemberFunctionPointer.hpp"
 #include <unordered_map>
 
-#define NB_ENTITY_ATTRIBUTES 6
+#define NB_ENTITY_ATTRIBUTES 7
 
-enum EntityAttributes { spawn_time, position_x, position_y, velocity_x, velocity_y, shooter };
+enum EntityAttributes { spawn_time, position_x, position_y, velocity_x, velocity_y, shooter, layer };
 
 class LevelManager : public AYamlConfig {
   public:
+    struct EntityData {
+        std::pair<ecs::EntityTypes, std::size_t> _entity_type_and_id;
+        std::vector<std::optional<int>> _attributes;
+    };
 
     /**
      * @brief Construct a new Level Manager object
@@ -69,13 +73,12 @@ class LevelManager : public AYamlConfig {
      */
     std::string const getEntityAttribute(EntityAttributes entity_attribute) const;
     /**
-     * @brief Get the Entity Attribute value object
+     * @brief Get the Entities Data object
      *
-     * @param entity
      * @param entity_attribute
-     * @return float
+     * @return std::vector<EntityData>
      */
-    int getEntityAttributeValue(std::size_t entity, EntityAttributes entity_attribute) const;
+    std::vector<EntityData> getEntitiesDatas() const;
     /**
      * @brief Get all Entities Type and Id object
      *
@@ -112,10 +115,6 @@ class LevelManager : public AYamlConfig {
      */
     void initMapFunctionPointer();
 
-    struct EntityData {
-        std::pair<ecs::EntityTypes, std::size_t> _entity_type_and_id;
-        std::vector<std::optional<int>> _attributes;
-    };
     std::vector<EntityData> _entity_data;
     ecs::EntityTypes _entity_type_tmp;
     long unsigned int _entity_type_id_tmp;
