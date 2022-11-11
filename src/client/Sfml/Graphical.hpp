@@ -36,19 +36,19 @@ namespace graphics
          *
          * @return std::unordered_map<std::size_t, sf::Sprite>
          */
-        std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;
+        std::unordered_map<std::size_t, sf::Sprite> &getAllSprites();
         /**
          * @brief Get the All RectangleShape object
          *
          * @return std::unordered_map<std::size_t, sf::RectangleShape>
          */
-        std::unordered_map<std::size_t, sf::RectangleShape> getAllRectangleShapes() const;
+        std::unordered_map<std::size_t, sf::RectangleShape> &getAllRectangleShapes();
         /**
          * @brief Get the All Text object
          *
          * @return std::unordered_map<std::size_t, sf::Text>
          */
-        std::unordered_map<std::size_t, sf::Text> getAllTexts() const;
+        std::unordered_map<std::size_t, sf::Text> &getAllTexts();
         /**
          * @brief Get the Video Mode object
          *
@@ -229,6 +229,9 @@ namespace graphics
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Sprite>> _sprites_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::RectangleShape>> _rectangleshape_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Text>> _text_entities;
+        std::unordered_map<std::size_t, sf::Sprite> _tmp_sprites_entities;
+        std::unordered_map<std::size_t, sf::RectangleShape> _tmp_rectangleshape_entities;
+        std::unordered_map<std::size_t, sf::Text> _tmp_text_entities;
         ecs::Scenes _actual_scene;
     };
 } // namespace graphics

@@ -112,6 +112,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string, bool>> _rooms;
     std::unordered_map<udp::endpoint, int> _rooms_filter_mode;
     std::unordered_map<udp::endpoint, std::string> _players_names;
- 
+
     std::vector<LevelManager> _levels;
 };

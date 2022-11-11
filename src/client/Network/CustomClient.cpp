@@ -126,6 +126,11 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             registry->setActualScene(scene);
             graphical->setActualGraphicsEntities(scene);
         } break;
+        case network::CustomMessage::KillAnEntity: {
+            std::size_t entity;
+            msg >> entity;
+            _killOneEntity(entity);
+        } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
             std::size_t entity = 0;
@@ -314,4 +319,12 @@ void CustomClient::_killEntities(ecs::Scenes scene)
     graphical->getAllSprites().clear();
     graphical->getAllRectangleShapes().clear();
     graphical->getAllTexts().clear();
+}
+
+void CustomClient::_killOneEntity(std::size_t entity)
+{
+    registry->killEntity(registry->getEntityById(entity));
+    graphical->getAllSprites().erase(entity);
+    graphical->getAllRectangleShapes().erase(entity);
+    graphical->getAllTexts().erase(entity);
 }

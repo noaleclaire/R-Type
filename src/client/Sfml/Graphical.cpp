@@ -34,32 +34,32 @@ namespace graphics
         return (_textures);
     }
 
-    std::unordered_map<std::size_t, sf::Sprite> Graphical::getAllSprites() const
+    std::unordered_map<std::size_t, sf::Sprite> &Graphical::getAllSprites()
     {
         try {
             _sprites_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (std::unordered_map<std::size_t, sf::Sprite>());
+            return (_tmp_sprites_entities);
         }
         return (_sprites_entities.at(_actual_scene));
     }
 
-    std::unordered_map<std::size_t, sf::RectangleShape> Graphical::getAllRectangleShapes() const
+    std::unordered_map<std::size_t, sf::RectangleShape> &Graphical::getAllRectangleShapes()
     {
         try {
             _rectangleshape_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (std::unordered_map<std::size_t, sf::RectangleShape>());
+            return (_tmp_rectangleshape_entities);
         }
         return (_rectangleshape_entities.at(_actual_scene));
     }
 
-    std::unordered_map<std::size_t, sf::Text> Graphical::getAllTexts() const
+    std::unordered_map<std::size_t, sf::Text> &Graphical::getAllTexts()
     {
         try {
             _text_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (std::unordered_map<std::size_t, sf::Text>());
+            return (_tmp_text_entities);
         }
         return (_text_entities.at(_actual_scene));
     }

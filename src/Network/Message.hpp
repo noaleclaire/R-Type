@@ -22,7 +22,7 @@ namespace network
                                 SwitchRoomMode,
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
-                                SwitchToGame,
+                                SwitchToGame, KillAnEntity,
                                 RemoveClient };
     template <class T> struct Header {
         T id;
