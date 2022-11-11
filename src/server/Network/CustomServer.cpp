@@ -5,6 +5,8 @@
 ** CustomServer
 */
 
+#include <filesystem>
+#include <algorithm>
 #include "CustomServer.hpp"
 #include "../../Ecs/Component/component.hpp"
 #include "../../Ecs/Factory.hpp"
@@ -135,15 +137,8 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::RemoveClient: {
             _quitRoom(target_endpoint);
-            //CHANGE THESE BECAUSE IT DOESN'T DECOONECT OTHERWISE OR STD::OUT_OF_RANGE
-            // for (auto it = _rooms_filter_mode.begin(); it != _rooms_filter_mode.end();) {
-            //     if (it->first == target_endpoint)
-            //         _rooms_filter_mode.erase(it);
-            // }
-            // for (auto it = _players_names.begin(); it != _players_names.end();) {
-            //     if (it->first == target_endpoint)
-            //         _players_names.erase(it);
-            // }
+            _rooms_filter_mode.erase(target_endpoint);
+            _players_names.erase(target_endpoint);
             for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
                 if (_clients_endpoint.at(i) == target_endpoint)
                     _clients_endpoint.erase(std::next(_clients_endpoint.begin(), i));
@@ -309,7 +304,7 @@ void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<n
     ecs::Registry tmp_registry = _registry;
     for (std::size_t i = 0; i < _rooms.size(); i++) {
         for (std::size_t j = 0; j < std::get<3>(_rooms.at(i)).size(); j++) {
-            if (std::get<3>(_rooms.at(i)).at(j).first == target_endpoint) {
+            if (std::get<3>(_rooms.at(i)).at(j).first == target_endpoint && std::get<3>(_rooms.at(i)).at(j).second == true) {
                 _registry.setActualScene(std::get<0>(_rooms.at(i)));
                 switch (msg.header.id)
                 {
@@ -397,10 +392,30 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
 
 void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Registry &tmp_registry)
 {
+    std::vector<std::size_t> tmp_entities;
     for (auto &it : _registry.getEntities()) {
-        for (std::size_t i = 0; i < _registry.getComponentCompare().size(); i++) {
+        for (std::size_t i = 0; i < _registry.getComponentsFind().size(); i++) {
+            if (_registry.getComponentsFind().at(i)(_registry, _registry.getEntityById(it))
+            != tmp_registry.getComponentsFind().at(i)(tmp_registry, tmp_registry.getEntityById(it))) {
+                tmp_entities.push_back(it);
+                break;
+            }
+        }
+        if (std::find(tmp_entities.begin(), tmp_entities.end(), it) != tmp_entities.end()) {
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::KillAnEntity;
+            message << static_cast<std::size_t>(it);
+            send(message, target_endpoint);
+            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent, target_endpoint);
+        }
+    }
+    for (auto &it : _registry.getEntities()) {
+        for (std::size_t i = 0; i < _registry.getComponentsCompare().size(); i++) {
             try {
-                if (!_registry.getComponentCompare().at(i)(it, tmp_registry))
+                if (_registry.getComponentsCompare().at(i)(tmp_registry, it)
+                != tmp_registry.getComponentsCompare().at(i)(_registry, it)
+                && std::find(tmp_entities.begin(), tmp_entities.end(), it) == tmp_entities.end())
                     sendNetworkComponent<network::CustomMessage>(it, network::CustomMessage::SendComponent, target_endpoint, i);
             } catch (const ecs::ExceptionComponentNull &e) {
                 continue;
@@ -409,7 +424,7 @@ void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Regist
             }
         }
     }
-    network::Message<network::CustomMessage> message;
-    message.header.id = network::CustomMessage::AllComponentSent;
-    send(message, target_endpoint);
+    network::Message<network::CustomMessage> message2;
+    message2.header.id = network::CustomMessage::AllComponentSent;
+    send(message2, target_endpoint);
 }
