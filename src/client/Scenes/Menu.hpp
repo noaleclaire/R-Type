@@ -20,6 +20,7 @@ class Menu : public ScenesInitializer {
             std::size_t btn_y = 350;
 
             registry.setActualScene(ecs::Scenes::MENU);
+            graphical.setActualGraphicsEntities(ecs::Scenes::MENU);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

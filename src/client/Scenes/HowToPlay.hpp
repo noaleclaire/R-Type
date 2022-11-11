@@ -19,6 +19,7 @@ class HowToPlay : public ScenesInitializer {
             std::size_t entity;
 
             registry.setActualScene(ecs::Scenes::HOWTOPLAY);
+            graphical.setActualGraphicsEntities(ecs::Scenes::HOWTOPLAY);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

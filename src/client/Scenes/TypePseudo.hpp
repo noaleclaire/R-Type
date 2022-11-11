@@ -21,6 +21,7 @@ class TypePseudo : public ScenesInitializer {
             std::size_t tmp_entity;
 
             registry.setActualScene(ecs::Scenes::TYPEPSEUDO);
+            graphical.setActualGraphicsEntities(ecs::Scenes::TYPEPSEUDO);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

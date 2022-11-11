@@ -27,18 +27,21 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
 {
     ParserYaml::parseYaml(_sprites_manager, std::filesystem::current_path().append("assets/sprites/sprites_config.yaml").string());
     ParserUserInfo::getUserInfo(_user_info);
+
     Core::new_music_volume = _user_info.music_volume;
     Core::new_sfx_volume = _user_info.sfx_volume;
 
     _graphical.sprites_manager = &_sprites_manager;
     _graphical.addAllTextures();
+
+    _actual_registry = &_unique_registry;
+
     TypePseudo::initScene(_unique_registry, _sprites_manager, _graphical);
-    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
     HowToPlay::initScene(_unique_registry, _sprites_manager, _graphical);
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
+    Menu::initScene(_unique_registry, _sprites_manager, _graphical);
 
-    _actual_registry = &_unique_registry;
 
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
@@ -48,6 +51,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.sprites_manager = &_sprites_manager;
     _client.user_info = &_user_info;
     _client.actual_scene = &Core::actual_scene;
+
     _graphical.client = &_client;
 
     _gameLoop();

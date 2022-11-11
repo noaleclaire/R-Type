@@ -23,6 +23,7 @@ class Settings : public ScenesInitializer {
             std::size_t tmp_width;
 
             registry.setActualScene(ecs::Scenes::SETTINGS);
+            graphical.setActualGraphicsEntities(ecs::Scenes::SETTINGS);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

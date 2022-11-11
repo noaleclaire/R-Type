@@ -20,6 +20,7 @@ class ListRoom : public ScenesInitializer {
             std::size_t tmp_entity;
 
             registry.setActualScene(ecs::Scenes::LISTROOM);
+            graphical.setActualGraphicsEntities(ecs::Scenes::LISTROOM);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

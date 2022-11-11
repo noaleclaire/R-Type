@@ -54,41 +54,54 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             sendToAllClients(message);
         } break;
         case network::CustomMessage::CreatePublicRoom: {
+            std::cout << "a" << std::endl;
             _createRoom(msg, target_endpoint);
+            std::cout << "b" << std::endl;
         } break;
         case network::CustomMessage::CreatePrivateRoom: {
             _createRoom(msg, target_endpoint, true);
         } break;
         case network::CustomMessage::InitListRoom: {
+            std::cout << "1" << std::endl;
             int room_filter_mode;
             msg >> room_filter_mode;
             _rooms_filter_mode.insert_or_assign(target_endpoint, room_filter_mode);
             network::Message<network::CustomMessage> message;
             _getInfoForListRoomScene(target_endpoint, message);
             send(message, target_endpoint);
+            std::cout << "2" << std::endl;
         } break;
         case network::CustomMessage::JoinRoom: {
+            std::cout << "c" << std::endl;
             _joinRoom(target_endpoint, msg);
+            std::cout << "d" << std::endl;
         } break;
         case network::CustomMessage::JoinRoomById: {
             _joinRoomById(target_endpoint, msg);
         } break;
         case network::CustomMessage::QuitRoomServer: {
+            std::cout << "e" << std::endl;
             _quitRoom(target_endpoint);
+            std::cout << "f" << std::endl;
         } break;
         case network::CustomMessage::SwitchRoomMode: {
+            std::cout << "g" << std::endl;
             _updateRoom(target_endpoint, msg);
+            std::cout << "h" << std::endl;
         } break;
         case network::CustomMessage::RemoveClient: {
+            std::cout << "i" << std::endl;
             _quitRoom(target_endpoint);
-            for (auto it = _rooms_filter_mode.begin(); it != _rooms_filter_mode.end();) {
-                if (it->first == target_endpoint)
-                    _rooms_filter_mode.erase(it);
-            }
-            for (auto it = _players_names.begin(); it != _players_names.end();) {
-                if (it->first == target_endpoint)
-                    _players_names.erase(it);
-            }
+            std::cout << "j" << std::endl;
+            //CHANGE THESE BECAUSE IT DOESN'T DECOONECT OTHERWISE OR STD::OUT_OF_RANGE
+            // for (auto it = _rooms_filter_mode.begin(); it != _rooms_filter_mode.end();) {
+            //     if (it->first == target_endpoint)
+            //         _rooms_filter_mode.erase(it);
+            // }
+            // for (auto it = _players_names.begin(); it != _players_names.end();) {
+            //     if (it->first == target_endpoint)
+            //         _players_names.erase(it);
+            // }
             for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
                 if (_clients_endpoint.at(i) == target_endpoint)
                     _clients_endpoint.erase(std::next(_clients_endpoint.begin(), i));
@@ -321,9 +334,8 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 send(message, std::get<3>(_rooms.at(i)).at(j).first);
                 std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
                 std::get<3>(_rooms.at(i)).erase(std::next(std::get<3>(_rooms.at(i)).begin(), j));
+                std::get<5>(_rooms.at(i)) = false;
                 _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
-                _registry.setActualScene(std::get<0>(_rooms.at(i)));
-                std::cout << _registry.getEntities().size() << std::endl;
                 if (std::get<3>(_rooms.at(i)).size() == 0) {
                     std::get<1>(_rooms.at(i)) = false;
                     _registry.setActualScene(std::get<0>(_rooms.at(i)));

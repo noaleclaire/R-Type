@@ -148,6 +148,12 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void _setParallax();
+    /**
+     * @brief
+     *
+     * @param scene
+     */
+    void _killEntities(ecs::Scenes scene);
 
     std::vector<ecs::Entity> _tmp_entities_registry;
 };

@@ -124,6 +124,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             ecs::Scenes scene;
             msg >> scene;
             registry->setActualScene(scene);
+            graphical->setActualGraphicsEntities(scene);
         } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
@@ -145,11 +146,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::QuitRoomClient: {
             ecs::Scenes room_scene;
             msg >> room_scene;
-            registry->setActualScene(room_scene);
-            std::cout << registry->getActualScene() << std::endl;
-            std::cout << "size: " << registry->getEntities().size() << std::endl;
-            for (auto &it : registry->getEntities())
-                registry->killEntity(it);
+            _killEntities(room_scene);
         } break;
         case network::CustomMessage::MaxRoomLimit: {
             _setErrorMessage("Max Number Of Rooms Were Already Be Created");
@@ -306,4 +303,15 @@ void CustomClient::_setErrorMessage(std::string msg_error)
 {
     error_msg_server = true;
     txt_error_msg_server = msg_error;
+}
+
+void CustomClient::_killEntities(ecs::Scenes scene)
+{
+    registry->setActualScene(scene);
+    graphical->setActualGraphicsEntities(scene);
+    for (auto &it : registry->getEntities())
+        registry->killEntity(it);
+    graphical->getAllSprites().clear();
+    graphical->getAllRectangleShapes().clear();
+    graphical->getAllTexts().clear();
 }
