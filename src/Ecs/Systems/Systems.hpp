@@ -109,10 +109,9 @@ namespace ecs
          *
          * @param registry
          * @param controllable
-         * @param graphical
          * @param client
          */
-        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client);
+        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client);
         /**
          * @brief
          *
@@ -130,7 +129,7 @@ namespace ecs
          * @param entity
          * @param client
          */
-        static void _createShot(Registry &registry, std::size_t entity, CustomClient *client);
+        static void _createShot(Registry &registry, std::size_t linked_entity, CustomClient *client);
         /**
          * @brief Calcul and return the volume based on two shapes
          *

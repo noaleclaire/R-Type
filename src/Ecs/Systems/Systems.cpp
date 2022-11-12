@@ -195,7 +195,7 @@ namespace ecs
             try {
                 try {
                     registry.getComponents<ecs::CompoServer>().at(it);
-                } catch (ecs::Exception &e) {
+                } catch (ecs::Exception &err) {
                     float posX = position.at(it).value().getXPosition();
                     float posY = position.at(it).value().getYPosition();
                     float veloX = position.at(it).value().getXVelocity();
@@ -270,7 +270,7 @@ namespace ecs
             }
         }
     }
-    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client)
+    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client)
     {
         for (auto &it : registry.getEntities()) {
             try {
@@ -294,14 +294,13 @@ namespace ecs
         }
     }
 
-    void Systems::_createShot(Registry &registry, std::size_t entity, CustomClient *client)
+    void Systems::_createShot(Registry &registry, std::size_t linked_entity, CustomClient *client)
     {
-        std::size_t shot;
-        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(entity).value().getAmmoType();
+        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
 
-        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
-            registry.getComponents<ecs::Shooter>().at(entity).value().setLastShot();
-            client->createShot(entity, registry.getActualScene());
+        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(linked_entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
+            registry.getComponents<ecs::Shooter>().at(linked_entity).value().setLastShot();
+            client->createShot(linked_entity, registry.getActualScene());
         }
     }
 

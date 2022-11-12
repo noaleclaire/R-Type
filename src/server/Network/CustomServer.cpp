@@ -197,7 +197,6 @@ void CustomServer::_createShot(network::Message<network::CustomMessage> &msg)
         float posY = _getGameRegistry(scene).getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + _getGameRegistry(scene).getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
         int layer = _getGameRegistry(scene).getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
         entity = ecs::Factory::createEntity(_getGameRegistry(scene), ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
-        _getGameRegistry(scene).addComponent<ecs::CompoServer>(_getGameRegistry(scene).getEntityById(entity), ecs::CompoServer());
         for (auto &client_endpoint : _getClientsEndpoint(scene)) {
             sendNetworkComponents<network::CustomMessage>(_getGameRegistry(scene), entity, network::CustomMessage::SendComponent, client_endpoint.first);
             network::Message<network::CustomMessage> message;

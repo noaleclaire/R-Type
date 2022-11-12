@@ -127,17 +127,15 @@ class Game : public ScenesInitializer {
                             if (std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) < t - server->getStartTime(scene)) {
                                 ecs::Registry tmp_registry = registry;
 
-                                ecs::SystemsServer::Position(registry, registry.getComponents<ecs::Position>(), server->getLastTime(scene));
-                                ecs::SystemsServer::Shot(registry, server, clients_endpoint);
-                                for (auto &client_endpoint : clients_endpoint) {
-                                    server->compareRegistries(client_endpoint.first, registry, tmp_registry);
-                                }
+                                // ecs::SystemsServer::Position(registry, registry.getComponents<ecs::Position>(), server->getLastTime(scene));
+                                // ecs::SystemsServer::Shot(registry, server, clients_endpoint);
+                                // for (auto &client_endpoint : clients_endpoint) {
+                                //     server->compareRegistries(client_endpoint.first, registry, tmp_registry);
+                                // }
                             }
                         } catch (const ecs::ExceptionComponentNull &e) {
-                            continue;
-                        } catch (const ecs::ExceptionIndexComponent &e) {
-                            continue;
-                        }
+                        } catch (const ecs::ExceptionIndexComponent &e) {}
+                        ecs::SystemsServer::Shot(registry, server, clients_endpoint);
                         server->setLastTime(scene, t);
                     }
                 } catch (const ecs::Exception &e) {
