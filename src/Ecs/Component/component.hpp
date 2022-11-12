@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AComponent.hpp"
+#include "Ammo.hpp"
 #include "Clickable.hpp"
 #include "Collider.hpp"
 #include "Controllable.hpp"

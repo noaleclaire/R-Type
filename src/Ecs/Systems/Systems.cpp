@@ -12,6 +12,8 @@
 #include "../Exceptions/ExceptionIndexComponent.hpp"
 #include <cmath>
 
+#include "../Factory.hpp"
+
 namespace ecs
 {
     void Systems::ClickableReleased(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
@@ -241,7 +243,9 @@ namespace ecs
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
                         controllable.at(it).value().setKey("d", true);
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
-                        controllable.at(it).value().setKey("space", true);//do not put it in the release
+                        controllable.at(it).value().setKey("space", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::LShift)
+                        controllable.at(it).value().setKey("shift", true);
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
@@ -252,9 +256,54 @@ namespace ecs
                         controllable.at(it).value().setKey("s", false);
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
                         controllable.at(it).value().setKey("d", false);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", false);
                 }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
                 if (controllable.at(it).value().getKey("space") == true)
-                    _createShot(registry, it);
+                    _createShot(registry, it, graphical, client);//degager graphical
+                if (controllable.at(it).value().getKey("shift") == true) {
+                    controllable.at(it).value().setKey("shift", false);
+                    if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::BEAM);
+                        std::cout << "BEAM" << std::endl;
+                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::BEAM) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC);
+                        std::cout << "CLASSIC" << std::endl;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Shot(Registry &registry, CustomServer *server)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT) {
+                    if (registry.getComponents<ecs::Ammo>().at(it).value().isDead(registry.getComponents<ecs::Position>().at(it).value().getXPosition(), registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) == true ||
+                        registry.getComponents<ecs::Ammo>().at(it).value().isDead() == true) {
+                        registry.killEntity(registry.getEntityById(it));
+                        network::Message<network::CustomMessage> message;
+                        message.header.id = network::CustomMessage::KillAnEntity;
+                        message << it;
+                        server->send(message);
+                        continue;
+                    }
+                }
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -263,13 +312,21 @@ namespace ecs
         }
     }
 
-    void Systems::_createShot(Registry &registry, std::size_t entity)
+    void Systems::_createShot(Registry &registry, std::size_t entity, graphics::Graphical *graphical, CustomClient *client)
     {
-        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(500)/*change this by the value of the wished shot type*/) {
-            //envoyer un signal au server qui lui va creer le tir ?
-            //ajouter au shot un ecs::Link(shooter_id)
-            std::cout << "shot" << std::endl;
-            registry.getComponents<ecs::Controllable>().at(entity).value().setKey("space", false);
+        std::size_t shot;
+        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(entity).value().getAmmoType();
+
+        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
+            // client->createShot(entity, registry.getActualScene());
+
+            registry.getComponents<ecs::Shooter>().at(entity).value().setLastShot();
+            auto rect = graphical->sprites_manager->get_Animations_rect(ecs::EntityTypes::SHOT, ammoType, 0);
+            float posX = registry.getComponents<ecs::Position>().at(entity).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()/2;
+            float posY = registry.getComponents<ecs::Position>().at(entity).value().getYPosition() + registry.getComponents<ecs::Rectangle>().at(entity).value().getHeightRectangle()/2 - rect.at(3)/2;
+            int layer = registry.getComponents<ecs::Layer>().at(entity).value().getLayer() - 1;
+            shot = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, entity, posX, posY, rect.at(0), rect.at(1), rect.at(2), rect.at(3), layer, static_cast<int>(ammoType));
+            graphical->addSprite(shot, graphical->sprites_manager->get_Spritesheet(ecs::EntityTypes::SHOT, ammoType), rect);
         }
     }
 
@@ -411,6 +468,30 @@ namespace ecs
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             } catch (const ::Exception &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (graphical->getAllSprites().at(it).getGlobalBounds().intersects(graphical->getAllSprites().at(it_in).getGlobalBounds())) {
+                            std::cout << "collision" << std::endl;
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }

@@ -54,7 +54,7 @@ namespace ecs
 
         friend bool operator==(const Controllable &lhs, const Controllable &rhs)
         {
-            return lhs._z == rhs._z && lhs._q == rhs._q && lhs._s == rhs._s && lhs._d == rhs._d && lhs._space == rhs._space;
+            return lhs._z == rhs._z && lhs._q == rhs._q && lhs._s == rhs._s && lhs._d == rhs._d && lhs._space == rhs._space && lhs._shift == rhs._shift;
         }
       private:
         bool _z;
@@ -62,5 +62,6 @@ namespace ecs
         bool _s;
         bool _d;
         bool _space;
+        bool _shift;
     };
 } // namespace ecs

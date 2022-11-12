@@ -93,6 +93,11 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
+    void createShot(std::size_t linked_entity, ecs::Scenes scene);
+    /**
+     * @brief
+     *
+     */
     void switchRoomMode();
     /**
      * @brief

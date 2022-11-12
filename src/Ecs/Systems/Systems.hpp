@@ -9,6 +9,8 @@
 #include "../../client/Sfml/Graphical.hpp"
 #include "../Component/SparseArray.hpp"
 #include "../Registry.hpp"
+#include "../../client/Network/CustomClient.hpp"
+#include "../../server/Network/CustomServer.hpp"
 
 namespace ecs
 {
@@ -103,6 +105,30 @@ namespace ecs
          * @param graphical
          */
         static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
+        /**
+         * @brief System handling shots in client side
+         *
+         * @param registry
+         * @param controllable
+         * @param graphical
+         * @param client
+         */
+        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client);
+        /**
+         * @brief System handling shots in server side
+         *
+         * @param registry
+         * @param server
+         */
+        static void Shot(Registry &registry, CustomServer *server);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param collider
+         * @param graphical
+         */
+        static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical *graphical);
 
       private:
         /**
@@ -110,8 +136,9 @@ namespace ecs
          *
          * @param registry
          * @param entity
+         * @param graphical
          */
-        static void _createShot(Registry &registry, std::size_t entity);
+        static void _createShot(Registry &registry, std::size_t entity, graphics::Graphical *graphical, CustomClient *client);
         /**
          * @brief Calcul and return the volume based on two shapes
          *

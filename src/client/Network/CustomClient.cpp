@@ -125,6 +125,14 @@ void CustomClient::clientDisconnect()
     send(msg);
 }
 
+void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::CreateShot;
+    msg << linked_entity << scene;
+    send(msg);
+}
+
 void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     static_cast<void>(target_endpoint);
@@ -132,6 +140,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
             msg >> scene;
+<<<<<<< HEAD
             if (scene != ecs::Scenes::GAME1 && scene != ecs::Scenes::GAME2
             && scene != ecs::Scenes::GAME3) {
                 registry->setActualScene(scene);
@@ -141,6 +150,10 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 game_scene = scene;
                 std::cout << "game_scene: " << game_scene << std::endl;
             }
+=======
+            registry->setActualScene(scene);
+            graphical->setActualGraphicsEntities(scene);
+>>>>>>> c20648f43fc385a5b2ed22d0f3bfbaae62ae1b61
         } break;
         case network::CustomMessage::KillAnEntity: {
             std::size_t entity;
