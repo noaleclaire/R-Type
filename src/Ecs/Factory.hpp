@@ -108,19 +108,22 @@ namespace ecs
         static Entity createShot(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
+            std::size_t linked_entity = UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0));
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
 
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(linked_entity));
+            registry.addComponent<ecs::Ammo>(registry.getEntityById(entity), ecs::Ammo(registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType()));
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)),
+                registry.getComponents<ecs::Ammo>().at(entity.getId()).value().getVelocity().first, registry.getComponents<ecs::Ammo>().at(entity.getId()).value().getVelocity().second));
             registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
 
-            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
             return (entity);
         }
         /**

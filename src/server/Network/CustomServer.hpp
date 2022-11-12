@@ -119,6 +119,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
 
   private:
     void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
+    void _createShot(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint);
     void _getInfoForListRoomScene(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _joinRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);

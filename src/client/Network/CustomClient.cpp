@@ -117,6 +117,14 @@ void CustomClient::clientDisconnect()
     send(msg);
 }
 
+void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::CreateShot;
+    msg << linked_entity << scene;
+    send(msg);
+}
+
 void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     static_cast<void>(target_endpoint);
@@ -124,7 +132,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::GetRoomScene: {
             ecs::Scenes scene;
             msg >> scene;
-            std::cout << "scene: " << scene << std::endl;
             registry->setActualScene(scene);
             graphical->setActualGraphicsEntities(scene);
         } break;
@@ -138,7 +145,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             std::size_t entity = 0;
             msg >> index_component_create;
             msg >> entity;
-            std::cout << "SendComponent}scene: " << registry->getActualScene() << std::endl;
             registry->getNetComponentCreate().at(index_component_create)(msg);
             _tmp_entities_registry.push_back(registry->getEntityById(entity));
         } break;
@@ -147,7 +153,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _setTextComponent();
             _setParallax();
             _tmp_entities_registry.clear();
-            std::cout << "AllComponentSent}scene: " << registry->getActualScene() << std::endl;
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);

@@ -459,3 +459,22 @@ spritesheet: spaceships/spaceship-4.png
    rect_width: 137
    rect_height: 97
    nb_anim: 6
+
+# ------------------------SPACESHIPS------------------------
+#CLASSIC
+spritesheet: filsdechienne
+ shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 50
+   rect_height: 15
+
+#BEAM
+spritesheet: filsdechienne2
+ shot: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 15

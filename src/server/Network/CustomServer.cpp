@@ -119,6 +119,9 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::CreatePrivateRoom: {
             _createRoom(msg, target_endpoint, true);
         } break;
+        case network::CustomMessage::CreateShot: {
+            _createRoom(msg, target_endpoint, true);
+        } break;
         case network::CustomMessage::InitListRoom: {
             int room_filter_mode;
             msg >> room_filter_mode;
@@ -154,6 +157,34 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         default:
             break;
     }
+}
+
+void CustomServer::_createShot(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint)
+{
+    std::size_t entity;
+    std::size_t linked_entity;
+    ecs::Scenes scene;
+    ecs::Scenes kept_scene = _registry.getActualScene();
+    msg >> scene >> linked_entity;
+
+    _registry.setActualScene(scene);
+    try {
+        ecs::Ammo::AmmoType ammoType = _registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
+        float posX = _registry.getComponents<ecs::Position>().at(linked_entity).value().getXPosition() + _registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle()/2;
+        float posY = _registry.getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + _registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
+        int layer = _registry.getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
+        entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
+        _registry.addComponent<ecs::CompoServer>(_registry.getEntityById(entity), ecs::CompoServer());
+        this->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, target_endpoint);
+    } catch (ecs::ExceptionComponentNull &e) {
+        return;
+    } catch (ecs::ExceptionIndexComponent &e) {
+        return;
+    }
+    network::Message<network::CustomMessage> message;
+    message.header.id = network::CustomMessage::AllComponentSent;
+    send(message, target_endpoint);
+    _registry.setActualScene(kept_scene);
 }
 
 void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room)

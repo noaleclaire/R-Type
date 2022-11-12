@@ -33,6 +33,7 @@ namespace ecs
       public:
         Registry()
         {
+            registerComponents<ecs::Ammo>();
             registerComponents<ecs::Clickable>();
             registerComponents<ecs::Collider>();
             registerComponents<ecs::Controllable>();
