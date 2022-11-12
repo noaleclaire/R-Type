@@ -18,8 +18,12 @@ namespace ecs
                 float posY = position.at(it).value().getYPosition();
                 float veloX = position.at(it).value().getXVelocity();
                 float veloY = position.at(it).value().getYVelocity();
-                posX += veloX * (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000000;
-                posY += veloY * (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000000;
+                float test = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count();
+                test /= 1000000;
+                // std::cout << (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000 << "ms" << std::endl;
+                std::cout << test << "s" << std::endl;
+                posX += veloX * test;
+                posY += veloY * test;
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
             } catch (const ExceptionComponentNull &e) {

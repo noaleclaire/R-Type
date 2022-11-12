@@ -107,17 +107,15 @@ class Game : public ScenesInitializer {
             std::chrono::time_point<std::chrono::system_clock> t = std::chrono::system_clock::now();
 
             registry.setActualScene(scene);
-
             while (1) {
-                t = std::chrono::system_clock::now();
                 try {
                     for (auto &it : registry.getEntities()) {
+                        t = std::chrono::system_clock::now();
                         try {
                             registry.getComponents<ecs::CompoServer>().at(it);
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
                                 (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
-                                std::cout << "timepoint" << std::endl;
                                 for (auto &client_endpoint : clients_endpoint) {
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
                                     network::Message<network::CustomMessage> message;
@@ -140,11 +138,11 @@ class Game : public ScenesInitializer {
                         } catch (const ecs::ExceptionIndexComponent &e) {
                             continue;
                         }
+                        server->setLastTime(scene, t);
                     }
                 } catch (const ecs::Exception &e) {
                     return;
                 }
-                server->setLastTime(scene, t);
             }
         }
 };
