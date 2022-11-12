@@ -104,8 +104,7 @@ void Core::_switchScenesJoinRoom()
 {
     if ((_last_scene != ecs::Scenes::ROOM1 && Core::actual_scene == ecs::Scenes::ROOM1) ||
     (_last_scene != ecs::Scenes::ROOM2 && Core::actual_scene == ecs::Scenes::ROOM2) ||
-    (_last_scene != ecs::Scenes::ROOM3 && Core::actual_scene == ecs::Scenes::ROOM3) ||
-    (_last_scene != ecs::Scenes::ROOM4 && Core::actual_scene == ecs::Scenes::ROOM4)) {
+    (_last_scene != ecs::Scenes::ROOM3 && Core::actual_scene == ecs::Scenes::ROOM3)) {
         _actual_registry->setActualScene(Core::actual_scene);
         _client.joinRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
@@ -163,10 +162,25 @@ void Core::_switchScenes()
     _switchScenesCreateRoom();
 
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
-        _client.initGame(_last_scene);
-        std::this_thread::sleep_for(std::chrono::milliseconds(205)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
-        Core::actual_scene = _actual_registry->getActualScene();
-        std::cout << Core::actual_scene << std::endl;
+        _client.getGame(_last_scene);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        if (_client.error_msg_server) {
+            std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
+            _client.error_msg_server = false;
+            Core::actual_scene = _last_scene;
+            _setActualRegistry();
+            _actual_registry->setActualScene(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
+        }
+    }
+    if (_client.game_scene == ecs::Scenes::GAME1 || _client.game_scene == ecs::Scenes::GAME2
+    || _client.game_scene == ecs::Scenes::GAME3) {
+        Core::actual_scene = _client.game_scene;
+        _actual_registry->setActualScene(Core::actual_scene);
+        _graphical.setActualGraphicsEntities(Core::actual_scene);
+        _client.initGame();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        _client.game_scene = ecs::Scenes::GAME;
     }
 
     _last_scene = Core::actual_scene;

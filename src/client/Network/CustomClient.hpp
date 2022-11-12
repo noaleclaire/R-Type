@@ -49,9 +49,14 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     /**
      * @brief
      *
+     */
+    void initGame();
+    /**
+     * @brief
+     *
      * @param room
      */
-    void initGame(ecs::Scenes room);
+    void getGame(ecs::Scenes room);
     /**
      * @brief
      *
@@ -110,6 +115,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     SpritesManager *sprites_manager;
     UserInfo *user_info;
     ecs::Scenes *actual_scene;
+    ecs::Scenes game_scene = ecs::Scenes::GAME;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
 

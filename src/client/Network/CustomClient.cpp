@@ -26,7 +26,15 @@ void CustomClient::pingServer()
     send(msg);
 }
 
-void CustomClient::initGame(ecs::Scenes room)
+void CustomClient::initGame()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::InitGame;
+    msg << *actual_scene;
+    send(msg);
+}
+
+void CustomClient::getGame(ecs::Scenes room)
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::SwitchToGame;
@@ -121,12 +129,18 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
 {
     static_cast<void>(target_endpoint);
     switch (msg.header.id) {
-        case network::CustomMessage::GetRoomScene: {
+        case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
             msg >> scene;
-            std::cout << "scene: " << scene << std::endl;
-            registry->setActualScene(scene);
-            graphical->setActualGraphicsEntities(scene);
+            if (scene != ecs::Scenes::GAME1 && scene != ecs::Scenes::GAME2
+            && scene != ecs::Scenes::GAME3) {
+                registry->setActualScene(scene);
+                graphical->setActualGraphicsEntities(scene);
+                std::cout << "scene: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
+            } else {
+                game_scene = scene;
+                std::cout << "game_scene: " << game_scene << std::endl;
+            }
         } break;
         case network::CustomMessage::KillAnEntity: {
             std::size_t entity;
@@ -138,16 +152,17 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             std::size_t entity = 0;
             msg >> index_component_create;
             msg >> entity;
-            std::cout << "SendComponent}scene: " << registry->getActualScene() << std::endl;
+            std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
             registry->getNetComponentCreate().at(index_component_create)(msg);
             _tmp_entities_registry.push_back(registry->getEntityById(entity));
         } break;
         case network::CustomMessage::AllComponentSent: {
+            std::cout << "scene2222: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             _setRectAndSpriteComponent();
             _setTextComponent();
             _setParallax();
             _tmp_entities_registry.clear();
-            std::cout << "AllComponentSent}scene: " << registry->getActualScene() << std::endl;
+            std::cout << "AllComponentSent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);
@@ -175,83 +190,85 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
 
 void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> &msg)
 {
-    ecs::Scenes tmp_scene = non_shareable_registry->getActualScene();
-    non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
-    graphical->setActualGraphicsEntities(ecs::Scenes::LISTROOM);
+    // ecs::Scenes tmp_scene = non_shareable_registry->getActualScene();
+    // non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
+    // graphical->setActualGraphicsEntities(ecs::Scenes::LISTROOM);
     std::size_t nb_rooms = 0;
     std::size_t tmp_nb_rooms = 0;
     ecs::Scenes room_scene;
     std::size_t entity_link_id;
     std::vector<float> rect;
     msg >> nb_rooms;
-    for (auto &it : non_shareable_registry->getEntities()) {
-        try {
-            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
-                non_shareable_registry->removeComponent<ecs::Drawable>(it);
-                non_shareable_registry->removeComponent<ecs::CompoScene>(it);
-                entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
-                non_shareable_registry->removeComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id));
-                non_shareable_registry->removeComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id));
-                non_shareable_registry->removeComponent<ecs::Drawable>(
-                    non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink())
-                );
+    if (non_shareable_registry->getActualScene() == ecs::Scenes::LISTROOM && *actual_scene == ecs::Scenes::LISTROOM) {
+        for (auto &it : non_shareable_registry->getEntities()) {
+            try {
+                if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                    non_shareable_registry->removeComponent<ecs::Drawable>(it);
+                    non_shareable_registry->removeComponent<ecs::CompoScene>(it);
+                    entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
+                    non_shareable_registry->removeComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id));
+                    non_shareable_registry->removeComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id));
+                    non_shareable_registry->removeComponent<ecs::Drawable>(
+                        non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink())
+                    );
+                }
+            } catch (const ecs::Exception &e) {
+                continue;
             }
-        } catch (const ecs::Exception &e) {
-            continue;
+        }
+        for (auto &it : non_shareable_registry->getEntities()) {
+            try {
+                if (tmp_nb_rooms == nb_rooms)
+                    break;
+                if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                    non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
+                    msg >> room_scene;
+                    non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
+                    entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
+                    non_shareable_registry->addComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id), ecs::Drawable());
+                    ecs::Text info_text;
+                    msg >> info_text;
+                    non_shareable_registry->addComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id), ecs::Text());
+                    non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().setText(info_text.getText());
+                    graphical->addText(entity_link_id, non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().getText(),
+                    {non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getXRectangle(),
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getYRectangle(),
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getWidthRectangle()});
+                    non_shareable_registry->addComponent<ecs::Drawable>(
+                        non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()), ecs::Drawable()
+                    );
+                    bool roommode_id;
+                    msg >> roommode_id;
+                    non_shareable_registry->getComponents<ecs::Type>().at(
+                        non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()
+                    ).value().setEntityID(roommode_id);
+                    rect = sprites_manager->get_Animations_rect(
+                    non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
+                    non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID(), 0);
+
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setXRectangle(rect.at(0));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setYRectangle(rect.at(1));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setWidthRectangle(rect.at(2));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setHeightRectangle(rect.at(3));
+                    graphical->addSprite(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
+                        sprites_manager->get_Spritesheet(
+                            non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
+                            non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID()),
+                        rect
+                    );
+                    graphical->setSpritePosition(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
+                    non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getXPosition(),
+                    non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getYPosition());
+                    tmp_nb_rooms++;
+                }
+
+            } catch (const ecs::Exception &e) {
+                continue;
+            }
         }
     }
-    for (auto &it : non_shareable_registry->getEntities()) {
-        try {
-            if (tmp_nb_rooms == nb_rooms)
-                break;
-            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
-                non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
-                msg >> room_scene;
-                non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
-                entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
-                non_shareable_registry->addComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id), ecs::Drawable());
-                ecs::Text info_text;
-                msg >> info_text;
-                non_shareable_registry->addComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id), ecs::Text());
-                non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().setText(info_text.getText());
-                graphical->addText(entity_link_id, non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().getText(),
-                {non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getXRectangle(),
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getYRectangle(),
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getWidthRectangle()});
-                non_shareable_registry->addComponent<ecs::Drawable>(
-                    non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()), ecs::Drawable()
-                );
-                bool roommode_id;
-                msg >> roommode_id;
-                non_shareable_registry->getComponents<ecs::Type>().at(
-                    non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()
-                ).value().setEntityID(roommode_id);
-                rect = sprites_manager->get_Animations_rect(
-                non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
-                non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID(), 0);
-
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setXRectangle(rect.at(0));
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setYRectangle(rect.at(1));
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setWidthRectangle(rect.at(2));
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setHeightRectangle(rect.at(3));
-                graphical->addSprite(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
-                    sprites_manager->get_Spritesheet(
-                        non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
-                        non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID()),
-                    rect
-                );
-                graphical->setSpritePosition(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
-                non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getXPosition(),
-                non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getYPosition());
-                tmp_nb_rooms++;
-            }
-
-        } catch (const ecs::Exception &e) {
-            continue;
-        }
-    }
-    non_shareable_registry->setActualScene(tmp_scene);
-    graphical->setActualGraphicsEntities(*actual_scene);
+    // non_shareable_registry->setActualScene(tmp_scene);
+    // graphical->setActualGraphicsEntities(*actual_scene);
 }
 
 void CustomClient::_setRectAndSpriteComponent()

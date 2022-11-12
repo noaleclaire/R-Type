@@ -9,8 +9,8 @@
 
 monster: 0
  time: 1000
- position_x: 100
- position_y: 150
+ position_x: 800
+ position_y: 500
  velocity_x: -80
  velocity_y: -10
  shooter: 0

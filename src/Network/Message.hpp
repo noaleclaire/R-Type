@@ -16,13 +16,13 @@ namespace network
 {
     enum CustomMessage : uint32_t { PingServer,
                                 CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
-                                GetRoomScene,
+                                GetScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
                                 SwitchRoomMode,
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
-                                SwitchToGame, KillAnEntity,
+                                SwitchToGame, InitGame, KillAnEntity,
                                 RemoveClient, NotEnoughPlayer };
     template <class T> struct Header {
         T id;

@@ -18,10 +18,9 @@
 CustomServer::CustomServer(boost::asio::io_context &io_context, unsigned short local_port)
     : network::UdpServerClient<network::CustomMessage>(io_context, local_port)
 {
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM1, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM2, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM3, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
-    _rooms.push_back(std::make_tuple(ecs::Scenes::ROOM4, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false));
+    _registries.push_back(std::make_tuple(ecs::Scenes::ROOM1, ecs::Scenes::GAME1, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false, std::make_unique<ecs::Registry>()));
+    _registries.push_back(std::make_tuple(ecs::Scenes::ROOM2, ecs::Scenes::GAME2, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false, std::make_unique<ecs::Registry>()));
+    _registries.push_back(std::make_tuple(ecs::Scenes::ROOM3, ecs::Scenes::GAME3, false, false, std::vector<std::pair<udp::endpoint, bool>>(), "", false, std::make_unique<ecs::Registry>()));
 
     for (std::size_t level_nb = 1; level_nb <= 5; level_nb++) {
         LevelManager level;
@@ -38,12 +37,12 @@ void CustomServer::updateSceneRoomInVectorRoom(ecs::Scenes room_scene, bool priv
 {
     _players_names.insert_or_assign(client_endpoint, player_name);
     _rooms_filter_mode.insert_or_assign(client_endpoint, -1);
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        if (std::get<0>(_rooms.at(i)) == room_scene) {
-            std::get<1>(_rooms.at(i)) = true;
-            std::get<2>(_rooms.at(i)) = private_room;
-            std::get<3>(_rooms.at(i)).push_back(std::make_pair(client_endpoint, true));
-            std::get<4>(_rooms.at(i)) = _players_names.at(client_endpoint);
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<0>(_registries.at(i)) == room_scene) {
+            std::get<2>(_registries.at(i)) = true;
+            std::get<3>(_registries.at(i)) = private_room;
+            std::get<4>(_registries.at(i)).push_back(std::make_pair(client_endpoint, true));
+            std::get<5>(_registries.at(i)) = _players_names.at(client_endpoint);
             return;
         }
     }
@@ -74,6 +73,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
 {
     switch (msg.header.id) {
         case network::CustomMessage::PingServer: {
+            _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
             std::cout << "["
                       << "connection..."
                       << "]: Server Ping" << std::endl;
@@ -81,36 +81,43 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::SwitchToGame: {
             ecs::Scenes client_scene;
             msg >> client_scene;
-            std::cout << client_scene << std::endl;
-            // if (std::get<3>(_rooms.at(client_scene)).size() < 2) {
-            //     network::Message<network::CustomMessage> message;
-            //     message.header.id = network::CustomMessage::NotEnoughPlayer;
-            //     send(message, target_endpoint);
-            //     return;
-            // }
-            switch (client_scene) {
-                case ecs::Scenes::ROOM1:
-                    std::cout << "initScene: " << std::endl;
-                    Game::initScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
-                    std::cout << "updateScene: " << std::endl;
-                    // std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene))));
-                    // Game::updateScene(this, _registry, ecs::Scenes::GAME1, std::get<3>(_rooms.at(client_scene)));
-                    std::cout << "after" << std::endl;
-                    break;
-                case ecs::Scenes::ROOM2:
-                    Game::initScene(this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
-                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME2, std::get<3>(_rooms.at(client_scene))));
-                    break;
-                case ecs::Scenes::ROOM3:
-                    Game::initScene(this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
-                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME3, std::get<3>(_rooms.at(client_scene))));
-                    break;
-                case ecs::Scenes::ROOM4:
-                    Game::initScene(this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene)), _levels.at(0));
-                    std::thread(std::bind(&Game::updateScene, this, _registry, ecs::Scenes::GAME4, std::get<3>(_rooms.at(client_scene))));
-                    break;
-                default:
-                    break;
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::GetScene;
+            for (std::size_t i = 0; i < _registries.size(); i++) {
+                if (std::get<0>(_registries.at(i)) == client_scene) {
+                    for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+                        if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second != true)
+                            return;
+                    }
+                    // if (std::get<4>(_registries.at(i)).size() < 2) {
+                    //     network::Message<network::CustomMessage> message2;
+                    //     message2.header.id = network::CustomMessage::NotEnoughPlayer;
+                    //     send(message2, target_endpoint);
+                    //     return;
+                    // }
+                    Game::initScene(*std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
+                    std::cout << std::get<4>(_registries.at(i)).at(0).first << std::endl;
+                    message << std::get<1>(_registries.at(i));
+                    for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                        send(message, client_endpoint.first);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                    }
+                    return;
+                }
+            }
+        } break;
+        case network::CustomMessage::InitGame: {
+            ecs::Scenes game_scene;
+            msg >> game_scene;
+            for (std::size_t i = 0; i < _registries.size(); i++) {
+                if (std::get<1>(_registries.at(i)) == game_scene) {
+                    Game::getScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), target_endpoint, _levels.at(0));
+                    for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                        if (client_endpoint.first == target_endpoint && client_endpoint.second == true)
+                            Game::updateScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
+                    }
+                    return;
+                }
             }
         } break;
         case network::CustomMessage::CreatePublicRoom: {
@@ -162,9 +169,9 @@ void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, ud
     std::string player_name;
     msg >> player_name_class;
     player_name = player_name_class.getText();
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        if (std::get<1>(_rooms.at(i)) == false) {
-            Room::initScene(this, _registry, std::get<0>(_rooms.at(i)), target_endpoint, private_room, player_name);
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<2>(_registries.at(i)) == false) {
+            Room::initScene(this, *std::get<7>(_registries.at(i)), std::get<0>(_registries.at(i)), target_endpoint, private_room, player_name);
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             send(message, target_endpoint);
@@ -187,28 +194,28 @@ void CustomServer::_getInfoForListRoomScene(udp::endpoint target_endpoint, netwo
     message.header.id = network::CustomMessage::UpdateListRoom;
     std::size_t nb_rooms = 0;
     std::string rooms_text;
-    for (int i = _rooms.size() - 1; i >= 0; i--) {
-        if (std::get<1>(_rooms.at(i)) == true && std::get<2>(_rooms.at(i)) == false) {
-            if (_rooms_filter_mode.at(target_endpoint) == 0 && std::get<5>(_rooms.at(i)) == false) {
-                message << std::get<5>(_rooms.at(i));
-                rooms_text = std::get<4>(_rooms.at(i)) + "         " + std::to_string(std::get<3>(_rooms.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+    for (int i = _registries.size() - 1; i >= 0; i--) {
+        if (std::get<2>(_registries.at(i)) == true && std::get<3>(_registries.at(i)) == false) {
+            if (_rooms_filter_mode.at(target_endpoint) == 0 && std::get<6>(_registries.at(i)) == false) {
+                message << std::get<6>(_registries.at(i));
+                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
-                message << std::get<0>(_rooms.at(i));
+                message << std::get<0>(_registries.at(i));
                 nb_rooms++;
-            } else if (_rooms_filter_mode.at(target_endpoint) == 1 && std::get<5>(_rooms.at(i)) == true) {
-                message << std::get<5>(_rooms.at(i));
-                rooms_text = std::get<4>(_rooms.at(i)) + "         " + std::to_string(std::get<3>(_rooms.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+            } else if (_rooms_filter_mode.at(target_endpoint) == 1 && std::get<6>(_registries.at(i)) == true) {
+                message << std::get<6>(_registries.at(i));
+                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
-                message << std::get<0>(_rooms.at(i));
+                message << std::get<0>(_registries.at(i));
                 nb_rooms++;
             } else if (_rooms_filter_mode.at(target_endpoint) == -1)  {
-                message << std::get<5>(_rooms.at(i));
-                rooms_text = std::get<4>(_rooms.at(i)) + "         " + std::to_string(std::get<3>(_rooms.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+                message << std::get<6>(_registries.at(i));
+                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
-                message << std::get<0>(_rooms.at(i));
+                message << std::get<0>(_registries.at(i));
                 nb_rooms++;
             }
         }
@@ -224,19 +231,33 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
     msg >> room_scene;
     msg >> player_name_class;
     player_name = player_name_class.getText();
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        if (std::get<0>(_rooms.at(i)) == room_scene && std::get<3>(_rooms.at(i)).size() == NB_MAX_PLAYERS_PER_ROOM) {
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<0>(_registries.at(i)) == room_scene && std::get<4>(_registries.at(i)).size() == NB_MAX_PLAYERS_PER_ROOM) {
             network::Message<network::CustomMessage> error_message;
             error_message.header.id = network::CustomMessage::MaxPlayersInRoom;
             send(error_message, target_endpoint);
             return;
-        } else if (std::get<0>(_rooms.at(i)) == room_scene) {
-            std::get<3>(_rooms.at(i)).push_back(std::make_pair(target_endpoint, false));
+        } else if (std::get<0>(_registries.at(i)) == room_scene) {
+            std::get<4>(_registries.at(i)).push_back(std::make_pair(target_endpoint, false));
             _players_names.insert_or_assign(target_endpoint, player_name);
             _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
-            _registry.setActualScene(room_scene);
-            for (auto &it : _registry.getEntities())
-                sendNetworkComponents(it, network::CustomMessage::SendComponent, target_endpoint);
+            std::get<7>(_registries.at(i))->setActualScene(room_scene);
+            for (auto &it : std::get<7>(_registries.at(i))->getEntities()) {
+                try {
+                    if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
+                        std::get<7>(_registries.at(i))->removeComponent<ecs::Clickable>(it);
+                        sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, target_endpoint);
+                        std::get<7>(_registries.at(i))->addComponent<ecs::Clickable>(it, ecs::Clickable(ecs::Clickable::Function::TOGAME));
+                    } else
+                        sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, target_endpoint);
+                } catch (const ecs::ExceptionIndexComponent &e) {
+                    sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, target_endpoint);
+                    continue;
+                } catch (const ecs::ExceptionComponentNull &e) {
+                    sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, target_endpoint);
+                    continue;
+                }
+            }
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             send(message, target_endpoint);
@@ -260,33 +281,47 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
     msg >> player_name_class;
     player_name = player_name_class.getText();
     std::string room_id;
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        if (std::get<1>(_rooms.at(i)) == true) {
-            _registry.setActualScene(std::get<0>(_rooms.at(i)));
-            for (auto &it : _registry.getEntitiesIdByEcsType(ecs::EntityTypes::ROOMID)) {
-                room_id = _registry.getComponents<ecs::Text>().at(it).value().getText();
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<2>(_registries.at(i)) == true) {
+            std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
+            for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMID)) {
+                room_id = std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(it).value().getText();
                 if (room_id.substr(9) == std::to_string(id_room)) {
-                    if (std::get<3>(_rooms.at(i)).size() == NB_MAX_PLAYERS_PER_ROOM) {
+                    if (std::get<4>(_registries.at(i)).size() == NB_MAX_PLAYERS_PER_ROOM) {
                         network::Message<network::CustomMessage> error_message;
                         error_message.header.id = network::CustomMessage::MaxPlayersInRoom;
                         send(error_message, target_endpoint);
                         return;
                     }
-                    std::get<3>(_rooms.at(i)).push_back(std::make_pair(target_endpoint, false));
+                    std::get<4>(_registries.at(i)).push_back(std::make_pair(target_endpoint, false));
                     _players_names.insert_or_assign(target_endpoint, player_name);
                     _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
                     network::Message<network::CustomMessage> message;
-                    message.header.id = network::CustomMessage::GetRoomScene;
-                    message << std::get<0>(_rooms.at(i));
+                    message.header.id = network::CustomMessage::GetScene;
+                    message << std::get<0>(_registries.at(i));
                     send(message, target_endpoint);
                     std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-                    for (auto &it2 : _registry.getEntities())
-                        sendNetworkComponents(it2, network::CustomMessage::SendComponent, target_endpoint);
+                    for (auto &it2 : std::get<7>(_registries.at(i))->getEntities()) {
+                        try {
+                            if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it2).value().getFunction() == ecs::Clickable::Function::TOGAME) {
+                                std::get<7>(_registries.at(i))->removeComponent<ecs::Clickable>(it2);
+                                sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it2, network::CustomMessage::SendComponent, target_endpoint);
+                                std::get<7>(_registries.at(i))->addComponent<ecs::Clickable>(it2, ecs::Clickable(ecs::Clickable::Function::TOGAME));
+                            } else
+                                sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it2, network::CustomMessage::SendComponent, target_endpoint);
+                        } catch (const ecs::ExceptionIndexComponent &e) {
+                            sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it2, network::CustomMessage::SendComponent, target_endpoint);
+                            continue;
+                        } catch (const ecs::ExceptionComponentNull &e) {
+                            sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it2, network::CustomMessage::SendComponent, target_endpoint);
+                            continue;
+                        }
+                    }
                     network::Message<network::CustomMessage> message2;
                     message2.header.id = network::CustomMessage::AllComponentSent;
                     send(message2, target_endpoint);
                     std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-                    if (std::get<2>(_rooms.at(i)) == false) {
+                    if (std::get<3>(_registries.at(i)) == false) {
                         network::Message<network::CustomMessage> message3;
                         for (std::size_t j = 0; j < _clients_endpoint.size(); j++) {
                             _getInfoForListRoomScene(_clients_endpoint.at(j), message3);
@@ -305,37 +340,37 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
 
 void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
-    ecs::Registry tmp_registry = _registry;
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        for (std::size_t j = 0; j < std::get<3>(_rooms.at(i)).size(); j++) {
-            if (std::get<3>(_rooms.at(i)).at(j).first == target_endpoint && std::get<3>(_rooms.at(i)).at(j).second == true) {
-                _registry.setActualScene(std::get<0>(_rooms.at(i)));
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+            if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second == true) {
+                ecs::Registry tmp_registry = *std::get<7>(_registries.at(i));
+                std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
                 switch (msg.header.id)
                 {
                     case network::CustomMessage::SwitchRoomMode: {
-                        if (std::get<5>(_rooms.at(i))) {
-                            std::get<5>(_rooms.at(i)) = false;
-                            for (auto &it : _registry.getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
-                                if (_registry.getComponents<ecs::Type>().at(it).value().getEntityID() == 13)
-                                    _registry.addComponent<ecs::Drawable>(_registry.getEntityById(it), ecs::Drawable());
-                                if (_registry.getComponents<ecs::Type>().at(it).value().getEntityID() == 14) {
-                                    _registry.removeComponent<ecs::Drawable>(_registry.getEntityById(it));
+                        if (std::get<6>(_registries.at(i))) {
+                            std::get<6>(_registries.at(i)) = false;
+                            for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
+                                if (std::get<7>(_registries.at(i))->getComponents<ecs::Type>().at(it).value().getEntityID() == 13)
+                                    std::get<7>(_registries.at(i))->addComponent<ecs::Drawable>(std::get<7>(_registries.at(i))->getEntityById(it), ecs::Drawable());
+                                if (std::get<7>(_registries.at(i))->getComponents<ecs::Type>().at(it).value().getEntityID() == 14) {
+                                    std::get<7>(_registries.at(i))->removeComponent<ecs::Drawable>(std::get<7>(_registries.at(i))->getEntityById(it));
                                     break;
                                 }
                             }
                         } else {
-                            std::get<5>(_rooms.at(i)) = true;
-                            for (auto &it : _registry.getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
-                                if (_registry.getComponents<ecs::Type>().at(it).value().getEntityID() == 13)
-                                    _registry.removeComponent<ecs::Drawable>(_registry.getEntityById(it));
-                                if (_registry.getComponents<ecs::Type>().at(it).value().getEntityID() == 14) {
-                                    _registry.addComponent<ecs::Drawable>(_registry.getEntityById(it), ecs::Drawable());
+                            std::get<6>(_registries.at(i)) = true;
+                            for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
+                                if (std::get<7>(_registries.at(i))->getComponents<ecs::Type>().at(it).value().getEntityID() == 13)
+                                    std::get<7>(_registries.at(i))->removeComponent<ecs::Drawable>(std::get<7>(_registries.at(i))->getEntityById(it));
+                                if (std::get<7>(_registries.at(i))->getComponents<ecs::Type>().at(it).value().getEntityID() == 14) {
+                                    std::get<7>(_registries.at(i))->addComponent<ecs::Drawable>(std::get<7>(_registries.at(i))->getEntityById(it), ecs::Drawable());
                                     break;
                                 }
                             }
                         }
-                        for (auto &it : _registry.getEntitiesIdByEcsType(ecs::EntityTypes::ROOMMODE)) {
-                            _registry.getComponents<ecs::Type>().at(it).value().setEntityID(static_cast<std::size_t>(std::get<5>(_rooms.at(i))));
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMMODE)) {
+                            std::get<7>(_registries.at(i))->getComponents<ecs::Type>().at(it).value().setEntityID(static_cast<std::size_t>(std::get<6>(_registries.at(i))));
                             break;
                         }
                         network::Message<network::CustomMessage> message;
@@ -347,8 +382,8 @@ void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<n
                     default:
                         break;
                 }
-                for (std::size_t g = 0; g < std::get<3>(_rooms.at(i)).size(); g++)
-                    _compareRegistries(std::get<3>(_rooms.at(i)).at(g).first, tmp_registry);
+                for (std::size_t g = 0; g < std::get<4>(_registries.at(i)).size(); g++)
+                    _compareRegistries(std::get<4>(_registries.at(i)).at(g).first, *std::get<7>(_registries.at(i)), tmp_registry);
                 return;
             }
         }
@@ -357,31 +392,43 @@ void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<n
 
 void CustomServer::_quitRoom(udp::endpoint target_endpoint)
 {
-    for (std::size_t i = 0; i < _rooms.size(); i++) {
-        for (std::size_t j = 0; j < std::get<3>(_rooms.at(i)).size(); j++) {
-            if (std::get<3>(_rooms.at(i)).at(j).first == target_endpoint) {
-                if (std::get<3>(_rooms.at(i)).at(j).second == true && std::get<3>(_rooms.at(i)).size() > 1) {
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+            if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint) {
+                if (std::get<4>(_registries.at(i)).at(j).second == true && std::get<4>(_registries.at(i)).size() > 1) {
                     try {
-                        std::get<3>(_rooms.at(i)).at(j+1).second = true;
-                        std::get<4>(_rooms.at(i)) = _players_names.at(std::get<3>(_rooms.at(i)).at(j+1).first);
+                        std::get<4>(_registries.at(i)).at(j+1).second = true;
+                        std::get<5>(_registries.at(i)) = _players_names.at(std::get<4>(_registries.at(i)).at(j+1).first);
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
+                            if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
+                                sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
+                                break;
+                            }
+                        }
                     } catch (const std::out_of_range &e) {
-                        std::get<3>(_rooms.at(i)).at(j-1).second = true;
-                        std::get<4>(_rooms.at(i)) = _players_names.at(std::get<3>(_rooms.at(i)).at(j-1).first);
+                        std::get<4>(_registries.at(i)).at(j-1).second = true;
+                        std::get<5>(_registries.at(i)) = _players_names.at(std::get<4>(_registries.at(i)).at(j-1).first);
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
+                            if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
+                                sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j-1).first);
+                                break;
+                            }
+                        }
                     }
                 }
                 network::Message<network::CustomMessage> message;
                 message.header.id = network::CustomMessage::QuitRoomClient;
-                message << std::get<0>(_rooms.at(i));
-                send(message, std::get<3>(_rooms.at(i)).at(j).first);
+                message << std::get<0>(_registries.at(i));
+                send(message, std::get<4>(_registries.at(i)).at(j).first);
                 std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-                std::get<3>(_rooms.at(i)).erase(std::next(std::get<3>(_rooms.at(i)).begin(), j));
-                std::get<5>(_rooms.at(i)) = false;
+                std::get<4>(_registries.at(i)).erase(std::next(std::get<4>(_registries.at(i)).begin(), j));
+                std::get<6>(_registries.at(i)) = false;
                 _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
-                if (std::get<3>(_rooms.at(i)).size() == 0) {
-                    std::get<1>(_rooms.at(i)) = false;
-                    _registry.setActualScene(std::get<0>(_rooms.at(i)));
-                    for (auto &it : _registry.getEntities())
-                        _registry.killEntity(it);
+                if (std::get<4>(_registries.at(i)).size() == 0) {
+                    std::get<2>(_registries.at(i)) = false;
+                    std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
+                    for (auto &it : std::get<7>(_registries.at(i))->getEntities())
+                        std::get<7>(_registries.at(i))->killEntity(it);
                 }
                 network::Message<network::CustomMessage> message2;
                 for (std::size_t g = 0; g < _clients_endpoint.size(); g++) {
@@ -394,12 +441,12 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
     }
 }
 
-void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Registry &tmp_registry)
+void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry)
 {
     std::vector<std::size_t> tmp_entities;
-    for (auto &it : _registry.getEntities()) {
-        for (std::size_t i = 0; i < _registry.getComponentsFind().size(); i++) {
-            if (_registry.getComponentsFind().at(i)(_registry, _registry.getEntityById(it))
+    for (auto &it : registry.getEntities()) {
+        for (std::size_t i = 0; i < registry.getComponentsFind().size(); i++) {
+            if (registry.getComponentsFind().at(i)(registry, registry.getEntityById(it))
             != tmp_registry.getComponentsFind().at(i)(tmp_registry, tmp_registry.getEntityById(it))) {
                 tmp_entities.push_back(it);
                 break;
@@ -411,16 +458,16 @@ void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Regist
             message << static_cast<std::size_t>(it);
             send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-            sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent, target_endpoint);
+            sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint);
         }
     }
-    for (auto &it : _registry.getEntities()) {
-        for (std::size_t i = 0; i < _registry.getComponentsCompare().size(); i++) {
+    for (auto &it : registry.getEntities()) {
+        for (std::size_t i = 0; i < registry.getComponentsCompare().size(); i++) {
             try {
-                if (_registry.getComponentsCompare().at(i)(tmp_registry, it)
-                != tmp_registry.getComponentsCompare().at(i)(_registry, it)
+                if (registry.getComponentsCompare().at(i)(tmp_registry, it)
+                != tmp_registry.getComponentsCompare().at(i)(registry, it)
                 && std::find(tmp_entities.begin(), tmp_entities.end(), it) == tmp_entities.end())
-                    sendNetworkComponent<network::CustomMessage>(it, network::CustomMessage::SendComponent, target_endpoint, i);
+                    sendNetworkComponent<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint, i);
             } catch (const ecs::ExceptionComponentNull &e) {
                 continue;
             } catch (const ecs::ExceptionIndexComponent &e) {
@@ -431,4 +478,5 @@ void CustomServer::_compareRegistries(udp::endpoint target_endpoint, ecs::Regist
     network::Message<network::CustomMessage> message2;
     message2.header.id = network::CustomMessage::AllComponentSent;
     send(message2, target_endpoint);
+    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
 }

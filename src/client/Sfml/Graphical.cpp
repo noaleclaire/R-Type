@@ -39,7 +39,8 @@ namespace graphics
         try {
             _sprites_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (_tmp_sprites_entities);
+            _sprites_entities.emplace(_actual_scene, std::unordered_map<std::size_t, sf::Sprite>());
+            return (_sprites_entities.at(_actual_scene));
         }
         return (_sprites_entities.at(_actual_scene));
     }
@@ -49,7 +50,8 @@ namespace graphics
         try {
             _rectangleshape_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (_tmp_rectangleshape_entities);
+            _rectangleshape_entities.emplace(_actual_scene, std::unordered_map<std::size_t, sf::RectangleShape>());
+            return (_rectangleshape_entities.at(_actual_scene));
         }
         return (_rectangleshape_entities.at(_actual_scene));
     }
@@ -59,7 +61,8 @@ namespace graphics
         try {
             _text_entities.at(_actual_scene);
         } catch (const std::out_of_range &e) {
-            return (_tmp_text_entities);
+            _text_entities.emplace(_actual_scene, std::unordered_map<std::size_t, sf::Text>());
+            return (_text_entities.at(_actual_scene));
         }
         return (_text_entities.at(_actual_scene));
     }

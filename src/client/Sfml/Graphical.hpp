@@ -217,6 +217,7 @@ namespace graphics
 
         CustomClient *client;
         SpritesManager *sprites_manager;
+        ecs::Scenes _actual_scene;
 
       protected:
       private:
@@ -229,9 +230,5 @@ namespace graphics
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Sprite>> _sprites_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::RectangleShape>> _rectangleshape_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Text>> _text_entities;
-        std::unordered_map<std::size_t, sf::Sprite> _tmp_sprites_entities;
-        std::unordered_map<std::size_t, sf::RectangleShape> _tmp_rectangleshape_entities;
-        std::unordered_map<std::size_t, sf::Text> _tmp_text_entities;
-        ecs::Scenes _actual_scene;
     };
 } // namespace graphics

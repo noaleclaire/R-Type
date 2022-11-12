@@ -66,7 +66,7 @@ ________________________________________________________________________________
         JoinRoomById :  
         This action is used to join a private room
 
-        GetRoomScene :  
+        GetScene :  
         This action is used to set the scene in the client
     
 ###    - 4. Error management

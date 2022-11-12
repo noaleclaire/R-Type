@@ -13,6 +13,7 @@
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
 #include "../Utilities/LevelManager.hpp"
 #include <chrono>
+#include <memory>
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -42,17 +43,18 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      */
     CustomServer &operator=(const CustomServer &other) = delete;
     template <class T>
-    void sendNetworkComponents(std::size_t entity, T id_msg, udp::endpoint client_endpoint, bool all_clients = false, bool except_one = false)
+    void sendNetworkComponents(ecs::Registry &registry, std::size_t entity, T id_msg, udp::endpoint client_endpoint, bool all_clients = false, bool except_one = false)
     {
-        for (std::size_t i = 0; i < _registry.getNetMessageCreate().size(); i++) {
+        for (std::size_t i = 0; i < registry.getNetMessageCreate().size(); i++) {
             try {
-                network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(i)(entity, id_msg, i);
+                network::Message<network::CustomMessage> message = registry.getNetMessageCreate().at(i)(entity, id_msg, i);
                 if (all_clients && !except_one)
                     sendToAllClients(message);
                 else if (all_clients && except_one)
                     sendToAllClientsExceptOne(message, client_endpoint);
-                else if (!all_clients)
+                else if (!all_clients) {
                     send(message, client_endpoint);
+                }
                 std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
             } catch (const ecs::ExceptionComponentNull &e) {
                 continue;
@@ -63,10 +65,10 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     }
 
     template <class T>
-    void sendNetworkComponent(std::size_t entity, T id_msg, udp::endpoint client_endpoint, std::size_t index, bool all_clients = false, bool except_one = false)
+    void sendNetworkComponent(ecs::Registry &registry, std::size_t entity, T id_msg, udp::endpoint client_endpoint, std::size_t index, bool all_clients = false, bool except_one = false)
     {
         try {
-            network::Message<network::CustomMessage> message = _registry.getNetMessageCreate().at(index)(entity, id_msg, index);
+            network::Message<network::CustomMessage> message = registry.getNetMessageCreate().at(index)(entity, id_msg, index);
             if (all_clients && !except_one)
                 sendToAllClients(message);
             else if (all_clients && except_one)
@@ -125,20 +127,21 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void _updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _quitRoom(udp::endpoint target_endpoint);
 
-    void _compareRegistries(udp::endpoint target_endpoint, ecs::Registry &tmp_registry);
-    ecs::Registry _registry;
+    void _compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry);
 
     /**
      * @brief
      * @param ecs::Scenes is the room scene at this range
+     * @param ecs::Scenes is the game scene at this range
      * @param bool this first bool is the indicator for if the room scene is already created or not
      * @param bool this second bool is the indicator for if the room scene is private or not
-     * @param std::vector is a vector of pair which contains every endpoint of the players in this room scene
-     *                    and the bool is the indicator for if the player is the host of this room or not
-     * @param std::string is the name of the host of the room scene
-     * @param bool is the mode of the room scene (coop by default)
+     * @param std::vector is a vector of pair which contains every endpoint of the players in this scene
+     *                    and the bool is the indicator for if the player is the host or not
+     * @param std::string is the name of the host of the scene
+     * @param bool is the mode of the scene (coop by default)
+     * @param ecs::Registry is the Registry of one scene
      */
-    std::vector<std::tuple<ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string, bool>> _rooms;
+    std::vector<std::tuple<ecs::Scenes, ecs::Scenes, bool, bool, std::vector<std::pair<udp::endpoint, bool>>, std::string, bool, std::unique_ptr<ecs::Registry>>> _registries;
     std::unordered_map<udp::endpoint, int> _rooms_filter_mode;
     std::unordered_map<udp::endpoint, std::string> _players_names;
 

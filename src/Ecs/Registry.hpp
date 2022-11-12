@@ -117,12 +117,15 @@ namespace ecs
                     _components_arrays.at(std::type_index(typeid(Component)));
                     std::size_t entity;
                     Component compo;
-                    message >> entity >> compo;
+                    message >> entity;
                     addEntity(entity);
+                    message >> compo;
                     std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))).insert_at(entity, compo);
                 } catch (const std::out_of_range &e) {
                     throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
                         "_net_component_create -> [&](network::Message<network::CustomMessage> message)");
+                } catch (const std::length_error &e) {
+                    return;
                 }
             });
             return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));
