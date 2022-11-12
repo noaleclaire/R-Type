@@ -107,14 +107,14 @@ class Game : public ScenesInitializer {
             registry.setActualScene(scene);
 
             while (1) {
+                t = std::chrono::system_clock::now();
                 try {
                     for (auto &it : registry.getEntities()) {
                         try {
                             registry.getComponents<ecs::CompoServer>().at(it);
-                            // std::cout << "entity::: " << it << std::endl;
-                            if ((registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() < (std::chrono::time_point_cast<std::chrono::milliseconds>(server->getLastTime(scene)).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::milliseconds>(server->getStartTime(scene)).time_since_epoch().count()) &&
-                                registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() >= (std::chrono::time_point_cast<std::chrono::milliseconds>(t).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::milliseconds>(server->getStartTime(scene)).time_since_epoch().count())) ||
-                                (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && (std::chrono::time_point_cast<std::chrono::milliseconds>(server->getLastTime(scene)).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::milliseconds>(server->getStartTime(scene)).time_since_epoch().count()) == 0)) {
+                            if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
+                                std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
+                                (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
                                 std::cout << "timepoint" << std::endl;
                                 for (auto &client_endpoint : clients_endpoint)
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
