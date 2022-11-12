@@ -112,7 +112,7 @@ namespace ecs
          * @param graphical
          * @param client
          */
-        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client);
+        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client);
         /**
          * @brief
          *

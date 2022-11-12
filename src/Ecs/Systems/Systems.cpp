@@ -270,7 +270,7 @@ namespace ecs
             }
         }
     }
-    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client)
+    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client)
     {
         for (auto &it : registry.getEntities()) {
             try {
@@ -296,7 +296,6 @@ namespace ecs
 
     void Systems::_createShot(Registry &registry, std::size_t entity, CustomClient *client)
     {
-        std::size_t shot;
         ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(entity).value().getAmmoType();
 
         if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
