@@ -91,6 +91,7 @@ class Game : public ScenesInitializer {
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::cout << std::endl;
         }
         /**
          * @brief Update the scene with the clock

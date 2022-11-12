@@ -81,43 +81,12 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::SwitchToGame: {
             ecs::Scenes client_scene;
             msg >> client_scene;
-            network::Message<network::CustomMessage> message;
-            message.header.id = network::CustomMessage::GetScene;
-            for (std::size_t i = 0; i < _registries.size(); i++) {
-                if (std::get<0>(_registries.at(i)) == client_scene) {
-                    for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
-                        if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second != true)
-                            return;
-                    }
-                    // if (std::get<4>(_registries.at(i)).size() < 2) {
-                    //     network::Message<network::CustomMessage> message2;
-                    //     message2.header.id = network::CustomMessage::NotEnoughPlayer;
-                    //     send(message2, target_endpoint);
-                    //     return;
-                    // }
-                    Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(0));
-                    message << std::get<1>(_registries.at(i));
-                    for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
-                        send(message, client_endpoint.first);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-                    }
-                    return;
-                }
-            }
+            _createGame(client_scene, target_endpoint);
         } break;
         case network::CustomMessage::InitGame: {
             ecs::Scenes game_scene;
             msg >> game_scene;
-            for (std::size_t i = 0; i < _registries.size(); i++) {
-                if (std::get<1>(_registries.at(i)) == game_scene) {
-                    Game::getScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), target_endpoint);
-                    for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
-                        if (client_endpoint.first == target_endpoint && client_endpoint.second == true)
-                            Game::updateScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
-                    }
-                    return;
-                }
-            }
+            _getGame(game_scene, target_endpoint);
         } break;
         case network::CustomMessage::CreatePublicRoom: {
             _createRoom(msg, target_endpoint);
@@ -129,6 +98,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             _createRoom(msg, target_endpoint, true);
         } break;
         case network::CustomMessage::InitListRoom: {
+            std::scoped_lock guard(_mtx);
             int room_filter_mode;
             msg >> room_filter_mode;
             _rooms_filter_mode.insert_or_assign(target_endpoint, room_filter_mode);
@@ -165,6 +135,52 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
     }
 }
 
+void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint)
+{
+    std::scoped_lock guard(_mtx);
+    network::Message<network::CustomMessage> message;
+    message.header.id = network::CustomMessage::GetScene;
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<0>(_registries.at(i)) == room_scene) {
+            for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+                if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second != true)
+                    return;
+            }
+            // if (std::get<4>(_registries.at(i)).size() < 2) {
+            //     network::Message<network::CustomMessage> message2;
+            //     message2.header.id = network::CustomMessage::NotEnoughPlayer;
+            //     send(message2, target_endpoint);
+            //     return;
+            // }
+            Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(0));
+            message << std::get<1>(_registries.at(i));
+            for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                send(message, client_endpoint.first);
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            }
+            return;
+        }
+    }
+}
+
+void CustomServer::_getGame(ecs::Scenes game_scene, udp::endpoint target_endpoint)
+{
+    _mtx.lock();
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<1>(_registries.at(i)) == game_scene) {
+            Game::getScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), target_endpoint);
+            _mtx.unlock();
+            for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                if (client_endpoint.first == target_endpoint && client_endpoint.second == true) {
+                    Game::updateScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
+                    break;
+                }
+            }
+            return;
+        }
+    }
+}
+
 void CustomServer::_createShot(ecs::Registry &registry, network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint)
 {
     std::size_t entity;
@@ -195,6 +211,7 @@ void CustomServer::_createShot(ecs::Registry &registry, network::Message<network
 
 void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room)
 {
+    std::scoped_lock guard(_mtx);
     ecs::Text player_name_class;
     std::string player_name;
     msg >> player_name_class;
@@ -255,6 +272,7 @@ void CustomServer::_getInfoForListRoomScene(udp::endpoint target_endpoint, netwo
 
 void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     ecs::Scenes room_scene;
     ecs::Text player_name_class;
     std::string player_name;
@@ -304,6 +322,7 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
 
 void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     int id_room = 0;
     ecs::Text player_name_class;
     std::string player_name;
@@ -370,6 +389,7 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
 
 void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     for (std::size_t i = 0; i < _registries.size(); i++) {
         for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
             if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second == true) {
@@ -422,6 +442,7 @@ void CustomServer::_updateRoom(udp::endpoint target_endpoint, network::Message<n
 
 void CustomServer::_quitRoom(udp::endpoint target_endpoint)
 {
+    std::scoped_lock guard(_mtx);
     for (std::size_t i = 0; i < _registries.size(); i++) {
         for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
             if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint) {

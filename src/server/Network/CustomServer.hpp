@@ -14,6 +14,7 @@
 #include "../Utilities/LevelManager.hpp"
 #include <chrono>
 #include <memory>
+#include <mutex>
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -120,6 +121,8 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
+    void _createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint);
+    void _getGame(ecs::Scenes game_scene, udp::endpoint target_endpoint);
     void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
     void _createShot(ecs::Registry &registry, network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint);
     void _getInfoForListRoomScene(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
@@ -149,4 +152,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     std::vector<LevelManager> _levels;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _start_times;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _last_times;
+
+    std::mutex _mtx;
 };
