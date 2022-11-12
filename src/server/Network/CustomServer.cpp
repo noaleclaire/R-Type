@@ -95,8 +95,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                     //     send(message2, target_endpoint);
                     //     return;
                     // }
-                    Game::initScene(*std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
-                    std::cout << std::get<4>(_registries.at(i)).at(0).first << std::endl;
+                    Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(0));
                     message << std::get<1>(_registries.at(i));
                     for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
                         send(message, client_endpoint.first);
@@ -111,7 +110,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             msg >> game_scene;
             for (std::size_t i = 0; i < _registries.size(); i++) {
                 if (std::get<1>(_registries.at(i)) == game_scene) {
-                    Game::getScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), target_endpoint, _levels.at(0));
+                    Game::getScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), target_endpoint);
                     for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
                         if (client_endpoint.first == target_endpoint && client_endpoint.second == true)
                             Game::updateScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)));
@@ -166,23 +165,23 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
     }
 }
 
-void CustomServer::_createShot(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint)
+void CustomServer::_createShot(ecs::Registry &registry, network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint)
 {
     std::size_t entity;
     std::size_t linked_entity;
     ecs::Scenes scene;
-    ecs::Scenes kept_scene = _registry.getActualScene();
+    ecs::Scenes kept_scene = registry.getActualScene();
     msg >> scene >> linked_entity;
 
-    _registry.setActualScene(scene);
+    registry.setActualScene(scene);
     try {
-        ecs::Ammo::AmmoType ammoType = _registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
-        float posX = _registry.getComponents<ecs::Position>().at(linked_entity).value().getXPosition() + _registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle()/2;
-        float posY = _registry.getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + _registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
-        int layer = _registry.getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
-        entity = ecs::Factory::createEntity(_registry, ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
-        _registry.addComponent<ecs::CompoServer>(_registry.getEntityById(entity), ecs::CompoServer());
-        this->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, target_endpoint);
+        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
+        float posX = registry.getComponents<ecs::Position>().at(linked_entity).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle()/2;
+        float posY = registry.getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + registry.getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
+        int layer = registry.getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
+        entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
+        registry.addComponent<ecs::CompoServer>(registry.getEntityById(entity), ecs::CompoServer());
+        this->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, target_endpoint);
     } catch (ecs::ExceptionComponentNull &e) {
         return;
     } catch (ecs::ExceptionIndexComponent &e) {
@@ -191,7 +190,7 @@ void CustomServer::_createShot(network::Message<network::CustomMessage> &msg, ud
     network::Message<network::CustomMessage> message;
     message.header.id = network::CustomMessage::AllComponentSent;
     send(message, target_endpoint);
-    _registry.setActualScene(kept_scene);
+    registry.setActualScene(kept_scene);
 }
 
 void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room)
