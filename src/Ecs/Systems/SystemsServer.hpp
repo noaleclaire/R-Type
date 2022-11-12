@@ -14,7 +14,7 @@ namespace ecs
     class SystemsServer {
         public:
         /**
-         * @brief 
+         * @brief
          *
          * @param registry
          * @param position
@@ -28,6 +28,6 @@ namespace ecs
          * @param server
          * @param clients_endpoint
          */
-        static void Shot(Registry &registry, CustomServer *server, std::vector<std::pair<udp::endpoint, bool>> clients_endpoint);
+        static void Shot(ecs::Registry &registry, CustomServer *server, std::vector<std::pair<udp::endpoint, bool>> clients_endpoint);
     };
 }

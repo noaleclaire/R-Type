@@ -110,6 +110,13 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param scene
      */
     void startTimes(ecs::Scenes scene);
+    /**
+     * @brief Compare two registries (one new and one old) and send only modified entities/components of the new registry
+     *
+     * @param target_endpoint
+     * @param registry new registry
+     * @param tmp_registry old registry
+     */
     void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry);
 
   protected:
@@ -133,7 +140,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void _quitRoom(udp::endpoint target_endpoint);
     ecs::Registry &_getGameRegistry(ecs::Scenes scene);
     std::vector<std::pair<udp::endpoint, bool>> &_getClientsEndpoint(ecs::Scenes scene);
-
 
     /**
      * @brief

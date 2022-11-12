@@ -12,7 +12,7 @@
 #include "../Exceptions/ExceptionIndexComponent.hpp"
 #include <cmath>
 
-// #include "../Factory.hpp"
+#include "../Factory.hpp"
 
 namespace ecs
 {
