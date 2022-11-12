@@ -12,7 +12,7 @@
 #include "../Exceptions/ExceptionIndexComponent.hpp"
 #include <cmath>
 
-#include "../Factory.hpp"
+// #include "../Factory.hpp"
 
 namespace ecs
 {
@@ -193,34 +193,38 @@ namespace ecs
     {
         for (auto &it : registry.getEntities()) {
             try {
-                float posX = position.at(it).value().getXPosition();
-                float posY = position.at(it).value().getYPosition();
-                float veloX = position.at(it).value().getXVelocity();
-                float veloY = position.at(it).value().getYVelocity();
                 try {
-                    registry.getComponents<ecs::Controllable>().at(it);
-                    veloX = 0;
-                    veloY = 0;
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
-                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
-                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
-                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
-                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                } catch (const ExceptionComponentNull &e) {}
-                catch (const ExceptionIndexComponent &e) {}
-                posX += veloX * graphics::Graphical::world_current_time;
-                posY += veloY * graphics::Graphical::world_current_time;
-                registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
-                registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
-                try {
-                    graphical.setSpritePosition(it, posX, posY);
-                } catch (const std::out_of_range &e) {}
-                try {
-                    graphical.setRectangleShapePosition(it, posX, posY);
-                } catch (const std::out_of_range &e) {}
+                    registry.getComponents<ecs::CompoServer>().at(it);
+                } catch (ecs::Exception &e) {
+                    float posX = position.at(it).value().getXPosition();
+                    float posY = position.at(it).value().getYPosition();
+                    float veloX = position.at(it).value().getXVelocity();
+                    float veloY = position.at(it).value().getYVelocity();
+                    try {
+                        registry.getComponents<ecs::Controllable>().at(it);
+                        veloX = 0;
+                        veloY = 0;
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                            veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                            veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    } catch (const ExceptionComponentNull &e) {}
+                    catch (const ExceptionIndexComponent &e) {}
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
+                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+                    try {
+                        graphical.setSpritePosition(it, posX, posY);
+                    } catch (const std::out_of_range &e) {}
+                    try {
+                        graphical.setRectangleShapePosition(it, posX, posY);
+                    } catch (const std::out_of_range &e) {}
+                }
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -271,7 +275,7 @@ namespace ecs
         for (auto &it : registry.getEntities()) {
             try {
                 if (controllable.at(it).value().getKey("space") == true)
-                    _createShot(registry, it, graphical, client);//degager graphical
+                    _createShot(registry, it, client);
                 if (controllable.at(it).value().getKey("shift") == true) {
                     controllable.at(it).value().setKey("shift", false);
                     if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
@@ -289,44 +293,15 @@ namespace ecs
             }
         }
     }
-    void Systems::Shot(Registry &registry, CustomServer *server)
-    {
-        for (auto &it : registry.getEntities()) {
-            try {
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT) {
-                    if (registry.getComponents<ecs::Ammo>().at(it).value().isDead(registry.getComponents<ecs::Position>().at(it).value().getXPosition(), registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) == true ||
-                        registry.getComponents<ecs::Ammo>().at(it).value().isDead() == true) {
-                        registry.killEntity(registry.getEntityById(it));
-                        network::Message<network::CustomMessage> message;
-                        message.header.id = network::CustomMessage::KillAnEntity;
-                        message << it;
-                        server->send(message);
-                        continue;
-                    }
-                }
-            } catch (const ExceptionComponentNull &e) {
-                continue;
-            } catch (const ExceptionIndexComponent &e) {
-                continue;
-            }
-        }
-    }
 
-    void Systems::_createShot(Registry &registry, std::size_t entity, graphics::Graphical *graphical, CustomClient *client)
+    void Systems::_createShot(Registry &registry, std::size_t entity, CustomClient *client)
     {
         std::size_t shot;
         ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(entity).value().getAmmoType();
 
         if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
-            // client->createShot(entity, registry.getActualScene());
-
             registry.getComponents<ecs::Shooter>().at(entity).value().setLastShot();
-            auto rect = graphical->sprites_manager->get_Animations_rect(ecs::EntityTypes::SHOT, ammoType, 0);
-            float posX = registry.getComponents<ecs::Position>().at(entity).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle()/2;
-            float posY = registry.getComponents<ecs::Position>().at(entity).value().getYPosition() + registry.getComponents<ecs::Rectangle>().at(entity).value().getHeightRectangle()/2 - rect.at(3)/2;
-            int layer = registry.getComponents<ecs::Layer>().at(entity).value().getLayer() - 1;
-            shot = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, entity, posX, posY, rect.at(0), rect.at(1), rect.at(2), rect.at(3), layer, static_cast<int>(ammoType));
-            graphical->addSprite(shot, graphical->sprites_manager->get_Spritesheet(ecs::EntityTypes::SHOT, ammoType), rect);
+            client->createShot(entity, registry.getActualScene());
         }
     }
 

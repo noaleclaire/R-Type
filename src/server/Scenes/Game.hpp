@@ -14,6 +14,7 @@
 #include "../../Utilities/LevelManager.hpp"
 #include "../../Ecs/Exceptions/ExceptionComponentNull.hpp"
 #include "../../Ecs/Exceptions/ExceptionIndexComponent.hpp"
+#include "../../Ecs/Systems/SystemsServer.hpp"
 
 class CustomServer;
 class Game : public ScenesInitializer {
@@ -91,6 +92,7 @@ class Game : public ScenesInitializer {
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::cout << std::endl;
         }
         /**
          * @brief Update the scene with the clock
@@ -116,8 +118,22 @@ class Game : public ScenesInitializer {
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
                                 (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
                                 std::cout << "timepoint" << std::endl;
-                                for (auto &client_endpoint : clients_endpoint)
+                                for (auto &client_endpoint : clients_endpoint) {
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
+                                    network::Message<network::CustomMessage> message;
+                                    message.header.id = network::CustomMessage::AllComponentSent;
+                                    server->send(message, client_endpoint.first);
+                                    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                                }
+                            }
+                            if (std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) < t - server->getStartTime(scene)) {
+                                ecs::Registry tmp_registry = registry;
+
+                                ecs::SystemsServer::Position(registry, registry.getComponents<ecs::Position>(), server->getLastTime(scene));
+                                ecs::SystemsServer::Shot(registry, server, clients_endpoint);
+                                for (auto &client_endpoint : clients_endpoint) {
+                                    server->compareRegistries(client_endpoint.first, registry, tmp_registry);
+                                }
                             }
                         } catch (const ecs::ExceptionComponentNull &e) {
                             continue;

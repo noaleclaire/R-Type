@@ -89,12 +89,5 @@ class Menu : public ScenesInitializer {
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::EXIT);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 2), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
-
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::SPACESHIP, 0, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120, 6, 0);
-            registry.addComponent<ecs::Controllable>(registry.getEntityById(entity), ecs::Controllable());
-            registry.getComponents<ecs::Rectangle>().at(entity).value().setWidthRectangle(137);
-            registry.getComponents<ecs::Rectangle>().at(entity).value().setHeightRectangle(97);
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::SPACESHIP, 0), rect);
         };
 };

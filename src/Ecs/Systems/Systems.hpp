@@ -10,7 +10,6 @@
 #include "../Component/SparseArray.hpp"
 #include "../Registry.hpp"
 #include "../../client/Network/CustomClient.hpp"
-#include "../../server/Network/CustomServer.hpp"
 
 namespace ecs
 {
@@ -115,13 +114,6 @@ namespace ecs
          */
         static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical, CustomClient *client);
         /**
-         * @brief System handling shots in server side
-         *
-         * @param registry
-         * @param server
-         */
-        static void Shot(Registry &registry, CustomServer *server);
-        /**
          * @brief
          *
          * @param registry
@@ -136,9 +128,9 @@ namespace ecs
          *
          * @param registry
          * @param entity
-         * @param graphical
+         * @param client
          */
-        static void _createShot(Registry &registry, std::size_t entity, graphics::Graphical *graphical, CustomClient *client);
+        static void _createShot(Registry &registry, std::size_t entity, CustomClient *client);
         /**
          * @brief Calcul and return the volume based on two shapes
          *

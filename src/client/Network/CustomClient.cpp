@@ -130,6 +130,7 @@ void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreateShot;
     msg << linked_entity << scene;
+    std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
     send(msg);
 }
 

@@ -8,7 +8,7 @@
 #   layer: 0
 
 monster: 0
- time: 1000
+ time: 5000
  position_x: 800
  position_y: 500
  velocity_x: -80

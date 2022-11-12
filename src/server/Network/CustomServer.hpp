@@ -14,6 +14,7 @@
 #include "../Utilities/LevelManager.hpp"
 #include <chrono>
 #include <memory>
+#include <mutex>
 
 class CustomServer : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -109,6 +110,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param scene
      */
     void startTimes(ecs::Scenes scene);
+    void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry);
 
   protected:
     /**
@@ -120,15 +122,18 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
+    void _createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint);
+    void _getGame(ecs::Scenes game_scene, udp::endpoint target_endpoint);
     void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
-    void _createShot(ecs::Registry &registry, network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint);
+    void _createShot(network::Message<network::CustomMessage> &msg);
     void _getInfoForListRoomScene(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _joinRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _quitRoom(udp::endpoint target_endpoint);
+    ecs::Registry &_getGameRegistry(ecs::Scenes scene);
+    std::vector<std::pair<udp::endpoint, bool>> &_getClientsEndpoint(ecs::Scenes scene);
 
-    void _compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry);
 
     /**
      * @brief
@@ -149,4 +154,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     std::vector<LevelManager> _levels;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _start_times;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _last_times;
+
+    std::mutex _mtx;
 };
