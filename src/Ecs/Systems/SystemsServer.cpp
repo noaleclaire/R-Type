@@ -6,6 +6,8 @@
 */
 
 #include "SystemsServer.hpp"
+#include "../Factory.hpp"
+#include <iomanip>
 
 namespace ecs
 {
@@ -18,6 +20,7 @@ namespace ecs
                 float posY = position.at(it).value().getYPosition();
                 float veloX = position.at(it).value().getXVelocity();
                 float veloY = position.at(it).value().getYVelocity();
+
                 posX += veloX * (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000000;
                 posY += veloY * (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000000;
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);

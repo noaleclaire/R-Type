@@ -195,7 +195,7 @@ namespace ecs
             try {
                 try {
                     registry.getComponents<ecs::CompoServer>().at(it);
-                } catch (ecs::Exception &e) {
+                } catch (ecs::Exception &err) {
                     float posX = position.at(it).value().getXPosition();
                     float posY = position.at(it).value().getYPosition();
                     float veloX = position.at(it).value().getXVelocity();
