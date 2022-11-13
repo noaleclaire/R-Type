@@ -31,8 +31,8 @@ namespace ecs
          */
         static Entity createEntity(Registry &registry, EntityTypes entityType, Params &&...args)
         {
-            MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster}, 
-                {EntityTypes::SHOT, &createShot}, {EntityTypes::BUTTON, &createButton}, {EntityTypes::ROOM, &createRoom}, {EntityTypes::WALL, &createWall},
+            MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster}, {EntityTypes::SHOT, &createShot},
+                {EntityTypes::BUTTON, &createButton}, {EntityTypes::ROOM, &createRoom}, {EntityTypes::WALL, &createWall},
                 {EntityTypes::BACKGROUND, &createBackground}};
             MapCall::const_iterator call;
 
@@ -113,8 +113,6 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
-
             registry.addComponent<ecs::Killable>(entity, ecs::Killable());
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(linked_entity));
             registry.addComponent<ecs::Ammo>(registry.getEntityById(entity), ecs::Ammo(registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType()));
@@ -125,6 +123,7 @@ namespace ecs
                 ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)),
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
             return (entity);
         }
