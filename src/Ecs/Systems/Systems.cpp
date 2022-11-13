@@ -453,28 +453,4 @@ namespace ecs
             }
         }
     }
-    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical *graphical)
-    {
-        for (auto &it : registry.getEntities()) {
-            try {
-                collider.at(it);
-                for (auto &it_in : registry.getEntities()) {
-                    try {
-                        collider.at(it_in);
-                        if (graphical->getAllSprites().at(it).getGlobalBounds().intersects(graphical->getAllSprites().at(it_in).getGlobalBounds())) {
-                            std::cout << "collision" << std::endl;
-                        }
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
-                    }
-                }
-            } catch (const ExceptionComponentNull &e) {
-                continue;
-            } catch (const ExceptionIndexComponent &e) {
-                continue;
-            }
-        }
-    }
 } // namespace ecs

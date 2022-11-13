@@ -12,7 +12,7 @@
 namespace ecs
 {
     class SystemsServer {
-        public:
+      public:
         /**
          * @brief
          *
@@ -29,5 +29,22 @@ namespace ecs
          * @param clients_endpoint
          */
         static void Shot(ecs::Registry &registry, CustomServer *server, std::vector<std::pair<udp::endpoint, bool>> clients_endpoint);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param collider
+         * @param graphical
+         */
+        static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider);
+      private:
+        /**
+         * @brief 
+         *
+         * @param registry
+         * @param entity
+         * @param entity_in
+         */
+        static bool _checkCollisionByPosAndRect(Registry &registry, std::size_t entity, std::size_t entity_in);
     };
 }
