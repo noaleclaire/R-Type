@@ -44,29 +44,22 @@ class Game : public ScenesInitializer {
 
             registry.setActualScene(scene);
 
-            std::cout << "a" << std::endl;
             for (std::size_t client_id = 0; client_id < clients_endpoint.size(); client_id++) {
                 ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * (client_id + 1), 1, client_id);
             }
             for (auto &it : level.getEntitiesDatas()) {
-                std::cout << 1 << std::endl;
                 entity = ecs::Factory::createEntity(registry, it._entity_type_and_id.first, it._attributes.at(EntityAttributes::position_x).value(), it._attributes.at(EntityAttributes::position_y).value(),
                     it._attributes.at(EntityAttributes::velocity_x).value(), it._attributes.at(EntityAttributes::velocity_y).value(), 0, 0, 0, 0, it._attributes.at(EntityAttributes::layer).value(), it._entity_type_and_id.second);
-                std::cout << 2 << std::endl;
                 if (it._attributes.at(EntityAttributes::shooter).value() == true)
                     registry.addComponent<ecs::Shooter>(registry.getEntityById(entity), ecs::Shooter());
-                std::cout << 3 << std::endl;
                 registry.addComponent<ecs::CompoServer>(registry.getEntityById(entity), ecs::CompoServer(it._attributes.at(EntityAttributes::spawn_time).value()));
-                std::cout << 4 << std::endl;
             }
-            std::cout << "b" << std::endl;
             server->startTimes(scene);
         }
         static void getScene(CustomServer *server, ecs::Registry &registry, ecs::Scenes scene, std::vector<std::pair<udp::endpoint, bool>> &clients_endpoint, udp::endpoint target_endpoint)
         {
             registry.setActualScene(scene);
 
-            std::cout << "c" << std::endl;
             for (auto &it : registry.getEntities()) {
                 try {
                     registry.getComponents<ecs::CompoServer>().at(it);
@@ -95,7 +88,6 @@ class Game : public ScenesInitializer {
                     }
                 }
             }
-            std::cout << "d" << std::endl;
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
@@ -115,7 +107,6 @@ class Game : public ScenesInitializer {
 
             registry.setActualScene(scene);
 
-            std::cout << "e" << std::endl;
             while (1) {
                 t = std::chrono::system_clock::now();
                 try {
@@ -125,7 +116,6 @@ class Game : public ScenesInitializer {
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
                                 (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
-                                std::cout << "timepoint" << std::endl;
                                 for (auto &client_endpoint : clients_endpoint) {
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
                                     network::Message<network::CustomMessage> message;
@@ -152,6 +142,5 @@ class Game : public ScenesInitializer {
                 }
                 server->setLastTime(scene, t);
             }
-            std::cout << "f" << std::endl;
         }
 };

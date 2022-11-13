@@ -194,44 +194,40 @@ namespace ecs
         update_time_position += graphics::Graphical::world_current_time;
         for (auto &it : registry.getEntities()) {
             try {
+                float posX = position.at(it).value().getXPosition();
+                float posY = position.at(it).value().getYPosition();
+                float veloX = position.at(it).value().getXVelocity();
+                float veloY = position.at(it).value().getYVelocity();
                 try {
-                    registry.getComponents<ecs::CompoServer>().at(it);
-                } catch (ecs::Exception &err) {
-                    float posX = position.at(it).value().getXPosition();
-                    float posY = position.at(it).value().getYPosition();
-                    float veloX = position.at(it).value().getXVelocity();
-                    float veloY = position.at(it).value().getYVelocity();
-                    try {
-                        registry.getComponents<ecs::Controllable>().at(it);
-                        veloX = 0;
-                        veloY = 0;
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
-                            veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
-                            veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        }
-                    } catch (const ExceptionComponentNull &e) {}
-                    catch (const ExceptionIndexComponent &e) {}
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
-                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
-                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
-                    if (update_time_position >= 10 && graphical.client->is_host == true)
-                        graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
-                    try {
-                        graphical.setSpritePosition(it, posX, posY);
-                    } catch (const std::out_of_range &e) {}
-                    try {
-                        graphical.setRectangleShapePosition(it, posX, posY);
-                    } catch (const std::out_of_range &e) {}
-                }
+                    registry.getComponents<ecs::Controllable>().at(it);
+                    veloX = 0;
+                    veloY = 0;
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
+                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
+                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
+                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
+                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    }
+                } catch (const ExceptionComponentNull &e) {}
+                catch (const ExceptionIndexComponent &e) {}
+                posX += veloX * graphics::Graphical::world_current_time;
+                posY += veloY * graphics::Graphical::world_current_time;
+                registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
+                registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+                if (update_time_position >= 10 && graphical.client->is_host == true)
+                    graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                try {
+                    graphical.setSpritePosition(it, posX, posY);
+                } catch (const std::out_of_range &e) {}
+                try {
+                    graphical.setRectangleShapePosition(it, posX, posY);
+                } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
