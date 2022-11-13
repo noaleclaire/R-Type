@@ -189,7 +189,7 @@ namespace ecs
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
-        for (std::size_t i = 0; i <= registry.getEntities().size(); i++) {
+        for (std::size_t i = 0; i <= 15; i++) {
             for (auto &it : registry.getEntities()) {
                 try {
                     drawable.at(it);
