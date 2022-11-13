@@ -22,7 +22,7 @@ cmake .. -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Release
 # Build the executable and libraries
 cmake --build .
 
-#Build the package
+# Build the package
 cpack
 ```
 
@@ -45,8 +45,46 @@ cmake . -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=Release -A x64
 # Build the executable and libraries
 cmake --build . --config Release
 
-#Build the package
+# Build the package
 cpack -C ZIP --release
 ```
 
 You can find packge with .sh, .tar.Z, .tar.gz, .tar.zip
+
+## Run 
+
+- Step 1: Open  
+    if you use  .tar.Z, .tar.gz, .tar.zip open it  
+    if you use .sh:   
+    ```sh
+    #Run the script on linux
+    ./[name_of_package].sh
+    
+    #Run the script on windows
+    .\[name_of_package].sh
+    ```
+    
+    
+- Step 2 : Install libraries
+    ```sh
+    #install all librarie needed on linux
+    chmod +x setup.conan.sh
+    ./setup_conan.sh
+    #install all librarie needed on windows
+    chmod +x setup.conan.sh
+    .\setup_conan.sh
+    ```
+    
+- Step 3 : 
+    on linux :
+    ```sh
+    #run server and client
+    cd bin
+    ./r_type_client
+    ./r_type_server
+    ```
+    on windows :
+    click on the .exe
+    
+    
+
