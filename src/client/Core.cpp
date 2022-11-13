@@ -158,6 +158,7 @@ void Core::_switchScenes()
     }
     if (_last_scene != ecs::Scenes::QUITROOM && Core::actual_scene == ecs::Scenes::QUITROOM) {
         _client.quitRoom();
+        std::cout << "ere" << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         Core::actual_scene = ecs::Scenes::LISTROOM;
         _setActualRegistry();
@@ -190,6 +191,27 @@ void Core::_switchScenes()
         _client.initGame();
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         _client.game_scene = ecs::Scenes::GAME;
+    }
+    if (_client.game_scene == ecs::Scenes::RETURNTOGAME) {
+        std::cout << "tes" << _actual_registry->getActualScene() << std::endl;
+        try {
+            for (auto &it : _actual_registry->getEntities())
+                _actual_registry->killEntity(it);
+            _graphical.getAllSprites().clear();
+            _graphical.getAllRectangleShapes().clear();
+            _graphical.getAllTexts().clear();
+            Core::actual_scene = _client.tmp_scene;
+            _setActualRegistry();
+            _actual_registry->setActualScene(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
+            _client.game_scene = ecs::Scenes::GAME;
+        } catch (const ecs::Exception &e) {
+            Core::actual_scene = ecs::Scenes::MENU;
+            _setActualRegistry();
+            _actual_registry->setActualScene(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
+            _client.game_scene = ecs::Scenes::GAME;
+        }
     }
 
     _last_scene = Core::actual_scene;

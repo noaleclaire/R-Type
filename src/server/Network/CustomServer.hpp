@@ -118,6 +118,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param tmp_registry old registry
      */
     void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry, network::CustomMessage id_msg = network::CustomMessage::SendComponent, bool update_all = true);
+    void quitGame(ecs::Scenes scene_game);
 
     std::mutex _mtx;
 
@@ -141,7 +142,6 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void _joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _quitRoom(udp::endpoint target_endpoint);
-    void _verifiedPosition();
     ecs::Registry &_getGameRegistry(ecs::Scenes scene);
     ecs::Registry _getCopyGameRegistry(ecs::Scenes scene);
     std::vector<std::pair<udp::endpoint, bool>> &_getClientsEndpoint(ecs::Scenes scene);

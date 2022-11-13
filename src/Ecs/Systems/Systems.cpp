@@ -189,7 +189,7 @@ namespace ecs
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
-        for (std::size_t i = 0; i <= registry.getEntities().size(); i++) {
+        for (std::size_t i = 0; i <= 15; i++) {
             for (auto &it : registry.getEntities()) {
                 try {
                     drawable.at(it);
@@ -516,8 +516,8 @@ namespace ecs
                             continue;
                         if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
-                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP ||
-                                    registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
+                                if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
+                                    (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
