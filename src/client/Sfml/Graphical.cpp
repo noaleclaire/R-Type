@@ -232,13 +232,12 @@ namespace graphics
         _sprites_entities.at(_actual_scene).at(entity).setTextureRect(sf::IntRect(rect.width * 2, rect.top, rect.width, rect.height));
     }
 
-    void Graphical::setActualMusic(ecs::Music music, bool stop_prev)
+    void Graphical::setActualMusic(ecs::Music music)
     {
         try
         {
-            if (stop_prev)
-                _music_entities.at(prev_music).stop();
             if (music != prev_music) {
+                _music_entities.at(prev_music).stop();
                 _music_entities.at(music).setLoop(true);
                 _music_entities.at(music).play();
                 prev_music = music;

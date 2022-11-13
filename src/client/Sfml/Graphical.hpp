@@ -161,7 +161,7 @@ namespace graphics
          * @param music 
          * @param stop_prev 
          */
-        void setActualMusic(ecs::Music music, bool stop_prev = true);
+        void setActualMusic(ecs::Music music);
         /**
          * @brief Get the Actual Music
          *

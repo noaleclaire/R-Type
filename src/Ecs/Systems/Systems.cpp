@@ -466,35 +466,42 @@ namespace ecs
                 entity_type = registry.getComponents<ecs::Type>().at(it).value().getEntityType();
                 entity_id = registry.getComponents<ecs::Type>().at(it).value().getEntityID();
 
-                sprites_manager.setAnimationCurrentFrame(entity_type, entity_id,
-                    sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) +
-                    graphics::Graphical::world_current_time *
-                    sprites_manager.getSpeedAnimation(entity_type, entity_id,
-                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))
-                );
+                if (registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() != 0 && registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle() != 0) {
+                    sprites_manager.setAnimationCurrentFrame(entity_type, entity_id,
+                        sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) +
+                        graphics::Graphical::world_current_time *
+                        sprites_manager.getSpeedAnimation(entity_type, entity_id,
+                            sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))
+                    );
 
-                registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(
-                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
-                    static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
-                );
-                if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
-                sprites_manager.getNbAnimation(entity_type, entity_id,
-                sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
-                    if (sprites_manager.getNextAnimation(entity_type, entity_id,
-                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1) {
-                        sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
-                        sprites_manager.getNextAnimation(entity_type, entity_id,
-                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
-                        rect = sprites_manager.get_Animations_rect(entity_type, entity_id, sprites_manager.getIndexCurrentAnimation(entity_type, entity_id));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(rect_x));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(rect_y));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(rect_width));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(rect_height));
+                    if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
+                    sprites_manager.getNbAnimation(entity_type, entity_id,
+                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
+                        if (sprites_manager.getNextAnimation(entity_type, entity_id,
+                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1) {
+                            sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
+                            sprites_manager.getNextAnimation(entity_type, entity_id,
+                            sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
+                            rect = sprites_manager.get_Animations_rect(entity_type, entity_id, sprites_manager.getIndexCurrentAnimation(entity_type, entity_id));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(rect_x));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(rect_y));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(rect_width));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(rect_height));
+                            sprites_manager.setDoNextAnimation(entity_type, entity_id, false);
+                        }
+                        sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
+                        sprites_manager.setLastCurrentFrame(entity_type, entity_id, -1);
                     }
-                    sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
+                    if (std::floor(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id)) != sprites_manager.getLastCurrentFrame(entity_type, entity_id)) {
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(
+                                registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
+                                static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
+                            );
+                            graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
+                                registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle());
+                            sprites_manager.setLastCurrentFrame(entity_type, entity_id, sprites_manager.getLastCurrentFrame(entity_type, entity_id) + 1);
+                    }
                 }
-                graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
-                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle());
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {

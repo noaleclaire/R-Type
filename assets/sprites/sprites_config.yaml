@@ -201,6 +201,7 @@ spritesheet: planets/sun.png
    rect_width: 244
    rect_height: 244
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: backgrounds/locked_achievement.png
  background: 19
@@ -367,6 +368,7 @@ spritesheet: planets/black_hole.png
    rect_width: 218
    rect_height: 86
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/rock_planet.png
  button: 17
@@ -376,6 +378,7 @@ spritesheet: planets/rock_planet.png
    rect_width: 218
    rect_height: 146
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/fire_planet.png
  button: 18
@@ -385,6 +388,7 @@ spritesheet: planets/fire_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/ice_planet.png
  button: 19
@@ -394,6 +398,7 @@ spritesheet: planets/ice_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/forest_planet.png
  button: 20
@@ -403,6 +408,7 @@ spritesheet: planets/forest_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 # ------------------------ROOMS------------------------
 spritesheet: rooms/public_game_select_room.png

@@ -241,8 +241,8 @@ void Core::_switchScenes()
 void Core::_switchMusic()
 {
     if (Core::actual_scene == ecs::Scenes::MENU && (_last_scene != ecs::Scenes::SETTINGS && _last_scene != ecs::Scenes::LISTROOM &&
-        _last_scene != ecs::Scenes::TYPEPSEUDO && _last_scene != ecs::Scenes::HOWTOPLAY && _last_scene != ecs::Scenes::ACHIEVEMENTS))
-            _graphical.setActualMusic(ecs::Music::MUSICMENU, false);
+    _last_scene != ecs::Scenes::TYPEPSEUDO && _last_scene != ecs::Scenes::HOWTOPLAY && _last_scene != ecs::Scenes::ACHIEVEMENTS))
+        _graphical.setActualMusic(ecs::Music::MUSICMENU);
 }
 
 void Core::_updateUserInfo()
