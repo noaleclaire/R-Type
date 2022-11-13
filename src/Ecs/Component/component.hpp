@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AComponent.hpp"
+#include "Ammo.hpp"
 #include "Clickable.hpp"
 #include "Collider.hpp"
 #include "Controllable.hpp"
@@ -26,3 +27,6 @@
 #include "CompoScene.hpp"
 #include "Animation.hpp"
 #include "Pressed.hpp"
+#include "CompoServer.hpp"
+#include "Planet.hpp"
+#include "Achievement.hpp"

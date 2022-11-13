@@ -7,7 +7,8 @@ R-Type Game              {#mainpage}
 
 R-Type is a horizontally scrolling shooter arcade video game developed and released by Irem in 1987 and the first game in the R-Type series. The player controls a star ship, the R-9 "Arrowhead", in its efforts to destroy the Bydo, a powerful alien race bent on wiping out all of mankind.
 
-![image](https://user-images.githubusercontent.com/72009611/196052229-109475d4-6290-4686-a0b1-7ecf660cd6e1.png)
+![Screenshot_20221113_134843](https://user-images.githubusercontent.com/72009611/201525861-bd45c626-0c75-44ae-a3c6-015a70263b3f.png)
+
 
 ====
 
@@ -19,15 +20,12 @@ R-Type is a horizontally scrolling shooter arcade video game developed and relea
 
 ### Command Line (via CMake)
 
-Confirmation badge for Build and Test:
-
-[![CMake](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml/badge.svg)](https://github.com/EpitechPromo2025/B-CPP-500-NAN-5-1-rtype-noa.leclaire/actions/workflows/build_and_test.yaml)
-
 Required tools:
 - CMake 3.17 (minimum) ![CMake](https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white)
     - -> Install link : https://cmake.org/install/
 
-on Linux:
+On Linux:  
+
 ```sh
 # Create the build directory and install all tools
 chmod 755 setup.conan.sh
@@ -44,21 +42,54 @@ cmake --build .
 cd -
 ```
 
-on Windows:
+On Windows:
+
+  Required tools:  
+  - Conan  
+    -> Install link : https://github.com/conan-io/conan/releases/latest/download/conan-win-64.exe
+  - Visual Studio 2017  
+    -> Install link : https://my.visualstudio.com/Downloads?q=visual%20studio%202017&wt.mc_id=o~msft~vscom~older-downloads
+
 ```sh
 # Create the build directory
 chmod +x setup.conan.sh
 ./setup_conan.sh
 
 # Configure the project
-cmake .. -G 'Visual Studio 17 2022' -DCMAKE_BUILD_TYPE=Release
+cmake . -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=Release -A x64
 
 # Build the executable and libraries
-cmake --build .
+cmake --build . --config Release
 
 # Return to previous directory
 cd -
 ```
+
+====
+## Launch Game
+
+1- Launch the server
+
+```sh
+#build the server on linux
+./r_type_server
+#build the server on windows
+.\r_type_server
+```
+2- Launch the client
+
+```sh
+#build the server on linux
+./r_type_client
+#build the server on windows
+.\r_type_client
+```
+
+====
+
+## Package
+
+See the doc: documentation/PACKAGE_DOCUMENTATION.md
 
 ====
 
@@ -69,11 +100,10 @@ Required tools:
   - -> Install link : https://doxygen.nl/manual/install.html
 
 ```sh
-#build the documentation
-doxygen doxyfile
-
-#open the documentation
-xdg-open docs/html/index.html
+#build the documentation on linux
+./setup_doc.sh
+#build the documentation on windows
+.\setup_doc.sh
 ```
 
 ====

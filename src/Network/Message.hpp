@@ -14,15 +14,18 @@
 
 namespace network
 {
-    enum CustomMessage : uint32_t { PingServer,
+    enum CustomMessage : uint32_t { PingServer, PingClient,
                                 CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
-                                GetRoomScene,
+                                GetScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
+                                SwitchRoomMode, IsHost,
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
-                                SwitchToGame,
-                                RemoveClient };
+                                SwitchToGame, InitGame, KillAnEntity,
+                                RemoveClient, NotEnoughPlayer, CreateShot,
+                                UpdatePosPlayerServer, UpdatePosPlayerClient,
+                                QuitGameClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;

@@ -16,13 +16,8 @@ namespace ecs
       public:
         /**
          * @brief Construct a new Controllable object
-         *
-         * @param z
-         * @param q
-         * @param s
-         * @param d
          */
-        Controllable(bool z = false, bool q = false, bool s = false, bool d =false);
+        Controllable();
         /**
          * @brief Construct a new Controllable object
          *
@@ -41,14 +36,32 @@ namespace ecs
          * @return Controllable&
          */
         Controllable &operator=(const Controllable &other) = default;
-
+        /**
+         * @brief Set the Key object
+         * 
+         * @param key 
+         * @param state 
+         */
         void setKey(std::string key, bool state);
+        /**
+         * @brief Get the Key object
+         * 
+         * @param key 
+         * @return true 
+         * @return false 
+         */
         bool getKey(std::string key) const;
 
+        friend bool operator==(const Controllable &lhs, const Controllable &rhs)
+        {
+            return lhs._z == rhs._z && lhs._q == rhs._q && lhs._s == rhs._s && lhs._d == rhs._d && lhs._space == rhs._space && lhs._shift == rhs._shift;
+        }
       private:
         bool _z;
         bool _q;
         bool _s;
         bool _d;
+        bool _space;
+        bool _shift;
     };
 } // namespace ecs

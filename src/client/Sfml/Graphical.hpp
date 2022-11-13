@@ -14,6 +14,7 @@
 #include "Event.hpp"
 #include "SpritesManager.hpp"
 
+class CustomClient;
 namespace graphics
 {
     class Graphical {
@@ -35,19 +36,19 @@ namespace graphics
          *
          * @return std::unordered_map<std::size_t, sf::Sprite>
          */
-        std::unordered_map<std::size_t, sf::Sprite> getAllSprites() const;
+        std::unordered_map<std::size_t, sf::Sprite> &getAllSprites();
         /**
          * @brief Get the All RectangleShape object
          *
          * @return std::unordered_map<std::size_t, sf::RectangleShape>
          */
-        std::unordered_map<std::size_t, sf::RectangleShape> getAllRectangleShapes() const;
+        std::unordered_map<std::size_t, sf::RectangleShape> &getAllRectangleShapes();
         /**
          * @brief Get the All Text object
          *
          * @return std::unordered_map<std::size_t, sf::Text>
          */
-        std::unordered_map<std::size_t, sf::Text> getAllTexts() const;
+        std::unordered_map<std::size_t, sf::Text> &getAllTexts();
         /**
          * @brief Get the Video Mode object
          *
@@ -134,7 +135,7 @@ namespace graphics
          *
          * @param _scene
          */
-        void setActualGraphicsEntities(ecs::Scenes _scene);
+        void setActualGraphicsEntities(ecs::Scenes scene);
         /**
          * @brief Set the hover sprite for the entity
          *
@@ -214,7 +215,9 @@ namespace graphics
          */
         void getWorldClock();
 
+        CustomClient *client;
         SpritesManager *sprites_manager;
+        ecs::Scenes _actual_scene;
 
       protected:
       private:
@@ -224,14 +227,8 @@ namespace graphics
         sf::Clock _world_clock;
         sf::Font _font;
         std::unordered_map<std::string, sf::Texture> _textures;
-        std::unordered_map<std::size_t, sf::Sprite> _unique_sprites_entities;
-        std::unordered_map<std::size_t, sf::Sprite> _shared_sprites_entities;
-        std::unordered_map<std::size_t, sf::Sprite> *_actual_sprites_entities;
-        std::unordered_map<std::size_t, sf::RectangleShape> _rectangleshape_entities;
-        std::unordered_map<std::size_t, sf::RectangleShape> _shared_rectangleshape_entities;
-        std::unordered_map<std::size_t, sf::RectangleShape> *_actual_rectangleshape_entities;
-        std::unordered_map<std::size_t, sf::Text> _text_entities;
-        std::unordered_map<std::size_t, sf::Text> _shared_text_entities;
-        std::unordered_map<std::size_t, sf::Text> *_actual_text_entities;
+        std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Sprite>> _sprites_entities;
+        std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::RectangleShape>> _rectangleshape_entities;
+        std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Text>> _text_entities;
     };
 } // namespace graphics

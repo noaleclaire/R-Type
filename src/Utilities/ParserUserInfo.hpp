@@ -11,7 +11,17 @@
 
 class ParserUserInfo {
     public:
+        /**
+         * @brief Get the User Info object
+         * 
+         * @param obj 
+         */
         static void getUserInfo(UserInfo &obj);
+        /**
+         * @brief 
+         * 
+         * @param obj 
+         */
         static void saveUserInfo(UserInfo &obj);
 
     private:

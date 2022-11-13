@@ -38,9 +38,9 @@ void executeSystemSetupCmd()
     if (validation.compare("no") == 0)
         exit(0);
     std::system("chmod +x setup_server.sh");
-    std::system("./setup_server.sh 1 > tmp.cache");
-    std::cout << std::ifstream("tmp.cache").rdbuf();
-    std::system("rm tmp.cache");
+    std::system("./setup_server.sh 1");
+    // std::cout << std::ifstream("tmp.cache").rdbuf();
+    // std::system("rm tmp.cache");
 }
 
 int main(int ac, char **av)

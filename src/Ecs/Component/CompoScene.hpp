@@ -12,23 +12,61 @@
 namespace ecs {
     class CompoScene : public AComponent {
         public:
+            /**
+             * @brief Construct a new Compo Scene object
+             * 
+             */
             CompoScene() = default;
+            /**
+             * @brief Construct a new Compo Scene object
+             * 
+             * @param scene 
+             */
             CompoScene(ecs::Scenes scene)
             {
                 _scene = scene;
             };
+            /**
+             * @brief Construct a new Compo Scene object
+             * 
+             * @param other 
+             */
             CompoScene(const CompoScene &other) = default;
+            /**
+             * @brief Destroy the Compo Scene object
+             * 
+             */
             ~CompoScene() = default;
+            /**
+             * @brief 
+             * 
+             * @param other 
+             * @return CompoScene& 
+             */
             CompoScene &operator=(const CompoScene &other) = default;
-
+            /**
+             * @brief Set the Scene object
+             * 
+             * @param scene 
+             */
             void setScene(ecs::Scenes scene)
             {
                 _scene = scene;
             };
+            /**
+             * @brief Get the Scene object
+             * 
+             * @return ecs::Scenes 
+             */
             ecs::Scenes getScene() const
             {
                 return (_scene);
             };
+
+            friend bool operator==(const CompoScene &lhs, const CompoScene &rhs)
+            {
+                return lhs._scene == rhs._scene;
+            }
 
         protected:
         private:

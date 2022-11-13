@@ -5,8 +5,9 @@ set(SRC
     ${SRC}
     ${SRCROOT}/Position.cpp
     ${SRCROOT}/Clickable.cpp
+    ${SRCROOT}/Ammo.cpp
     ${SRCROOT}/Controllable.cpp
-    ${SRCROOT}/Shootable.cpp
+    ${SRCROOT}/Killable.cpp
     ${SRCROOT}/Rectangle.cpp
     ${SRCROOT}/Layer.cpp
     ${SRCROOT}/Link.cpp

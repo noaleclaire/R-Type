@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 
-set(SRC)
+set(SRC ${SRCROOT}/Enum.cpp)
 
 add_subdirectory(Systems)
 add_subdirectory(Exceptions)
@@ -17,3 +17,5 @@ add_library(${LIB_NAME} ${SRC})
 target_include_directories(${LIB_NAME} PRIVATE ${INCDIRS})
 target_include_directories(${LIB_NAME} PUBLIC ${INCROOT})
 target_include_directories(Ecs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+install(TARGETS Ecs DESTINATION lib)

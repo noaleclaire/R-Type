@@ -66,17 +66,15 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-            registry.addComponent<ecs::Controllable>(entity, ecs::Controllable());
             registry.addComponent<ecs::Killable>(entity, ecs::Killable());
             registry.addComponent<ecs::Shooter>(entity, ecs::Shooter());
 
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), 150, 150));
-            registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), 0, 0));
+            registry.addComponent<ecs::Rectangle>(entity, ecs::Rectangle(0, 0, 0, 0));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
+            registry.addComponent<ecs::Animation>(entity, ecs::Animation());
             return (entity);
         }
         /**
@@ -94,12 +92,12 @@ namespace ecs
             registry.addComponent<ecs::Killable>(entity, ecs::Killable());
 
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
             registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(9))));
             return (entity);
         }
         /**
@@ -111,20 +109,23 @@ namespace ecs
         static Entity createShot(Registry &registry)
         {
             Entity entity = registry.spawnEntity();
+            std::size_t linked_entity = UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0));
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
             registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
 
+            registry.addComponent<ecs::Killable>(entity, ecs::Killable());
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(linked_entity));
+            registry.addComponent<ecs::Ammo>(registry.getEntityById(entity), ecs::Ammo(registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType()));
             registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)),
+                registry.getComponents<ecs::Ammo>().at(entity.getId()).value().getVelocity().first, registry.getComponents<ecs::Ammo>().at(entity.getId()).value().getVelocity().second));
             registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-
-            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
             return (entity);
         }
         /**
@@ -184,13 +185,14 @@ namespace ecs
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
 
-            registry.addComponent<ecs::Position>(
-                entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
+            registry.addComponent<ecs::Position>(entity,
+                ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
             registry.addComponent<ecs::Rectangle>(entity,
-                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3)),
-                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5))));
-            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::WALL));
+                ecs::Rectangle(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(4)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(5)),
+                    UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
+            registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::WALL, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(9))));
             return (entity);
         }
         /**

@@ -10,15 +10,30 @@
 
 class HowToPlay : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new How To Play object
+         * 
+         */
         HowToPlay() = default;
+        /**
+         * @brief Destroy the How To Play object
+         * 
+         */
         ~HowToPlay() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;
             std::size_t entity;
 
             registry.setActualScene(ecs::Scenes::HOWTOPLAY);
+            graphical.setActualGraphicsEntities(ecs::Scenes::HOWTOPLAY);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

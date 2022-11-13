@@ -19,4 +19,18 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+install(FILES ${PROJECT_SOURCE_DIR}/setup_server.sh DESTINATION bin)
+install(FILES ${PROJECT_SOURCE_DIR}/setup_server.bat DESTINATION bin)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets DESTINATION bin)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/server/levels/ DESTINATION bin/src/server/levels/)
+install(FILES ${PROJECT_SOURCE_DIR}/conanfile.txt DESTINATION setup)
+install(FILES ${PROJECT_SOURCE_DIR}/setup_conan.sh DESTINATION setup)
+
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESSOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.md")
+set(CPACK_PACKAGE_NAME "R-type")
+set(CPACK_PACKAGE_VERSION_MAJOR)
+set(CPACK_PACKAGE_VERSION_MINOR)
+include(CPack)
+
 add_subdirectory(src)

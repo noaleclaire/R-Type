@@ -5,12 +5,13 @@
 ** Systems
 */
 
+#include <cmath>
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
 #include "../../client/Exceptions/Exception.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
-#include <cmath>
+#include "../Factory.hpp"
 
 namespace ecs
 {
@@ -29,9 +30,22 @@ namespace ecs
                             case Clickable::Function::TOSETTINGS: Core::actual_scene = ecs::Scenes::SETTINGS; break;
                             case Clickable::Function::TOMENU: Core::actual_scene = ecs::Scenes::MENU; break;
                             case Clickable::Function::TOHTP: Core::actual_scene = ecs::Scenes::HOWTOPLAY; break;
+                            case Clickable::Function::TOACHIEVEMENTS: Core::actual_scene = ecs::Scenes::ACHIEVEMENTS; break;
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
+                            case Clickable::Function::FILTERBYROOMMODECOOP:
+                                graphical->client->filterByRoomModeCoop();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::FILTERBYROOMMODEVERSUS:
+                                graphical->client->filterByRoomModeVersus();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::REFRESHFILTERSROOM:
+                                graphical->client->initListRoom();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0) {
@@ -40,12 +54,23 @@ namespace ecs
                                 }
                                 break;
                             case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
+                            case Clickable::Function::SWITCHROOMMODE:
+                                graphical->client->switchRoomMode();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
                                     Core::new_pseudo = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());
                                 break;
                             case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
+                                break;
+                            case Clickable::Function::SELECTPLANET:
+                                _unselectAllPlanet(registry, registry.getComponents<ecs::Planet>(), graphical);
+                                registry.getComponents<ecs::Planet>().at(it).value().select();
+                                graphical->getAllSprites().at(it).setScale(sf::Vector2f(1.25, 1.25));
+                                registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                                Core::level_id = registry.getComponents<ecs::Planet>().at(it).value().getLevelID() - 1;
                                 break;
                             default: break;
                         }
@@ -70,6 +95,24 @@ namespace ecs
             }
         }
     }
+
+    void Systems::_unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (planet.at(it).value().isSelected() == true) {
+                    planet.at(it).value().unselect();
+                    graphical->getAllSprites().at(it).setScale(sf::Vector2f(1, 1));
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
     void Systems::ClickablePressed(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
     {
         for (auto &it : registry.getEntities()) {
@@ -146,7 +189,7 @@ namespace ecs
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
-        for (std::size_t i = 0; i < registry.getEntities().size(); i++) {
+        for (std::size_t i = 0; i <= 15; i++) {
             for (auto &it : registry.getEntities()) {
                 try {
                     drawable.at(it);
@@ -204,214 +247,237 @@ namespace ecs
                     veloY = 0;
                     spaceship_posX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
                     spaceship_posY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
                         veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
                         veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
                         veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                         veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                } catch (const ExceptionComponentNull &e) {}
-                catch (const ExceptionIndexComponent &e) {}
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BASIC_MONSTER) {
-                    monster_posX = position.at(it).value().getXPosition();
-                    monster_posY = position.at(it).value().getYPosition();
-                    if (posX <= 1208 && posX >= spaceship_posX + 500) {
-                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 65;
                     }
-                    if (posX <= 1208 && posX < spaceship_posX + 500) {
-                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 65;
+                    if (veloX != 0 || veloY != 0)
+                        registry.addComponent<ecs::Animation>(registry.getEntityById(it), ecs::Animation());
+                    else {
+                        registry.removeComponent<ecs::Animation>(registry.getEntityById(it));
+                        auto rect = graphical.sprites_manager->get_Animations_rect(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID());
+                        graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
                     }
-                    if (posY <= spaceship_posY) {
-                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 65;
-                    }
-                    if (posY > spaceship_posY) {
-                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 65;
-                    }
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                    if (posX < 0)
+                        posX = 0;
+                    if (posX > 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
+                        posX = 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+                    if (posY < 0)
+                        posY = 0;
+                    if (posY > 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
+                        posY = 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
+                } catch (const Exception &e) {
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BASIC_MONSTER) {
+                      monster_posX = position.at(it).value().getXPosition();
+                      monster_posY = position.at(it).value().getYPosition();
+                      if (posX <= 1208 && posX >= spaceship_posX + 500) {
+                          veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 65;
+                      }
+                      if (posX <= 1208 && posX < spaceship_posX + 500) {
+                          veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 65;
+                      }
+                      if (posY <= spaceship_posY) {
+                          veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 65;
+                      }
+                      if (posY > spaceship_posY) {
+                          veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 65;
+                      }
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::GREEN_SHOT) {
+                      if (posX < -100) {
+                              posX = greenX + 200;
+                              posY = greenY + 50;
+                          }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::RED_SHOT) {
+                      if (posX < -100) {
+                          posX = redX + 200;
+                          posY = redY + 50;
+                      }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BLUE_SHOT) {
+                      if (posX < -100) {
+                          posX = blueX + 200;
+                          posY = blueY + 50;
+                      }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::SPACESHIP_SHOT) {
+                      if (posX < -100) {
+                          posX = spaceship_bossX + 350;
+                          posY = spaceship_bossY;
+                      }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::WORMS_SHOT) {
+                      if (posX < -100) {
+                          posX = wormsX;
+                          posY = wormsY + 50;
+                      }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::HEAD_SHOT) {
+                      if (posX < -100) {
+                          posX = iceX;
+                          posY = iceY + 100;
+                      }
+                      veloX -= 300;
+                      veloY = 0;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BASIC_SHOT) {
+                      if (posX < -100) {
+                          registry.getComponents<ecs::Shootable>().at(it).value().setShooting(false);
+                          if ((std::chrono::system_clock::now() - t) >= std::chrono::seconds(3)) {
+                              posX = monster_posX;
+                              posY = monster_posY;
+                              t = std::chrono::system_clock::now();
+                          }
+                      }
+                      if (posY >= spaceship_posY - 35 && posY <= spaceship_posY + 35 && registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true) {
+                          veloX -= 500;
+                          veloY = 0;
+                          registry.getComponents<ecs::Shootable>().at(it).value().setShooting(true);
+                          registry.getComponents<ecs::Shootable>().at(it).value().setBeenInRange(true);
+                      }
+                      if (registry.getComponents<ecs::Shootable>().at(it).value().getBeenInRange() == true)
+                          veloX -= 500;
+                      if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posX >= spaceship_posX + 500)
+                          posX = monster_posX;
+                      if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posX <= spaceship_posX + 500)
+                          posX = monster_posX;
+                      if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posY <= spaceship_posY)
+                          posY = monster_posY;
+                      if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posY > spaceship_posY)
+                          posY = monster_posY;
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FIRE_SPACESHIP) {
+                      spaceship_bossX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                      spaceship_bossY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                      if (posY >= 0 && spaceship_posY <= 720/2) {
+                          veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                      }
+                      if (posY <= 225 && spaceship_posY > 720/2) {
+                          veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                      }
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_RED 
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_GREEN
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_BLUE) {
+                      if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_GREEN) {
+                          greenX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                          greenY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                          if (spaceship_posY <= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (spaceship_posY > 720/2 && posY <= 400) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (registry.getComponents<ecs::Position>().at(it).value().getGreenStart() != true) {
+                              registry.getComponents<ecs::Position>().at(it).value().setGreenXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setGreenYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setGreenStart(true);
+                          }
+                      }
+                      if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_BLUE) {
+                          blueX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                          blueY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                          if (spaceship_posY >= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (spaceship_posY < 720/2 && posY <= 400) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (registry.getComponents<ecs::Position>().at(it).value().getBlueStart() != true) {
+                              registry.getComponents<ecs::Position>().at(it).value().setBlueXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setBlueYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setBlueStart(true);
+                          }
+                      }
+                      if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_RED) {
+                          redX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                          redY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                          if (spaceship_posY <= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (spaceship_posY > 720/2 && posY <= 400) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
+                          }
+                          if (registry.getComponents<ecs::Position>().at(it).value().getRedStart() != true) {
+                              registry.getComponents<ecs::Position>().at(it).value().setRedXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setRedYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
+                              registry.getComponents<ecs::Position>().at(it).value().setRedStart(true);
+                          }
+                      }
+                      //faire des shots basics pour chacun des monstres
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_CAVERN_MAGICIAN) {
+                      magicianX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                      magicianY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                      if (spaceship_posY <= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      if (spaceship_posY > 720/2 && posY <= 220) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      // faire un shot qui target le player
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_ICE_HEADESTROYER) {
+                      iceX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                      iceY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                      if (spaceship_posY <= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      if (spaceship_posY > 720/2 && posY <= 131) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      // faire un shot tout droit
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_DESERT_WORMS) {
+                      wormsX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
+                      wormsY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
+                      if (posX <= 1090 && posX >= spaceship_posX + 300) {
+                          veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 100;
+                      }
+                      if (posX <= 1090 && posX < spaceship_posX + 300) {
+                          veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 100;
+                      }
+                      if (spaceship_posY <= 720/2 && posY >= 0) {
+                              veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      if (spaceship_posY > 720/2 && posY <= 130) {
+                              veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
+                      }
+                      // faire un shot tout droit
+                  }
+                  if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::FIRE_MONSTER 
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::CAVE_MONSTER
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::ICE_MONSTER
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::FOREST_MONSTER
+                      || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::DESERT_MONSTER) {
+                      veloX -= 125;
+                  }
+                  posX += veloX * graphics::Graphical::world_current_time;
+                  posY += veloY * graphics::Graphical::world_current_time;
                 }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::GREEN_SHOT) {
-                    if (posX < -100) {
-                            posX = greenX + 200;
-                            posY = greenY + 50;
-                        }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::RED_SHOT) {
-                    if (posX < -100) {
-                        posX = redX + 200;
-                        posY = redY + 50;
-                    }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BLUE_SHOT) {
-                    if (posX < -100) {
-                        posX = blueX + 200;
-                        posY = blueY + 50;
-                    }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::SPACESHIP_SHOT) {
-                    if (posX < -100) {
-                        posX = spaceship_bossX + 350;
-                        posY = spaceship_bossY;
-                    }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::WORMS_SHOT) {
-                    if (posX < -100) {
-                        posX = wormsX;
-                        posY = wormsY + 50;
-                    }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::HEAD_SHOT) {
-                    if (posX < -100) {
-                        posX = iceX;
-                        posY = iceY + 100;
-                    }
-                    veloX -= 300;
-                    veloY = 0;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BASIC_SHOT) {
-                    if (posX < -100) {
-                        registry.getComponents<ecs::Shootable>().at(it).value().setShooting(false);
-                        if ((std::chrono::system_clock::now() - t) >= std::chrono::seconds(3)) {
-                            posX = monster_posX;
-                            posY = monster_posY;
-                            t = std::chrono::system_clock::now();
-                        }
-                    }
-                    if (posY >= spaceship_posY - 35 && posY <= spaceship_posY + 35 && registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true) {
-                        veloX -= 500;
-                        veloY = 0;
-                        registry.getComponents<ecs::Shootable>().at(it).value().setShooting(true);
-                        registry.getComponents<ecs::Shootable>().at(it).value().setBeenInRange(true);
-                    }
-                    if (registry.getComponents<ecs::Shootable>().at(it).value().getBeenInRange() == true)
-                        veloX -= 500;
-                    if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posX >= spaceship_posX + 500)
-                        posX = monster_posX;
-                    if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posX <= spaceship_posX + 500)
-                        posX = monster_posX;
-                    if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posY <= spaceship_posY)
-                        posY = monster_posY;
-                    if (registry.getComponents<ecs::Shootable>().at(it).value().getShooting() != true && posY > spaceship_posY)
-                        posY = monster_posY;
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FIRE_SPACESHIP) {
-                    spaceship_bossX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    spaceship_bossY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    if (posY >= 0 && spaceship_posY <= 720/2) {
-                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                    }
-                    if (posY <= 225 && spaceship_posY > 720/2) {
-                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                    }
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_RED 
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_GREEN
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_BLUE) {
-                    if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_GREEN) {
-                        greenX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                        greenY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                        if (spaceship_posY <= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (spaceship_posY > 720/2 && posY <= 400) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (registry.getComponents<ecs::Position>().at(it).value().getGreenStart() != true) {
-                            registry.getComponents<ecs::Position>().at(it).value().setGreenXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setGreenYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setGreenStart(true);
-                        }
-                    }
-                    if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_BLUE) {
-                        blueX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                        blueY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                        if (spaceship_posY >= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (spaceship_posY < 720/2 && posY <= 400) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (registry.getComponents<ecs::Position>().at(it).value().getBlueStart() != true) {
-                            registry.getComponents<ecs::Position>().at(it).value().setBlueXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setBlueYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setBlueStart(true);
-                        }
-                    }
-                    if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_FOREST_RED) {
-                        redX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                        redY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                        if (spaceship_posY <= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (spaceship_posY > 720/2 && posY <= 400) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 70;
-                        }
-                        if (registry.getComponents<ecs::Position>().at(it).value().getRedStart() != true) {
-                            registry.getComponents<ecs::Position>().at(it).value().setRedXPos(registry.getComponents<ecs::Position>().at(it).value().getXPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setRedYPos(registry.getComponents<ecs::Position>().at(it).value().getYPosition());
-                            registry.getComponents<ecs::Position>().at(it).value().setRedStart(true);
-                        }
-                    }
-                    //faire des shots basics pour chacun des monstres
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_CAVERN_MAGICIAN) {
-                    magicianX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    magicianY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    if (spaceship_posY <= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    if (spaceship_posY > 720/2 && posY <= 220) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    // faire un shot qui target le player
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_ICE_HEADESTROYER) {
-                    iceX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    iceY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    if (spaceship_posY <= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    if (spaceship_posY > 720/2 && posY <= 131) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    // faire un shot tout droit
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::BOSS_DESERT_WORMS) {
-                    wormsX = registry.getComponents<ecs::Position>().at(it).value().getXPosition();
-                    wormsY = registry.getComponents<ecs::Position>().at(it).value().getYPosition();
-                    if (posX <= 1090 && posX >= spaceship_posX + 300) {
-                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 100;
-                    }
-                    if (posX <= 1090 && posX < spaceship_posX + 300) {
-                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity() + 100;
-                    }
-                    if (spaceship_posY <= 720/2 && posY >= 0) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    if (spaceship_posY > 720/2 && posY <= 130) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity() + 100;
-                    }
-                    // faire un shot tout droit
-                }
-                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::FIRE_MONSTER 
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::CAVE_MONSTER
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::ICE_MONSTER
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::FOREST_MONSTER
-                    || registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::DESERT_MONSTER) {
-                    veloX -= 125;
-                }
-                posX += veloX * graphics::Graphical::world_current_time;
-                posY += veloY * graphics::Graphical::world_current_time;
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 try {
@@ -433,24 +499,46 @@ namespace ecs
             try {
                 controllable.at(it);
                 if (graphical->getEvent().type == sf::Event::KeyPressed) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", true);
+                        graphical->client->sendPlayerPos(3, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::LShift)
+                        controllable.at(it).value().setKey("shift", true);
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", false);
+                        graphical->client->sendPlayerPos(3, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", false);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -459,6 +547,40 @@ namespace ecs
             }
         }
     }
+    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (controllable.at(it).value().getKey("space") == true)
+                    _createShot(registry, it, client);
+                if (controllable.at(it).value().getKey("shift") == true) {
+                    controllable.at(it).value().setKey("shift", false);
+                    if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::BEAM);
+                        std::cout << "BEAM" << std::endl;
+                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::BEAM) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC);
+                        std::cout << "CLASSIC" << std::endl;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
+    void Systems::_createShot(Registry &registry, std::size_t linked_entity, CustomClient *client)
+    {
+        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
+
+        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(linked_entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
+            registry.getComponents<ecs::Shooter>().at(linked_entity).value().setLastShot();
+            client->createShot(linked_entity, registry.getActualScene());
+        }
+    }
+
     void Systems::Parallaxe(Registry &registry, SparseArray<ecs::Type> const &type)
     {
         for (auto &it : registry.getEntities()) {
@@ -609,6 +731,108 @@ namespace ecs
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             } catch (const ::Exception &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (it == it_in)
+                            continue;
+                        if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
+                            if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
+                                if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
+                                    (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                            }
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    } catch (const std::out_of_range &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Achievement(UserInfo *user_info)
+    {
+        if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
+            user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
+    }
+    void Systems::Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical)
+    {
+        if (graphical.getEvent().type == sf::Event::KeyPressed) {
+            if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
+                for (auto &it : registry.getEntities()) {
+                    try {
+                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MARVIN) {
+                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() <= (1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()))
+                                break;
+                        }
+                        registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() - 50);
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            }
+            if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
+                for (auto &it : registry.getEntities()) {
+                    try {
+                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MATRIX) {
+                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > 0)
+                                break;
+                        }
+                        registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() + 50);
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    void Systems::setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (user_info->achievements.at(registry.getComponents<ecs::Achievement>().at(it).value().getID()) == true) {
+                    registry.addComponent<ecs::Drawable>(registry.getEntityById(registry.getComponents<ecs::Link>().at(it).value().getLink()), ecs::Drawable());
+                    auto rect = graphical.sprites_manager->get_Animations_rect(ecs::EntityTypes::BACKGROUND, 20, 0);
+                    registry.getComponents<ecs::Type>().at(it).value().setEntityID(20);
+                    graphical.addSprite(it, graphical.sprites_manager->get_Spritesheet(ecs::EntityTypes::BACKGROUND, 20), rect);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }

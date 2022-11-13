@@ -36,5 +36,12 @@ namespace ecs
          * @return Drawable&
          */
         Drawable &operator=(const Drawable &other) = default;
+
+        friend bool operator==(const Drawable &lhs, const Drawable &rhs)
+        {
+            static_cast<void>(lhs);
+            static_cast<void>(rhs);
+            return true;
+        }
     };
 } // namespace ecs

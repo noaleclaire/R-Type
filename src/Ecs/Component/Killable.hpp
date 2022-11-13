@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AComponent.hpp"
+#include <string>
 
 namespace ecs
 {
@@ -16,8 +17,9 @@ namespace ecs
         /**
          * @brief Construct a new Killable object
          *
+         * @param life
          */
-        Killable() = default;
+        Killable(std::size_t life = 1);
         /**
          * @brief Construct a new Killable object
          *
@@ -36,5 +38,31 @@ namespace ecs
          * @return Killable&
          */
         Killable &operator=(const Killable &other) = default;
+        /**
+         * @brief
+         *
+         * @return std::size_t
+         */
+        std::size_t getLife() const;
+        /**
+         * @brief
+         *
+         * @param life
+         */
+        void setLife(std::size_t life);
+        /**
+         * @brief
+         *
+         * @param damage
+         */
+        void substractLife(std::size_t damage);
+
+
+        friend bool operator==(const Killable &lhs, const Killable &rhs)
+        {
+            return lhs._life == rhs._life;
+        }
+      private:
+        std::size_t _life;
     };
 } // namespace ecs

@@ -12,9 +12,23 @@
 
 class Settings : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Settings object
+         * 
+         */
         Settings() = default;
+        /**
+         * @brief Destroy the Settings object
+         * 
+         */
         ~Settings() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;
@@ -23,6 +37,7 @@ class Settings : public ScenesInitializer {
             std::size_t tmp_width;
 
             registry.setActualScene(ecs::Scenes::SETTINGS);
+            graphical.setActualGraphicsEntities(ecs::Scenes::SETTINGS);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);

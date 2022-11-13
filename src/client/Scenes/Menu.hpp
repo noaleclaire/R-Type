@@ -10,9 +10,23 @@
 
 class Menu : public ScenesInitializer {
     public:
+        /**
+         * @brief Construct a new Menu object
+         * 
+         */
         Menu() = default;
+        /**
+         * @brief Destroy the Menu object
+         * 
+         */
         ~Menu() = default;
-
+        /**
+         * @brief 
+         * 
+         * @param registry 
+         * @param sprites_manager 
+         * @param graphical 
+         */
         static void initScene(ecs::Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical)
         {
             std::vector<float> rect;
@@ -20,6 +34,7 @@ class Menu : public ScenesInitializer {
             std::size_t btn_y = 350;
 
             registry.setActualScene(ecs::Scenes::MENU);
+            graphical.setActualGraphicsEntities(ecs::Scenes::MENU);
 
             //Backgrounds
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 0, 0);
@@ -74,11 +89,11 @@ class Menu : public ScenesInitializer {
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::EXIT);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 2), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
-                // game for test on monsters
-            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 2, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 0, 0, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 2, 2);
-            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOGAME);
-            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 2), rect);
+                //achievements
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 10, 0);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 1170, 8, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 10, 2);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOACHIEVEMENTS);
+            graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 10), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
         };
 };

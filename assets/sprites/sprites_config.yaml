@@ -33,15 +33,6 @@
 #   nb_anim: 15
 #   next_anim: 0
 
-spritesheet: spaceships.gif
- spaceship: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 132
-   rect_height: 72
-   nb_anim: 4
-
 spritesheet: nsm
  monster: 0
   anim: 0
@@ -202,6 +193,31 @@ spritesheet: backgrounds/planet_level_info.png
    rect_width: 360
    rect_height: 198
 
+spritesheet: planets/sun.png
+ background: 18
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 244
+   rect_height: 244
+   nb_anim: 29
+
+spritesheet: backgrounds/locked_achievement.png
+ background: 19
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 860
+   rect_height: 134
+
+spritesheet: backgrounds/achievement.png
+ background: 20
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 860
+   rect_height: 134
+
 # ------------------------BUTTONS------------------------
 spritesheet: buttons/create_private_game_btn.png
  button: 0
@@ -334,6 +350,59 @@ spritesheet: buttons/arrow2.png
    rect_y: 0
    rect_width: 45
    rect_height: 45
+
+spritesheet: buttons/refresh_btn.png
+ button: 15
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 88
+   rect_height: 89
+
+spritesheet: planets/black_hole.png
+ button: 16
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 218
+   rect_height: 86
+   nb_anim: 29
+
+spritesheet: planets/rock_planet.png
+ button: 17
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 218
+   rect_height: 146
+   nb_anim: 29
+
+spritesheet: planets/fire_planet.png
+ button: 18
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 29
+
+spritesheet: planets/ice_planet.png
+ button: 19
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 29
+
+spritesheet: planets/forest_planet.png
+ button: 20
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 129
+   rect_height: 129
+   nb_anim: 29
 
 # ------------------------ROOMS------------------------
 spritesheet: rooms/public_game_select_room.png
@@ -597,3 +666,44 @@ spritesheet: shots/head_shot.png
    rect_height: 62
    nb_anim: 4
    speed_anim: 10
+
+# ------------------------SPACESHIPS------------------------
+spritesheet: spaceships/spaceship-1.png
+ spaceship: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 5
+   speed_anim: 15
+
+spritesheet: spaceships/spaceship-2.png
+ spaceship: 1
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 5
+   speed_anim: 15
+
+spritesheet: spaceships/spaceship-3.png
+ spaceship: 2
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 5
+   speed_anim: 15
+
+spritesheet: spaceships/spaceship-4.png
+ spaceship: 3
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 137
+   rect_height: 97
+   nb_anim: 5
+   speed_anim: 15
