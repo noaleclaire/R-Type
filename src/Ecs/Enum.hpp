@@ -19,6 +19,7 @@ namespace ecs
                 MENU, SETTINGS, WIN, LOOSE, GAME, TYPEPSEUDO, HOWTOPLAY, ACHIEVEMENTS };
 
     enum EntityTypes { SPACESHIP, MONSTER, SHOT, BUTTON, WALL, BACKGROUND, PARALLAX, ROOM, ROOMID, ROOMMODE, SHAPE, TEXT, TEXTBOX, TEXTBOXNUMBER, PSEUDO, MUSIC, SFX };
+    enum AchievementTypes { MATRIX, RAMPAGE, HACKER, NEMESIS, BFF, WORLDWARRIOR, PAIN, MARVIN };
     class Enum {
         public:
             static std::chrono::time_point<std::chrono::system_clock> ping_latency;

@@ -548,4 +548,62 @@ namespace ecs
             }
         }
     }
+    void Systems::Achievement(UserInfo *user_info)
+    {
+        if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
+            user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
+    }
+    void Systems::Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical)
+    {
+        if (graphical.getEvent().type == sf::Event::KeyPressed) {
+            if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
+                for (auto &it : registry.getEntities()) {
+                    try {
+                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MARVIN) {
+                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() <= (1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()))
+                                break;
+                        }
+                        registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() - 50);
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            }
+            if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
+                for (auto &it : registry.getEntities()) {
+                    try {
+                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MATRIX) {
+                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > 0)
+                                break;
+                        }
+                        registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() + 50);
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+
+    void Systems::setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (user_info->achievements.at(registry.getComponents<ecs::Achievement>().at(it).value().getID()) == true) {
+                    registry.addComponent<ecs::Drawable>(registry.getEntityById(registry.getComponents<ecs::Link>().at(it).value().getLink()), ecs::Drawable());
+                    auto rect = graphical.sprites_manager->get_Animations_rect(ecs::EntityTypes::BACKGROUND, 20, 0);
+                    registry.getComponents<ecs::Type>().at(it).value().setEntityID(20);
+                    graphical.addSprite(it, graphical.sprites_manager->get_Spritesheet(ecs::EntityTypes::BACKGROUND, 20), rect);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
 } // namespace ecs

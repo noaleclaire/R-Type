@@ -44,7 +44,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
-    // Achievements::initScene(_unique_registry, _sprites_manager, _graphical);
+    Achievements::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
@@ -143,8 +143,10 @@ void Core::_switchScenes()
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
         _actual_registry->setActualScene(Core::actual_scene);
-    if (_last_scene != ecs::Scenes::ACHIEVEMENTS && Core::actual_scene == ecs::Scenes::ACHIEVEMENTS)
+    if (_last_scene != ecs::Scenes::ACHIEVEMENTS && Core::actual_scene == ecs::Scenes::ACHIEVEMENTS) {
         _actual_registry->setActualScene(Core::actual_scene);
+        ecs::Systems::setUserInfoInAchievements(*_actual_registry, _graphical, &_user_info);
+    }
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS) {
         _actual_registry->setActualScene(Core::actual_scene);
         ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
@@ -273,6 +275,7 @@ void Core::_gameLoop()
             ecs::Systems::Collider(*_actual_registry, _actual_registry->getComponents<ecs::Collider>(), _graphical);
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
+            ecs::Systems::Achievement(&_user_info);
             _graphical.draw(*_actual_registry);
         }
     } catch (const Exception &e) {

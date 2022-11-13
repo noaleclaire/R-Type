@@ -54,6 +54,7 @@ namespace ecs
             registerComponents<ecs::Pressed>();
             registerComponents<ecs::CompoServer>();
             registerComponents<ecs::Planet>();
+            registerComponents<ecs::Achievement>();
         };
         ~Registry() = default;
         /**
