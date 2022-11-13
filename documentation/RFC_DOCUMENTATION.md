@@ -65,18 +65,24 @@ ________________________________________________________________________________
     
     Enum message:  
 
-    enum CustomMessage : uint32_t { PingServer,
+    enum CustomMessage : uint32_t { PingServer, PingClient,
                                 CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
-                                GetRoomScene,
+                                GetScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
+                                SwitchRoomMode, IsHost,
+                                QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
-                                SwitchToGame,
-                                RemoveClient };
+                                SwitchToGame, InitGame, KillAnEntity,
+                                RemoveClient, NotEnoughPlayer, CreateShot,
+                                UpdatePosPlayerServer, UpdatePosPlayerClient };
 
 ###   - 1. Communications's basis
     
         PingServer :  
+        This action is used to verify the connexion to a server
+        
+        PingCLient :  
         This action is used to verify the connexion to a server
 
         RemoveClient :  
@@ -89,8 +95,16 @@ ________________________________________________________________________________
 
         AllComponentSent :  
         This action is used to setup information about components
+        
+        KillAnEntity :
+        This action is used to destroy an entity
+
+###    - 3. Scene
+        
+        GetScene :
+        This action is used to send the scene to the client
     
-###    - 3. Room management
+###    - 4. Room management
 
         CreatePublicRoom :  
         This action is used to create a plublic room in a server
@@ -106,11 +120,43 @@ ________________________________________________________________________________
 
         JoinRoomById :  
         This action is used to join a private room
-
+        
+        JoinRoom :
+        This action is used to join a private room  
+    
         GetRoomScene :  
         This action is used to set the scene in the client
+        
+        SwitchRoomMode:
+        This action is used to set the mode in the room in the server
+        
+        SwitchToGame :
+        This action is used to lauch the game in the client
+        
+        IsHost :
+        This action is used to set the host of a game in the server
+        
+        QuitRoomServer :
+        This action is used to quit a server
+        
+        QuitRoomClient :
+        This action is used to destroy a room in the client side
+
+###    - 5. Game
+
+        InitGame :
+        This action is used to launch all component use in the gameplay
+        
+        CreateShot :
+        This action is used to use shot in the client
+        
+        UpdatePosPlayerServer :
+        This action is used to set and update the player position in the server
+        
+        UpdatePosPlayerClient :
+        This action is used to set and update the player position in the client
     
-###    - 4. Error management
+###    - 6. Error management
 
         MaxRoomLimit :  
         This action is used to notify the client that the maximum number of rooms have been created
