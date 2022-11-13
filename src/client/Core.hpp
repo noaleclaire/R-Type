@@ -34,6 +34,8 @@ class Core {
     void _switchScenesJoinRoom();
     void _gameLoop();
     void _gameStop();
+    void _updatePingLatency();
+    void _updateComponentsServer();
 
     boost::asio::io_context &_io_context;
     UserInfo _user_info;
@@ -45,4 +47,8 @@ class Core {
     SpritesManager _sprites_manager;
     graphics::Graphical _graphical;
     ecs::Scenes _last_scene = ecs::Scenes::MENU;
+    std::thread _update_ping_latency;
+    float _ping_latency = 0;
+    std::thread _update_components_server;
+    float _update_time = 0;
 };

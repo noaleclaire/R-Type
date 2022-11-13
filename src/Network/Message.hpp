@@ -14,7 +14,7 @@
 
 namespace network
 {
-    enum CustomMessage : uint32_t { PingServer,
+    enum CustomMessage : uint32_t { PingServer, PingClient,
                                 CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
                                 GetScene,
                                 InitListRoom, UpdateListRoom,

@@ -91,7 +91,7 @@ class Game : public ScenesInitializer {
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         }
         /**
          * @brief Update the scene with the clock
@@ -122,7 +122,7 @@ class Game : public ScenesInitializer {
                                     network::Message<network::CustomMessage> message;
                                     message.header.id = network::CustomMessage::AllComponentSent;
                                     server->send(message, client_endpoint.first);
-                                    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                                 }
                             }
                             if (std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) < t - server->getStartTime(scene)) {

@@ -49,7 +49,7 @@ class Room : public ScenesInitializer {
             message.header.id = network::CustomMessage::GetScene;
             message << which_room;
             server->send(message, client_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
 
             //Backgrounds
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 0, 0, -80, 0, 0, 0, 0, 0, 1, 0);

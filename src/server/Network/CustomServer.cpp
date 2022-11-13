@@ -77,6 +77,9 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             std::cout << "["
                       << "connection..."
                       << "]: Server Ping" << std::endl;
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::PingClient;
+            send(message, target_endpoint);
         } break;
         case network::CustomMessage::SendComponent: {
             ecs::Scenes scene;
@@ -191,7 +194,7 @@ void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endp
             message << std::get<1>(_registries.at(i));
             for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
                 send(message, client_endpoint.first);
-                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             }
             return;
         }
@@ -238,7 +241,7 @@ void CustomServer::_createShot(network::Message<network::CustomMessage> &msg)
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             send(message, client_endpoint.first);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         }
     } catch (ecs::ExceptionComponentNull &e) {
         return;
@@ -260,11 +263,11 @@ void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, ud
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             send(message, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             network::Message<network::CustomMessage> message2;
             message2.header.id = network::CustomMessage::IsHost;
             send(message2, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             network::Message<network::CustomMessage> message3;
             for (std::size_t j = 0; j < _clients_endpoint.size(); j++) {
                 _getInfoForListRoomScene(_clients_endpoint.at(j), message3);
@@ -351,7 +354,7 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             send(message, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             network::Message<network::CustomMessage> message2;
             for (std::size_t j = 0; j < _clients_endpoint.size(); j++) {
                 _getInfoForListRoomScene(_clients_endpoint.at(j), message2);
@@ -391,7 +394,7 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
                     message.header.id = network::CustomMessage::GetScene;
                     message << std::get<0>(_registries.at(i));
                     send(message, target_endpoint);
-                    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                     for (auto &it2 : std::get<7>(_registries.at(i))->getEntities()) {
                         try {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it2).value().getFunction() == ecs::Clickable::Function::TOGAME) {
@@ -411,7 +414,7 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
                     network::Message<network::CustomMessage> message2;
                     message2.header.id = network::CustomMessage::AllComponentSent;
                     send(message2, target_endpoint);
-                    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                     if (std::get<3>(_registries.at(i)) == false) {
                         network::Message<network::CustomMessage> message3;
                         for (std::size_t j = 0; j < _clients_endpoint.size(); j++) {
@@ -496,7 +499,7 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         network::Message<network::CustomMessage> message3;
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
@@ -509,7 +512,7 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         network::Message<network::CustomMessage> message3;
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j-1).first);
@@ -522,7 +525,7 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 message.header.id = network::CustomMessage::QuitRoomClient;
                 message << std::get<0>(_registries.at(i));
                 send(message, std::get<4>(_registries.at(i)).at(j).first);
-                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                 std::get<4>(_registries.at(i)).erase(std::next(std::get<4>(_registries.at(i)).begin(), j));
                 std::get<6>(_registries.at(i)) = false;
                 _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
@@ -561,7 +564,7 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
             message.header.id = network::CustomMessage::KillAnEntity;
             message << static_cast<std::size_t>(it);
             send(message, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             sendNetworkComponents<network::CustomMessage>(registry, it, id_msg, target_endpoint);
             update = true;
         }
@@ -588,7 +591,7 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
         network::Message<network::CustomMessage> message2;
         message2.header.id = network::CustomMessage::AllComponentSent;
         send(message2, target_endpoint);
-        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
     }
 }
 

@@ -7,6 +7,7 @@
 
 #include <typeindex>
 #include <algorithm>
+#include <cmath>
 #include "CustomClient.hpp"
 #include "../../Ecs/Exceptions/Exception.hpp"
 #include "../Exceptions/Exception.hpp"
@@ -24,6 +25,7 @@ void CustomClient::pingServer()
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::PingServer;
+    ecs::Enum::ping_latency = std::chrono::system_clock::now();
     send(msg);
 }
 
@@ -147,6 +149,14 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
 {
     static_cast<void>(target_endpoint);
     switch (msg.header.id) {
+        case network::CustomMessage::PingClient: {
+            float latency =
+                (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count()
+                - std::chrono::time_point_cast<std::chrono::microseconds>(ecs::Enum::ping_latency).time_since_epoch().count());
+            latency /= 1000;
+            ecs::Enum::ping_latency_ms = std::ceil(latency) + 2;
+            std::cout << "ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
+        } break;
         case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
             msg >> scene;

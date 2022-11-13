@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include <chrono>
 
 #define NB_MAX_PLAYERS_PER_ROOM 4
 #define ROOM_ID_SIZE 8
@@ -18,4 +19,9 @@ namespace ecs
                 MENU, SETTINGS, WIN, LOOSE, GAME, TYPEPSEUDO, HOWTOPLAY };
 
     enum EntityTypes { SPACESHIP, MONSTER, SHOT, BUTTON, WALL, BACKGROUND, PARALLAX, ROOM, ROOMID, ROOMMODE, SHAPE, TEXT, TEXTBOX, TEXTBOXNUMBER, PSEUDO, MUSIC, SFX };
+    class Enum {
+        public:
+            static std::chrono::time_point<std::chrono::system_clock> ping_latency;
+            static int ping_latency_ms;
+    };
 } // namespace ecs

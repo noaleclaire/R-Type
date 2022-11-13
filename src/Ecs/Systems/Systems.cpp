@@ -35,15 +35,15 @@ namespace ecs
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
                             case Clickable::Function::FILTERBYROOMMODECOOP:
                                 graphical->client->filterByRoomModeCoop();
-                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
                                 break;
                             case Clickable::Function::FILTERBYROOMMODEVERSUS:
                                 graphical->client->filterByRoomModeVersus();
-                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
                                 break;
                             case Clickable::Function::REFRESHFILTERSROOM:
                                 graphical->client->initListRoom();
-                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
                                 break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID:
@@ -55,7 +55,7 @@ namespace ecs
                             case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
                             case Clickable::Function::SWITCHROOMMODE:
                                 graphical->client->switchRoomMode();
-                                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
                                 break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
@@ -190,8 +190,8 @@ namespace ecs
 
     void Systems::Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical)
     {
-        static float update_time_position = 0;
-        update_time_position += graphics::Graphical::world_current_time;
+        // static float update_time_position = 0;
+        // update_time_position += graphics::Graphical::world_current_time;
         for (auto &it : registry.getEntities()) {
             try {
                 try {
@@ -223,8 +223,8 @@ namespace ecs
                     posY += veloY * graphics::Graphical::world_current_time;
                     registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                     registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
-                    if (update_time_position >= 10 && graphical.client->is_host == true)
-                        graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                    // if (update_time_position >= 10 && graphical.client->is_host == true)
+                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
                     try {
                         graphical.setSpritePosition(it, posX, posY);
                     } catch (const std::out_of_range &e) {}
@@ -238,8 +238,8 @@ namespace ecs
                 continue;
             }
         }
-        if (update_time_position >= 10)
-            update_time_position = 0;
+        // if (update_time_position >= 10)
+        //     update_time_position = 0;
     }
     void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical)
     {

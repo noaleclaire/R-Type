@@ -50,7 +50,7 @@ namespace ecs
                             message.header.id = network::CustomMessage::KillAnEntity;
                             message << it;
                             server->send(message, client_endpoint.first);
-                            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                         }
                         continue;
                     }
@@ -127,7 +127,7 @@ namespace ecs
                         message.header.id = network::CustomMessage::KillAnEntity;
                         message << it;
                         server->send(message, client_endpoint.first);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                     }
                 }
             } catch (const ExceptionComponentNull &e) {

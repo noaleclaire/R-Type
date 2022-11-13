@@ -139,7 +139,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
                 network::Message<T> message = registry->getNetMessageCreate().at(i)(entity, id_msg, i);
                 message << registry->getActualScene();
                 send(message);
-                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             } catch (const ecs::ExceptionComponentNull &e) {
                 continue;
             } catch (const ecs::ExceptionIndexComponent &e) {

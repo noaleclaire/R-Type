@@ -206,6 +206,31 @@ void Core::_updateUserInfo()
     }
 }
 
+void Core::_updateComponentsServer()
+{
+    while (1) {
+        if (_update_time == -1)
+            break;
+        if (_update_time >= 15 && _client.is_host == true) {
+            for (auto &it : _actual_registry->getEntities())
+                _client.sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+            _update_time = 0;
+        }
+    }
+}
+
+void Core::_updatePingLatency()
+{
+    while (1) {
+        if (_ping_latency == -1)
+            break;
+        if (_ping_latency >= 20) {
+            _client.pingServer();
+            _ping_latency = 0;
+        }
+    }
+}
+
 void Core::_gameStop()
 {
     _client.clientDisconnect();
@@ -213,6 +238,12 @@ void Core::_gameStop()
     _io_context.stop();
     if (_client_thread.joinable())
         _client_thread.join();
+    _ping_latency = -1;
+    if (_update_ping_latency.joinable())
+        _update_ping_latency.join();
+    _update_time = -1;
+    if (_update_components_server.joinable())
+        _update_components_server.join();
 }
 
 void Core::_gameLoop()
@@ -220,8 +251,12 @@ void Core::_gameLoop()
     _graphical.getWindow().create(_graphical.getVideoMode(), ""); // sf::Style::None
     _graphical.getWindow().setFramerateLimit(60);
     _actual_registry->setActualScene(actual_scene);
+    _update_ping_latency = std::thread(&Core::_updatePingLatency, this);
+    _update_components_server = std::thread(&Core::_updateComponentsServer, this);
     try {
         while (_graphical.getWindow().isOpen()) {
+            _ping_latency += graphics::Graphical::world_current_time;
+            _update_time += graphics::Graphical::world_current_time;
             _updateUserInfo();
             _graphical.getWorldClock();
             _setActualRegistry();
