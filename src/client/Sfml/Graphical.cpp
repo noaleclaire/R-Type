@@ -22,6 +22,14 @@ namespace graphics
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
         _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf"));
+        _music_entities["cave"].openFromFile(std::filesystem::current_path().append("assets/sounds/cave_music.mp3"));
+        _music_entities["space"].openFromFile(std::filesystem::current_path().append("assets/sounds/space_music.mp3"));
+        _music_entities["desert"].openFromFile(std::filesystem::current_path().append("assets/sounds/desert_music.mp3"));
+        _music_entities["snow"].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.mp3"));
+        _music_entities["forest"].openFromFile(std::filesystem::current_path().append("assets/sounds/forest_music.mp3"));
+        _music_entities["menu"].openFromFile(std::filesystem::current_path().append("assets/sounds/boss_music.mp3"));
+        _music_entities["boss"].openFromFile(std::filesystem::current_path().append("assets/sounds/boss_music.mp3"));
+        };
     }
 
     Graphical::~Graphical()
@@ -218,6 +226,19 @@ namespace graphics
         sf::IntRect rect = _sprites_entities.at(_actual_scene).at(entity).getTextureRect();
 
         _sprites_entities.at(_actual_scene).at(entity).setTextureRect(sf::IntRect(rect.width * 2, rect.top, rect.width, rect.height));
+    }
+
+    void Graphical::setActualMusic(std::string next_scene, std::string prev_scene)
+    {
+        try
+        {
+            _music_entities.at(prev_scene).stop();
+            _music_entities.at(next_scene).play();
+        }
+        catch(const std::exception& e)
+        {
+        }
+        
     }
 
     void Graphical::setBasicSprite(std::size_t entity)

@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include "../../Ecs/Enum.hpp"
 #include "../../Ecs/Registry.hpp"
 #include "Event.hpp"
@@ -155,6 +156,13 @@ namespace graphics
          */
         void setBasicSprite(std::size_t entity);
         /**
+         * @brief Set the Actual Music object
+         * 
+         * @param next_scene 
+         * @param prev_scene 
+         */
+        void setActualMusic(std::string next_scene, std::string prev_scene);
+        /**
          * @brief Set the Texture Rect Sprite
          *
          * @param entity
@@ -230,5 +238,7 @@ namespace graphics
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Sprite>> _sprites_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::RectangleShape>> _rectangleshape_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Text>> _text_entities;
+        std::unordered_map<std::string, sf::Music> _music_entities;
+
     };
 } // namespace graphics
