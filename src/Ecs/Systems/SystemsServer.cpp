@@ -6,34 +6,34 @@
 */
 
 #include "SystemsServer.hpp"
-#include "../Factory.hpp"
-#include <iomanip>
 
 namespace ecs
 {
-    void SystemsServer::Position(Registry &registry, SparseArray<ecs::Position> const &position, std::chrono::time_point<std::chrono::system_clock> last_time)
+    void SystemsServer::VerifyPosition(Registry &registry, SparseArray<ecs::Position> const &position, float loop_time)
     {
-        for (auto &it : registry.getEntities()) {
-            try {
-                registry.getComponents<ecs::CompoServer>().at(it);
-                float posX = position.at(it).value().getXPosition();
-                float posY = position.at(it).value().getYPosition();
-                float veloX = position.at(it).value().getXVelocity();
-                float veloY = position.at(it).value().getYVelocity();
-                float test = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count();
-                test /= 1000000;
-                // std::cout << (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000 << "ms" << std::endl;
-                std::cout << test << "s" << std::endl;
-                posX += veloX * test;
-                posY += veloY * test;
-                registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
-                registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
-            } catch (const ExceptionComponentNull &e) {
-                continue;
-            } catch (const ExceptionIndexComponent &e) {
-                continue;
-            }
-        }
+        // for (auto &it : registry.getEntities()) {
+        //     try {
+        //         // registry.getComponents<ecs::CompoServer>().at(it);
+        //         float posX = position.at(it).value().getXPosition();
+        //         float posY = position.at(it).value().getYPosition();
+        //         float veloX = position.at(it).value().getXVelocity();
+        //         float veloY = position.at(it).value().getYVelocity();
+        //         // float test = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(loop_time).time_since_epoch().count();
+        //         // test /= 1000000;
+        //         // std::cout << (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count() - std::chrono::time_point_cast<std::chrono::microseconds>(last_time).time_since_epoch().count())/1000 << "ms" << std::endl;
+        //         // std::cout << test << "s" << std::endl;
+        //         posX += veloX * loop_time;
+        //         // if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT)
+        //         //     std::cout << posX << "    " << loop_time << std::endl;
+        //         posY += veloY * loop_time;
+        //         registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
+        //         registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+        //     } catch (const ExceptionComponentNull &e) {
+        //         continue;
+        //     } catch (const ExceptionIndexComponent &e) {
+        //         continue;
+        //     }
+        // }
     }
 
     void SystemsServer::Shot(Registry &registry, CustomServer *server, std::vector<std::pair<udp::endpoint, bool>> clients_endpoint)

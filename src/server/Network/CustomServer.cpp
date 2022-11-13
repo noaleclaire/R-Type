@@ -97,6 +97,9 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::CreateShot: {
             _createShot(msg);
         } break;
+        case network::CustomMessage::UpdatePosPlayerServer: {
+            _updatePosPlayer(target_endpoint, msg);
+        } break;
         case network::CustomMessage::InitListRoom: {
             std::scoped_lock guard(_mtx);
             int room_filter_mode;
@@ -132,6 +135,28 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         default:
             break;
+    }
+}
+
+void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
+{
+    ecs::Scenes scene;
+    std::size_t entity;
+    ecs::Position compo;
+    msg >> scene >> entity >> compo;
+    try {
+        compo.setXVelocity(0);
+        compo.setYVelocity(0);
+        _getGameRegistry(scene).addComponent<ecs::Position>(_getGameRegistry(scene).getEntityById(entity), compo);
+    } catch (const ecs::ExceptionEntityUnobtainable &e) {
+        return;
+    }
+    network::Message<network::CustomMessage> message;
+    message.header.id = network::CustomMessage::UpdatePosPlayerClient;
+    message << compo << entity;
+    for (auto &client_endpoint : _getClientsEndpoint(scene)) {
+        if (client_endpoint.first != target_endpoint)
+            send(message, client_endpoint.first);
     }
 }
 
@@ -197,6 +222,7 @@ void CustomServer::_createShot(network::Message<network::CustomMessage> &msg)
         float posY = _getGameRegistry(scene).getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + _getGameRegistry(scene).getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
         int layer = _getGameRegistry(scene).getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
         entity = ecs::Factory::createEntity(_getGameRegistry(scene), ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
+        std::cout << entity << std::endl;
         for (auto &client_endpoint : _getClientsEndpoint(scene)) {
             sendNetworkComponents<network::CustomMessage>(_getGameRegistry(scene), entity, network::CustomMessage::SendComponent, client_endpoint.first);
             network::Message<network::CustomMessage> message;
@@ -226,9 +252,13 @@ void CustomServer::_createRoom(network::Message<network::CustomMessage> &msg, ud
             send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
             network::Message<network::CustomMessage> message2;
+            message2.header.id = network::CustomMessage::IsHost;
+            send(message2, target_endpoint);
+            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            network::Message<network::CustomMessage> message3;
             for (std::size_t j = 0; j < _clients_endpoint.size(); j++) {
-                _getInfoForListRoomScene(_clients_endpoint.at(j), message2);
-                send(message2, _clients_endpoint.at(j));
+                _getInfoForListRoomScene(_clients_endpoint.at(j), message3);
+                send(message3, _clients_endpoint.at(j));
             }
             return;
         }
@@ -453,6 +483,10 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                     try {
                         std::get<4>(_registries.at(i)).at(j+1).second = true;
                         std::get<5>(_registries.at(i)) = _players_names.at(std::get<4>(_registries.at(i)).at(j+1).first);
+                        network::Message<network::CustomMessage> message3;
+                        message3.header.id = network::CustomMessage::IsHost;
+                        send(message3, target_endpoint);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
@@ -462,6 +496,10 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                     } catch (const std::out_of_range &e) {
                         std::get<4>(_registries.at(i)).at(j-1).second = true;
                         std::get<5>(_registries.at(i)) = _players_names.at(std::get<4>(_registries.at(i)).at(j-1).first);
+                        network::Message<network::CustomMessage> message3;
+                        message3.header.id = network::CustomMessage::IsHost;
+                        send(message3, target_endpoint);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j-1).first);
@@ -495,7 +533,7 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
     }
 }
 
-void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry)
+void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry, network::CustomMessage id_msg, bool update_all)
 {
     std::scoped_lock guard(_mtx);
     bool update = false;
@@ -514,7 +552,8 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
             message << static_cast<std::size_t>(it);
             send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-            sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint);
+            std::cout << "here22" << std::endl;
+            sendNetworkComponents<network::CustomMessage>(registry, it, id_msg, target_endpoint);
             update = true;
         }
     }
@@ -524,7 +563,8 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
                 if (registry.getComponentsCompare().at(i)(tmp_registry, it)
                 != tmp_registry.getComponentsCompare().at(i)(registry, it)
                 && std::find(tmp_entities.begin(), tmp_entities.end(), it) == tmp_entities.end()) {
-                    sendNetworkComponent<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint, i);
+                    std::cout << "here" << std::endl;
+                    sendNetworkComponent<network::CustomMessage>(registry, it, id_msg, target_endpoint, i);
                     update = true;
                 }
             } catch (const ecs::ExceptionComponentNull &e) {
@@ -534,6 +574,8 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
             }
         }
     }
+    if (!update_all)
+        update = false;
     if (update == true) {
         network::Message<network::CustomMessage> message2;
         message2.header.id = network::CustomMessage::AllComponentSent;
@@ -543,6 +585,15 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
 }
 
 ecs::Registry &CustomServer::_getGameRegistry(ecs::Scenes scene)
+{
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<1>(_registries.at(i)) == scene)
+            return (*std::get<7>(_registries.at(i)));
+    }
+    return (*std::get<7>(_registries.at(0)));
+}
+
+ecs::Registry CustomServer::_getCopyGameRegistry(ecs::Scenes scene)
 {
     for (std::size_t i = 0; i < _registries.size(); i++) {
         if (std::get<1>(_registries.at(i)) == scene)

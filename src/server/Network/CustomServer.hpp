@@ -48,7 +48,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     {
         for (std::size_t i = 0; i < registry.getNetMessageCreate().size(); i++) {
             try {
-                network::Message<network::CustomMessage> message = registry.getNetMessageCreate().at(i)(entity, id_msg, i);
+                network::Message<T> message = registry.getNetMessageCreate().at(i)(entity, id_msg, i);
                 if (all_clients && !except_one)
                     sendToAllClients(message);
                 else if (all_clients && except_one)
@@ -69,7 +69,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void sendNetworkComponent(ecs::Registry &registry, std::size_t entity, T id_msg, udp::endpoint client_endpoint, std::size_t index, bool all_clients = false, bool except_one = false)
     {
         try {
-            network::Message<network::CustomMessage> message = registry.getNetMessageCreate().at(index)(entity, id_msg, index);
+            network::Message<T> message = registry.getNetMessageCreate().at(index)(entity, id_msg, index);
             if (all_clients && !except_one)
                 sendToAllClients(message);
             else if (all_clients && except_one)
@@ -117,7 +117,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      * @param registry new registry
      * @param tmp_registry old registry
      */
-    void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry);
+    void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry, network::CustomMessage id_msg = network::CustomMessage::SendComponent, bool update_all = true);
 
   protected:
     /**
@@ -129,6 +129,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg) override;
 
   private:
+    void _updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint);
     void _getGame(ecs::Scenes game_scene, udp::endpoint target_endpoint);
     void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
@@ -138,7 +139,9 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     void _joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _updateRoom(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
     void _quitRoom(udp::endpoint target_endpoint);
+    void _verifiedPosition();
     ecs::Registry &_getGameRegistry(ecs::Scenes scene);
+    ecs::Registry _getCopyGameRegistry(ecs::Scenes scene);
     std::vector<std::pair<udp::endpoint, bool>> &_getClientsEndpoint(ecs::Scenes scene);
 
     /**

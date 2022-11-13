@@ -114,6 +114,17 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void clientDisconnect();
+    template <class T, class U>
+    void sendComponentToServer(std::size_t entity, T id_msg, U &compo)
+    {
+        try {
+            network::Message<T> message;
+            message.header.id = id_msg;
+            message << compo << entity << *actual_scene;
+            send(message);
+        } catch (const ecs::ExceptionComponentNull &e) {}
+        catch (const ecs::ExceptionIndexComponent &e) {}
+    }
     ecs::Registry *registry;
     ecs::Registry *non_shareable_registry;
     graphics::Graphical *graphical;
@@ -121,6 +132,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     UserInfo *user_info;
     ecs::Scenes *actual_scene;
     ecs::Scenes game_scene = ecs::Scenes::GAME;
+    bool is_host = false;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
 

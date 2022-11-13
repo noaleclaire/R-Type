@@ -5,13 +5,12 @@
 ** Systems
 */
 
+#include <cmath>
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
 #include "../../client/Exceptions/Exception.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
-#include <cmath>
-
 #include "../Factory.hpp"
 
 namespace ecs
@@ -204,14 +203,22 @@ namespace ecs
                         registry.getComponents<ecs::Controllable>().at(it);
                         veloX = 0;
                         veloY = 0;
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
                             veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
                             veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
                             veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                             veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
+                        }
                     } catch (const ExceptionComponentNull &e) {}
                     catch (const ExceptionIndexComponent &e) {}
                     posX += veloX * graphics::Graphical::world_current_time;

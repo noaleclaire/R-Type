@@ -20,7 +20,7 @@ namespace ecs
          * @param position
          * @param last_time
          */
-        static void Position(Registry &registry, SparseArray<ecs::Position> const &position, std::chrono::time_point<std::chrono::system_clock> last_time);
+        static void VerifyPosition(Registry &registry, SparseArray<ecs::Position> const &position, float loop_time);
         /**
          * @brief System handling shots in server side
          *

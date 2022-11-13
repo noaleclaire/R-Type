@@ -92,7 +92,6 @@ class Game : public ScenesInitializer {
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-            std::cout << std::endl;
         }
         /**
          * @brief Update the scene with the clock
@@ -108,9 +107,9 @@ class Game : public ScenesInitializer {
 
             registry.setActualScene(scene);
             while (1) {
+                t = std::chrono::system_clock::now();
                 try {
                     for (auto &it : registry.getEntities()) {
-                        t = std::chrono::system_clock::now();
                         try {
                             registry.getComponents<ecs::CompoServer>().at(it);
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
@@ -127,7 +126,6 @@ class Game : public ScenesInitializer {
                             if (std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) < t - server->getStartTime(scene)) {
                                 ecs::Registry tmp_registry = registry;
 
-                                // ecs::SystemsServer::Position(registry, registry.getComponents<ecs::Position>(), server->getLastTime(scene));
                                 // ecs::SystemsServer::Shot(registry, server, clients_endpoint);
                                 // for (auto &client_endpoint : clients_endpoint) {
                                 //     server->compareRegistries(client_endpoint.first, registry, tmp_registry);
@@ -136,11 +134,11 @@ class Game : public ScenesInitializer {
                         } catch (const ecs::ExceptionComponentNull &e) {
                         } catch (const ecs::ExceptionIndexComponent &e) {}
                         ecs::SystemsServer::Shot(registry, server, clients_endpoint);
-                        server->setLastTime(scene, t);
                     }
                 } catch (const ecs::Exception &e) {
                     return;
                 }
+                server->setLastTime(scene, t);
             }
         }
 };
