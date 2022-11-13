@@ -161,7 +161,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             ecs::Scenes scene;
             msg >> scene;
             if (scene != ecs::Scenes::GAME1 && scene != ecs::Scenes::GAME2
-            && scene != ecs::Scenes::GAME3) {
+            && scene != ecs::Scenes::GAME3 && scene != ecs::Scenes::RETURNTOGAME) {
                 registry->setActualScene(scene);
                 graphical->setActualGraphicsEntities(scene);
                 std::cout << "scene: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
@@ -214,6 +214,11 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _killEntities(room_scene);
             _killEntities(scene_game);
             is_host = false;
+            std::cout << "lll" << std::endl;
+        } break;
+        case network::CustomMessage::QuitGameClient: {
+            game_scene = ecs::Scenes::RETURNTOGAME;
+            msg >> tmp_scene;
         } break;
         case network::CustomMessage::IsHost: {
             is_host = true;

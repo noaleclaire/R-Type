@@ -24,7 +24,8 @@ namespace network
                                 SendComponent, AllComponentSent,
                                 SwitchToGame, InitGame, KillAnEntity,
                                 RemoveClient, NotEnoughPlayer, CreateShot,
-                                UpdatePosPlayerServer, UpdatePosPlayerClient };
+                                UpdatePosPlayerServer, UpdatePosPlayerClient,
+                                QuitGameClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;
