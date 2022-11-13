@@ -179,7 +179,7 @@ void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Mess
                 std::get<7>(_registries.at(i))->getEntityById(entity);
                 std::get<7>(_registries.at(i))->addComponent<ecs::Position>(std::get<7>(_registries.at(i))->getEntityById(entity), pos);
                 std::get<7>(_registries.at(i))->addComponent<ecs::Rectangle>(std::get<7>(_registries.at(i))->getEntityById(entity), rect);
-                return;
+                break;
             }
         }
     } catch (const ecs::Exception &e) {}
@@ -356,6 +356,20 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
             _players_names.insert_or_assign(target_endpoint, player_name);
             _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
             std::get<7>(_registries.at(i))->setActualScene(room_scene);
+
+            std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(
+                std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(
+                    std::get<4>(_registries.at(i)).size() - 1)).value().setText(const_cast<char *>(player_name.c_str()));
+            for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                sendNetworkComponents(*std::get<7>(_registries.at(i)),
+                std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(std::get<4>(_registries.at(i)).size() - 1),
+                network::CustomMessage::SendComponent, client_endpoint.first);
+                network::Message<network::CustomMessage> message3;
+                message3.header.id = network::CustomMessage::AllComponentSent;
+                send(message3, client_endpoint.first);
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+            }
+
             for (auto &it : std::get<7>(_registries.at(i))->getEntities()) {
                 try {
                     if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
@@ -388,6 +402,7 @@ void CustomServer::_joinRoom(udp::endpoint target_endpoint, network::Message<net
 
 void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     int id_room = 0;
     ecs::Text player_name_class;
     std::string player_name;
@@ -397,7 +412,6 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
     std::string room_id;
     for (std::size_t i = 0; i < _registries.size(); i++) {
         if (std::get<2>(_registries.at(i)) == true) {
-            std::scoped_lock guard(_mtx);
             std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
             for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMID)) {
                 room_id = std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(it).value().getText();
@@ -416,6 +430,20 @@ void CustomServer::_joinRoomById(udp::endpoint target_endpoint, network::Message
                     message << std::get<0>(_registries.at(i));
                     send(message, target_endpoint);
                     std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+
+                    std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(
+                        std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(
+                            std::get<4>(_registries.at(i)).size() - 1)).value().setText(const_cast<char *>(player_name.c_str()));
+                    for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                        sendNetworkComponents(*std::get<7>(_registries.at(i)),
+                        std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(std::get<4>(_registries.at(i)).size() - 1),
+                        network::CustomMessage::SendComponent, client_endpoint.first);
+                        network::Message<network::CustomMessage> message3;
+                        message3.header.id = network::CustomMessage::AllComponentSent;
+                        send(message3, client_endpoint.first);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                    }
+
                     for (auto &it2 : std::get<7>(_registries.at(i))->getEntities()) {
                         try {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it2).value().getFunction() == ecs::Clickable::Function::TOGAME) {
@@ -512,7 +540,9 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
     for (std::size_t i = 0; i < _registries.size(); i++) {
         for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
             if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint) {
+                std::cout << std::get<4>(_registries.at(i)).at(j).first << std::endl;
                 std::scoped_lock guard(_mtx);
+                std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
                 if (std::get<4>(_registries.at(i)).at(j).second == true && std::get<4>(_registries.at(i)).size() > 1) {
                     try {
                         std::get<4>(_registries.at(i)).at(j+1).second = true;
@@ -521,6 +551,17 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
                         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                        std::cout << std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT).size() << std::endl;
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT)) {
+                            Room::setTextToStartGame(*std::get<7>(_registries.at(i)), it);
+                            sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
+                            network::Message<network::CustomMessage> msg;
+                            msg.header.id = network::CustomMessage::AllComponentSent;
+                            send(msg, std::get<4>(_registries.at(i)).at(j+1).first);
+                            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                            Room::setTextToWaitingHost(*std::get<7>(_registries.at(i)), it);
+                            break;
+                        }
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
@@ -534,6 +575,16 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
                         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT)) {
+                            Room::setTextToStartGame(*std::get<7>(_registries.at(i)), it);
+                            sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j-1).first);
+                            network::Message<network::CustomMessage> msg;
+                            msg.header.id = network::CustomMessage::AllComponentSent;
+                            send(msg, std::get<4>(_registries.at(i)).at(j-1).first);
+                            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                            Room::setTextToWaitingHost(*std::get<7>(_registries.at(i)), it);
+                            break;
+                        }
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::BUTTON)) {
                             if (std::get<7>(_registries.at(i))->getComponents<ecs::Clickable>().at(it).value().getFunction() == ecs::Clickable::Function::TOGAME) {
                                 sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j-1).first);
@@ -561,6 +612,26 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                             std::get<7>(_registries.at(i))->killEntity(it);
                     } catch (const ecs::Exception &e) {}
                 }
+                for (std::size_t g = 0; g < std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).size(); g++) {
+                    std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(
+                    std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(g)).value().setText(const_cast<char *>(""));
+                }
+                for (std::size_t g = 0; g < std::get<4>(_registries.at(i)).size(); g++) {
+                    std::get<7>(_registries.at(i))->getComponents<ecs::Text>().at(
+                    std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(g)).value().setText(
+                    const_cast<char *>(_players_names.at(std::get<4>(_registries.at(i)).at(g).first).c_str()));
+                }
+                network::Message<network::CustomMessage> message3;
+                message3.header.id = network::CustomMessage::AllComponentSent;
+                for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
+                    for (std::size_t g = 0; g < std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).size(); g++) {
+                        sendNetworkComponents(*std::get<7>(_registries.at(i)),
+                        std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLAYERSNAME).at(g),
+                        network::CustomMessage::SendComponent, client_endpoint.first);
+                    }
+                    send(message3, client_endpoint.first);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                }
                 network::Message<network::CustomMessage> message2;
                 for (std::size_t g = 0; g < _clients_endpoint.size(); g++) {
                     _getInfoForListRoomScene(_clients_endpoint.at(g), message2);
@@ -568,6 +639,25 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 }
                 return;
             }
+        }
+    }
+}
+
+void CustomServer::quitGame(ecs::Scenes scene_game)
+{
+    std::scoped_lock guard(_mtx);
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<1>(_registries.at(i)) == scene_game) {
+            std::get<7>(_registries.at(i))->setActualScene(std::get<1>(_registries.at(i)));
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::QuitGameClient;
+            message << std::get<0>(_registries.at(i));
+            for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+                send(message, std::get<4>(_registries.at(i)).at(j).first);
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+            }
+            for (auto &it : std::get<7>(_registries.at(i))->getEntities())
+                std::get<7>(_registries.at(i))->killEntity(it);
         }
     }
 }

@@ -44,7 +44,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
-    // Achievements::initScene(_unique_registry, _sprites_manager, _graphical);
+    Achievements::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
@@ -143,8 +143,10 @@ void Core::_switchScenes()
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
         _actual_registry->setActualScene(Core::actual_scene);
-    if (_last_scene != ecs::Scenes::ACHIEVEMENTS && Core::actual_scene == ecs::Scenes::ACHIEVEMENTS)
+    if (_last_scene != ecs::Scenes::ACHIEVEMENTS && Core::actual_scene == ecs::Scenes::ACHIEVEMENTS) {
         _actual_registry->setActualScene(Core::actual_scene);
+        ecs::Systems::setUserInfoInAchievements(*_actual_registry, _graphical, &_user_info);
+    }
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS) {
         _actual_registry->setActualScene(Core::actual_scene);
         ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
@@ -156,6 +158,7 @@ void Core::_switchScenes()
     }
     if (_last_scene != ecs::Scenes::QUITROOM && Core::actual_scene == ecs::Scenes::QUITROOM) {
         _client.quitRoom();
+        std::cout << "ere" << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         Core::actual_scene = ecs::Scenes::LISTROOM;
         _setActualRegistry();
@@ -207,6 +210,27 @@ void Core::_switchScenes()
                 break;
             default:
                 break;
+        }
+    }
+    if (_client.game_scene == ecs::Scenes::RETURNTOGAME) {
+        std::cout << "tes" << _actual_registry->getActualScene() << std::endl;
+        try {
+            for (auto &it : _actual_registry->getEntities())
+                _actual_registry->killEntity(it);
+            _graphical.getAllSprites().clear();
+            _graphical.getAllRectangleShapes().clear();
+            _graphical.getAllTexts().clear();
+            Core::actual_scene = _client.tmp_scene;
+            _setActualRegistry();
+            _actual_registry->setActualScene(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
+            _client.game_scene = ecs::Scenes::GAME;
+        } catch (const ecs::Exception &e) {
+            Core::actual_scene = ecs::Scenes::MENU;
+            _setActualRegistry();
+            _actual_registry->setActualScene(Core::actual_scene);
+            _graphical.setActualGraphicsEntities(Core::actual_scene);
+            _client.game_scene = ecs::Scenes::GAME;
         }
     }
 
@@ -304,6 +328,7 @@ void Core::_gameLoop()
             ecs::Systems::Collider(*_actual_registry, _actual_registry->getComponents<ecs::Collider>(), _graphical);
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
+            ecs::Systems::Achievement(&_user_info);
             _graphical.draw(*_actual_registry);
         }
     } catch (const Exception &e) {

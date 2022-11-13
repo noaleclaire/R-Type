@@ -105,6 +105,7 @@ class Room : public ScenesInitializer {
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMMODE, 0));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
 
+            //Room ID
             std::time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::tm tm = *std::gmtime(&tt);
             std::string format = "UTC: %Y-%m-%d %H:%M:%S";
@@ -121,6 +122,49 @@ class Room : public ScenesInitializer {
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMID));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+
+            //Text
+                //start game text
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("START GAME")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(78, 632, 60, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+            setTextToWaitingHost(registry, entity);
+                //player name 1
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>(player_name.c_str())));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(99, 253, 60, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLAYERSNAME));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //player name 2
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(99, 313, 60, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLAYERSNAME));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //player name 3
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(99, 373, 60, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLAYERSNAME));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //player name 4
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(99, 433, 60, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLAYERSNAME));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
 
             //Planets
@@ -158,5 +202,35 @@ class Room : public ScenesInitializer {
             // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
             registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(5, false));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+        }
+        /**
+         * @brief Set the Text Component To Waiting Host
+         *
+         * @param registry
+         * @param entity
+         */
+        static void setTextToWaitingHost(ecs::Registry &registry, std::size_t entity)
+        {
+            if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == ecs::EntityTypes::TEXT) {
+                registry.getComponents<ecs::Text>().at(entity).value().setText(const_cast<char *>("waiting for host..."));
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setXRectangle(48);
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setYRectangle(644);
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setWidthRectangle(40);
+            }
+        }
+        /**
+         * @brief Set the Text Component to Start Game
+         *
+         * @param registry
+         * @param entity
+         */
+        static void setTextToStartGame(ecs::Registry &registry, std::size_t entity)
+        {
+            if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == ecs::EntityTypes::TEXT) {
+                registry.getComponents<ecs::Text>().at(entity).value().setText(const_cast<char *>("START GAME"));
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setXRectangle(78);
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setYRectangle(632);
+                registry.getComponents<ecs::Rectangle>().at(entity).value().setWidthRectangle(60);
+            }
         }
 };
