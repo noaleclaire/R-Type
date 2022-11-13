@@ -40,22 +40,6 @@ namespace ecs
         /** Getter */
 
         /** Setter */
-        /**
-         * @brief Set the Angle object
-         *
-         * @param angle
-         */
-        void setAngle(int angle);
-        bool getShooting() const;
-        void setShooting(bool isShooting);
-        bool getBeenInRange() const;
-        void setBeenInRange(bool beenIn);
-
-      private:
-        int _angle;
-        bool _shooting = false; // mettre dans le compo basic shot plus tard
-        bool _been_in_range = false;
-
 
         friend bool operator==(const Shootable &lhs, const Shootable &rhs)
         {
