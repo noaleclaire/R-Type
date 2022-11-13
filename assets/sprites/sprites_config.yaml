@@ -49,6 +49,7 @@ spritesheet: backgrounds/background.jpg
    rect_y: 0
    rect_width: 1327
    rect_height: 720
+
 spritesheet: backgrounds/background.jpg
  parallax: 0
   anim: 0
@@ -216,10 +217,147 @@ spritesheet: backgrounds/achievement.png
   anim: 0
    rect_x: 0
    rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/cave/2.png
+ background: 30
+  anim: 0
+   rect_x: 0
+   rect_y: 0
    rect_width: 860
    rect_height: 134
 
+spritesheet: backgrounds/desert/background1.png
+ background: 40
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/desert/background2.png
+ background: 41
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/desert/background3.png
+ background: 42
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/forest/layer_0001_8.png
+ background: 50
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/forest/layer_0003_6.png
+ background: 51
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/forest/layer_0005_5.png
+ background: 52
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/forest/layer_0011_0.png
+ background: 53
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/ice/1.png
+ background: 60
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/ice/2.png
+ background: 61
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/ice/3.png
+ background: 62
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/ice/4.png
+ background: 63
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/ice/5.png
+ background: 64
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/space/1.png
+ background: 70
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/space/2.png
+ background: 71
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/space/3.png
+ background: 72
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
+spritesheet: backgrounds/space/4.png
+ background: 73
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 720
+   rect_height: 405
+
 # ------------------------BUTTONS------------------------
+
 spritesheet: buttons/create_private_game_btn.png
  button: 0
   anim: 0
