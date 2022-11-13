@@ -48,7 +48,7 @@ class Core {
     graphics::Graphical _graphical;
     ecs::Scenes _last_scene = ecs::Scenes::MENU;
     std::thread _update_ping_latency;
-    float _ping_latency = 0;
+    // float _ping_latency = 0;
     std::thread _update_components_server;
     float _update_time = 0;
 };

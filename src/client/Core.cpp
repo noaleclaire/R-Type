@@ -238,9 +238,9 @@ void Core::_gameStop()
     _io_context.stop();
     if (_client_thread.joinable())
         _client_thread.join();
-    _ping_latency = -1;
-    if (_update_ping_latency.joinable())
-        _update_ping_latency.join();
+    // _ping_latency = -1;
+    // if (_update_ping_latency.joinable())
+    //     _update_ping_latency.join();
     _update_time = -1;
     if (_update_components_server.joinable())
         _update_components_server.join();
