@@ -20,6 +20,8 @@ void ParserUserInfo::getUserInfo(UserInfo &obj)
     std::strcpy(obj.pseudo, "");
     obj.music_volume = 10;
     obj.sfx_volume = 10;
+    for (int i = 0; i < 8; i++)
+        obj.achievements.push_back(static_cast<int>(false));
     // Opening file in append mode
     file_obj.open(std::filesystem::current_path() / "user.cache", std::ios::in | std::ios::binary);
  
