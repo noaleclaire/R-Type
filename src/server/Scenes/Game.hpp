@@ -69,8 +69,8 @@ class Game : public ScenesInitializer {
                         registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP &&
                         registry.getComponents<ecs::Type>().at(it).value().getEntityID() == client_id) {
                             registry.addComponent<ecs::Controllable>(it, ecs::Controllable());
-                            registry.getComponents<ecs::Position>().at(it).value().setXVelocity(150);
-                            registry.getComponents<ecs::Position>().at(it).value().setYVelocity(150);
+                            registry.getComponents<ecs::Position>().at(it).value().setXVelocity(600);
+                            registry.getComponents<ecs::Position>().at(it).value().setYVelocity(600);
                             server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint);
                             break;
                         }

@@ -114,10 +114,6 @@ namespace ecs
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
             registry.addComponent<ecs::Killable>(entity, ecs::Killable());
-<<<<<<< HEAD
-=======
-
->>>>>>> bdacb16ee94f82d4c49b65676343faf9a9038a26
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(linked_entity));
             registry.addComponent<ecs::Ammo>(registry.getEntityById(entity), ecs::Ammo(registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType()));
             registry.addComponent<ecs::Position>(
