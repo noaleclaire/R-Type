@@ -5,12 +5,13 @@
 ** Systems
 */
 
+#include <cmath>
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
 #include "../../client/Exceptions/Exception.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
-#include <cmath>
+#include "../Factory.hpp"
 
 namespace ecs
 {
@@ -21,16 +22,30 @@ namespace ecs
             try {
                 clickable.at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         switch (clickable.at(it).value().getFunction()) {
                             case Clickable::Function::EXIT: graphical->getWindow().close(); break;
                             case Clickable::Function::TOGAME: Core::actual_scene = ecs::Scenes::GAME; break;
                             case Clickable::Function::TOSETTINGS: Core::actual_scene = ecs::Scenes::SETTINGS; break;
                             case Clickable::Function::TOMENU: Core::actual_scene = ecs::Scenes::MENU; break;
                             case Clickable::Function::TOHTP: Core::actual_scene = ecs::Scenes::HOWTOPLAY; break;
+                            case Clickable::Function::TOACHIEVEMENTS: Core::actual_scene = ecs::Scenes::ACHIEVEMENTS; break;
                             case Clickable::Function::CREATEPUBLICROOM: Core::actual_scene = ecs::Scenes::PUBLICROOM; break;
                             case Clickable::Function::CREATEPRIVATEROOM: Core::actual_scene = ecs::Scenes::PRIVATEROOM; break;
                             case Clickable::Function::LISTROOM: Core::actual_scene = ecs::Scenes::LISTROOM; break;
+                            case Clickable::Function::FILTERBYROOMMODECOOP:
+                                graphical->client->filterByRoomModeCoop();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::FILTERBYROOMMODEVERSUS:
+                                graphical->client->filterByRoomModeVersus();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
+                            case Clickable::Function::REFRESHFILTERSROOM:
+                                graphical->client->initListRoom();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::JOINROOM: Core::actual_scene = registry.getComponents<ecs::CompoScene>().at(it).value().getScene(); break;
                             case Clickable::Function::JOINROOMBYID:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0) {
@@ -38,12 +53,24 @@ namespace ecs
                                     Core::actual_scene = ecs::Scenes::JOINROOMBYID;
                                 }
                                 break;
+                            case Clickable::Function::QUITROOM: Core::actual_scene = ecs::Scenes::QUITROOM; break;
+                            case Clickable::Function::SWITCHROOMMODE:
+                                graphical->client->switchRoomMode();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+                                break;
                             case Clickable::Function::CONFIRMPSEUDO:
                                 if (graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink()).size() > 0)
                                     Core::new_pseudo = graphical->getTextString(registry.getComponents<ecs::Link>().at(it).value().getLink());
                                 break;
                             case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
+                                break;
+                            case Clickable::Function::SELECTPLANET:
+                                _unselectAllPlanet(registry, registry.getComponents<ecs::Planet>(), graphical);
+                                registry.getComponents<ecs::Planet>().at(it).value().select();
+                                graphical->getAllSprites().at(it).setScale(sf::Vector2f(1.25, 1.25));
+                                registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                                Core::level_id = registry.getComponents<ecs::Planet>().at(it).value().getLevelID() - 1;
                                 break;
                             default: break;
                         }
@@ -68,6 +95,24 @@ namespace ecs
             }
         }
     }
+
+    void Systems::_unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (planet.at(it).value().isSelected() == true) {
+                    planet.at(it).value().unselect();
+                    graphical->getAllSprites().at(it).setScale(sf::Vector2f(1, 1));
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
     void Systems::ClickablePressed(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
     {
         for (auto &it : registry.getEntities()) {
@@ -76,7 +121,8 @@ namespace ecs
                 registry.getComponents<ecs::Pressed>().at(it);
                 registry.getComponents<ecs::Type>().at(it);
                 try {
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseButton.x, graphical->getEvent().mouseButton.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3) {
                             graphical->setPressedSprite(it);
@@ -143,7 +189,7 @@ namespace ecs
 
     void Systems::Drawable(Registry &registry, SparseArray<ecs::Drawable> const &drawable, graphics::Graphical *graphical)
     {
-        for (std::size_t i = 0; i < registry.getEntities().size(); i++) {
+        for (std::size_t i = 0; i <= registry.getEntities().size(); i++) {
             for (auto &it : registry.getEntities()) {
                 try {
                     drawable.at(it);
@@ -180,18 +226,39 @@ namespace ecs
                     registry.getComponents<ecs::Controllable>().at(it);
                     veloX = 0;
                     veloY = 0;
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
                         veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
                         veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
                         veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                         veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                } catch (const ExceptionComponentNull &e) {}
-                catch (const ExceptionIndexComponent &e) {}
-                posX += veloX * graphics::Graphical::world_current_time;
-                posY += veloY * graphics::Graphical::world_current_time;
+                    }
+                    if (veloX != 0 || veloY != 0)
+                        registry.addComponent<ecs::Animation>(registry.getEntityById(it), ecs::Animation());
+                    else {
+                        registry.removeComponent<ecs::Animation>(registry.getEntityById(it));
+                        auto rect = graphical.sprites_manager->get_Animations_rect(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID());
+                        graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
+                    }
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                    if (posX < 0)
+                        posX = 0;
+                    if (posX > 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
+                        posX = 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+                    if (posY < 0)
+                        posY = 0;
+                    if (posY > 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
+                        posY = 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
+                } catch (const Exception &e) {
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                }
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 try {
@@ -213,24 +280,46 @@ namespace ecs
             try {
                 controllable.at(it);
                 if (graphical->getEvent().type == sf::Event::KeyPressed) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", true);
+                        graphical->client->sendPlayerPos(3, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", true);
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::LShift)
+                        controllable.at(it).value().setKey("shift", true);
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", false);
+                        graphical->client->sendPlayerPos(3, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
+                        controllable.at(it).value().setKey("space", false);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -239,13 +328,49 @@ namespace ecs
             }
         }
     }
+    void Systems::Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (controllable.at(it).value().getKey("space") == true)
+                    _createShot(registry, it, client);
+                if (controllable.at(it).value().getKey("shift") == true) {
+                    controllable.at(it).value().setKey("shift", false);
+                    if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::BEAM);
+                        std::cout << "BEAM" << std::endl;
+                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::BEAM) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC);
+                        std::cout << "CLASSIC" << std::endl;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
+    void Systems::_createShot(Registry &registry, std::size_t linked_entity, CustomClient *client)
+    {
+        ecs::Ammo::AmmoType ammoType = registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
+
+        if ((std::chrono::system_clock::now() - registry.getComponents<ecs::Shooter>().at(linked_entity).value().getLastShot()) >= std::chrono::milliseconds(ecs::Ammo::ammoAttributesByType.at(ammoType).shot_rate)) {
+            registry.getComponents<ecs::Shooter>().at(linked_entity).value().setLastShot();
+            client->createShot(linked_entity, registry.getActualScene());
+        }
+    }
+
     void Systems::Parallaxe(Registry &registry, SparseArray<ecs::Type> const &type)
     {
         for (auto &it : registry.getEntities()) {
             try {
-                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
+                if (type.at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::PARALLAX
+                || type.at(it).value().getEntityType() == ecs::EntityTypes::WALL) {
                     if (registry.getComponents<ecs::Position>().at(it).value().getXPosition()
-                        <= -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                    + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() < 1) {
                         registry.getComponents<ecs::Position>().at(it).value().setXPosition(
                             registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle());
                     }
@@ -297,7 +422,8 @@ namespace ecs
                 registry.getComponents<ecs::Type>().at(it);
                 try {
                     graphical->setBasicSprite(it);
-                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
+                    if (graphical->getAllSprites().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)
+                    && registry.getComponents<ecs::Drawable>().at(it)) {
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON
                         && graphical->sprites_manager->getNbAnimation(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID()) == 3)
                             graphical->setHoverSprite(it);
@@ -374,6 +500,50 @@ namespace ecs
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             } catch (const ::Exception &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (it == it_in)
+                            continue;
+                        if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
+                            if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP ||
+                                    registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                            }
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    } catch (const std::out_of_range &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }

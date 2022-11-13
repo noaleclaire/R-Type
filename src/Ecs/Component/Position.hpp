@@ -98,6 +98,10 @@ namespace ecs
          */
         void setYVelocity(float y);
 
+        friend bool operator==(const Position &lhs, const Position &rhs)
+        {
+            return lhs._x == rhs._x && lhs._y == rhs._y && lhs._xVelocity == rhs._xVelocity && lhs._yVelocity == rhs._yVelocity;
+        }
       private:
         float _x;
         float _y;

@@ -3,13 +3,1240 @@
 #   position_x: 100 -> spawn x position
 #   position_y: 150 -> spawn y position
 #   velocity_x: -80 -> x velocity
-#   velocity_y: -10 -> y velocity
+#   velocity_y: 0 -> y velocity
 #   shooter: 0 -> 0: false, 1:true
+#   layer: 0
+
+# first wave 1 pattern \
 
 monster: 0
- time: 1000
- position_x: 100
- position_y: 150
- velocity_x: -80
- velocity_y: -10
+ time: 5000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
  shooter: 0
+ layer: 1
+
+monster: 0
+ time: 5500
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 6000
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 6500
+ position_x: 1300
+ position_y: 400
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 7000
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# second wave pattern /
+
+monster: 0
+ time: 8500
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 9000
+ position_x: 1300
+ position_y: 400
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 9500
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 10000
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 10500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+#  third wave  pattern >
+
+monster: 0
+ time: 12000
+ position_x: 1300
+ position_y: 650
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 12000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 12500
+ position_x: 1300
+ position_y: 600
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 12500
+ position_x: 1300
+ position_y: 150
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 13000
+ position_x: 1300
+ position_y: 550
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 13000
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 13500
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 13500
+ position_x: 1300
+ position_y: 250
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 14000
+ position_x: 1300
+ position_y: 450
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 14000
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4 -1wave patter, WALL alternant
+
+monster: 0
+ time: 16000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 16500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 17000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 17500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 18000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4 -2wave patter, WALL alternant
+
+monster: 0
+ time: 17000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 17500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 18000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 18500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 19000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4-3 wave patter, WALL alternant
+
+monster: 0
+ time: 18500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 19000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 19500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 20000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 20500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5 -1wave patter, WALL alternant
+
+monster: 0
+ time: 20500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 21000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 21500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 22000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 22500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5 -2wave patter, WALL alternant
+
+monster: 0
+ time: 21500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 22000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 22500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 23000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 23500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5-3 wave patter, WALL alternant
+
+monster: 0
+ time: 23000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 23500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 24000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 24500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 25000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-1 wave patter, WALL alternant
+
+monster: 0
+ time: 27000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 27500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 28000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 28500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 29000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-2 wave patter, WALL alternant
+
+monster: 0
+ time: 28000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 28500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 29000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 29500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 30000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-3 wave patter, WALL alternant
+
+monster: 0
+ time: 27000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 27500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 28000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 28500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 29000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+#REPEAT
+#REPEAT
+#REPEAT
+#REPEAT
+#REPEAT
+#REPEAT
+#REPEAT
+#REPEAT
+
+monster: 0
+ time: 32000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 32500
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 33000
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 33500
+ position_x: 1300
+ position_y: 400
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 34000
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# second wave pattern /
+
+monster: 0
+ time: 35500
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 36000
+ position_x: 1300
+ position_y: 400
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 36500
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 37000
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 37500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+#  third wave  pattern >
+
+monster: 0
+ time: 39000
+ position_x: 1300
+ position_y: 650
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 39000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 39500
+ position_x: 1300
+ position_y: 600
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 39500
+ position_x: 1300
+ position_y: 150
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 40000
+ position_x: 1300
+ position_y: 550
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 40000
+ position_x: 1300
+ position_y: 200
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 40500
+ position_x: 1300
+ position_y: 500
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 40500
+ position_x: 1300
+ position_y: 250
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 41000
+ position_x: 1300
+ position_y: 450
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 41000
+ position_x: 1300
+ position_y: 300
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4 -1wave patter, WALL alternant
+
+monster: 0
+ time: 42500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 43000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 43500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 44000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 44500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4 -2wave patter, WALL alternant
+
+monster: 0
+ time: 43500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 44000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 44500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 45000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 45000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 4-3 wave patter, WALL alternant
+
+monster: 0
+ time: 44000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 44500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 45000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 45500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 46000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5 -1wave patter, WALL alternant
+
+monster: 0
+ time: 48000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 48500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 49000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 49500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 50000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5 -2wave patter, WALL alternant
+
+monster: 0
+ time: 49000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 49500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 50000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 50500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 51000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 5-3 wave patter, WALL alternant
+
+monster: 0
+ time: 50000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 50500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 51000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 51500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 52000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-1 wave patter, WALL alternant
+
+monster: 0
+ time: 54000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 54500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 55000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 55500
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 56000
+ position_x: 1300
+ position_y: 100
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-2 wave patter, WALL alternant
+
+monster: 0
+ time: 55000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 55500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 56000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 56500
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 57000
+ position_x: 1300
+ position_y: 360
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# 6-3 wave patter, WALL alternant
+
+monster: 0
+ time: 54000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 54500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 55000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 55500
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+monster: 0
+ time: 56000
+ position_x: 1300
+ position_y: 620
+ velocity_x: -300
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+# monster: 3
+#  time: 60000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1

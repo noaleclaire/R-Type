@@ -6,6 +6,8 @@
 */
 
 #include <typeindex>
+#include <algorithm>
+#include <cmath>
 #include "CustomClient.hpp"
 #include "../../Ecs/Exceptions/Exception.hpp"
 #include "../Exceptions/Exception.hpp"
@@ -23,19 +25,29 @@ void CustomClient::pingServer()
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::PingServer;
+    ecs::Enum::ping_latency = std::chrono::system_clock::now();
     send(msg);
 }
 
 void CustomClient::initGame()
 {
     network::Message<network::CustomMessage> msg;
-    msg.header.id = network::CustomMessage::SwitchToGame;
+    msg.header.id = network::CustomMessage::InitGame;
+    msg << *actual_scene;
     send(msg);
 }
 
-void CustomClient::createPublicRoom(char *player_name)
+void CustomClient::getGame(ecs::Scenes room, std::size_t level_id)
 {
-    ecs::Text player_name_class(const_cast<char *>(player_name));
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::SwitchToGame;
+    msg << room << level_id;
+    send(msg);
+}
+
+void CustomClient::createPublicRoom()
+{
+    ecs::Text player_name_class(const_cast<char *>(user_info->pseudo));
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreatePublicRoom;
     msg << player_name_class;
@@ -44,8 +56,10 @@ void CustomClient::createPublicRoom(char *player_name)
 
 void CustomClient::createPrivateRoom()
 {
+    ecs::Text player_name_class(const_cast<char *>(user_info->pseudo));
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreatePrivateRoom;
+    msg << player_name_class;
     send(msg);
 }
 
@@ -53,22 +67,57 @@ void CustomClient::initListRoom()
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::InitListRoom;
+    msg << -1;
     send(msg);
 }
 
-void CustomClient::joinRoom(ecs::Scenes scene)
+void CustomClient::joinRoom()
 {
+    ecs::Text player_name_class(const_cast<char *>(user_info->pseudo));
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::JoinRoom;
-    msg << scene;
+    msg << player_name_class;
+    msg << *actual_scene;
     send(msg);
 }
 
 void CustomClient::joinRoomById(int id_room)
 {
+    ecs::Text player_name_class(const_cast<char *>(user_info->pseudo));
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::JoinRoomById;
+    msg << player_name_class;
     msg << id_room;
+    send(msg);
+}
+
+void CustomClient::quitRoom()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::QuitRoomServer;
+    send(msg);
+}
+
+void CustomClient::switchRoomMode()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::SwitchRoomMode;
+    send(msg);
+}
+
+void CustomClient::filterByRoomModeVersus()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::InitListRoom;
+    msg << 1;
+    send(msg);
+}
+
+void CustomClient::filterByRoomModeCoop()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::InitListRoom;
+    msg << 0;
     send(msg);
 }
 
@@ -79,26 +128,95 @@ void CustomClient::clientDisconnect()
     send(msg);
 }
 
+void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::CreateShot;
+    msg << linked_entity << scene;
+    std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
+    send(msg);
+}
+
+void CustomClient::sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::UpdatePosPlayerServer;
+    msg << pressed << key << entity << pos << rect << *actual_scene;
+    send(msg);
+}
+
 void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     static_cast<void>(target_endpoint);
     switch (msg.header.id) {
-        case network::CustomMessage::GetRoomScene: {
+        case network::CustomMessage::PingClient: {
+            float latency =
+                (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count()
+                - std::chrono::time_point_cast<std::chrono::microseconds>(ecs::Enum::ping_latency).time_since_epoch().count());
+            latency /= 1000;
+            ecs::Enum::ping_latency_ms = std::ceil(latency) + 5;
+            std::cout << *actual_scene << "  " << registry->getActualScene() << "  ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
+        } break;
+        case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
             msg >> scene;
-            registry->setActualScene(scene);
+            if (scene != ecs::Scenes::GAME1 && scene != ecs::Scenes::GAME2
+            && scene != ecs::Scenes::GAME3) {
+                registry->setActualScene(scene);
+                graphical->setActualGraphicsEntities(scene);
+                std::cout << "scene: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
+            } else {
+                game_scene = scene;
+                std::cout << "game_scene: " << game_scene << std::endl;
+            }
+        } break;
+        case network::CustomMessage::KillAnEntity: {
+            std::size_t entity;
+            msg >> entity;
+            _killOneEntity(entity);
         } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
+            std::size_t entity = 10000;
             msg >> index_component_create;
-            registry->getNetComponentCreate().at(index_component_create)(msg);
+            msg >> entity;
+            std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
+            try {
+                if (entity >= 10000)
+                    return;
+                registry->getNetComponentCreate().at(index_component_create)(msg);
+                registry->getEntityById(entity);
+                if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
+                    _tmp_entities_registry.push_back(registry->getEntityById(entity));
+                std::cout << "entity:  " << entity << "  entity type:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityType();
+                std::cout << "  entity id:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityID() << std::endl;
+            } catch (const ecs::Exception &e) {}
+            catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::AllComponentSent: {
+            std::cout << "scene2222: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             _setRectAndSpriteComponent();
             _setTextComponent();
+            _setParallax();
+            _tmp_entities_registry.clear();
+            std::cout << "AllComponentSent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);
+        } break;
+        case network::CustomMessage::UpdatePosPlayerClient: {
+            _updatePosPlayer(msg);
+        } break;
+        case network::CustomMessage::QuitRoomClient: {
+            ecs::Scenes room_scene;
+            ecs::Scenes scene_game;
+            msg >> room_scene >> scene_game;
+            _killEntities(room_scene);
+            _killEntities(scene_game);
+            is_host = false;
+        } break;
+        case network::CustomMessage::IsHost: {
+            is_host = true;
         } break;
         case network::CustomMessage::MaxRoomLimit: {
             _setErrorMessage("Max Number Of Rooms Were Already Be Created");
@@ -109,63 +227,96 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::RoomDoesntExists: {
             _setErrorMessage("This Room Doesn't Exists");
         } break;
+        case network::CustomMessage::NotEnoughPlayer: {
+            _setErrorMessage("Not Enough Player In This Room");
+        } break;
         default: break;
     }
 }
 
 void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> &msg)
 {
-    ecs::Scenes tmp_scene = non_shareable_registry->getActualScene();
-    non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
     std::size_t nb_rooms = 0;
     std::size_t tmp_nb_rooms = 0;
     ecs::Scenes room_scene;
+    std::size_t entity_link_id;
+    std::vector<float> rect;
     msg >> nb_rooms;
-    for (auto &it : non_shareable_registry->getEntities()) {
-        try {
-            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
-                non_shareable_registry->removeComponent<ecs::Drawable>(it);
-                non_shareable_registry->removeComponent<ecs::CompoScene>(it);
-                non_shareable_registry->removeComponent<ecs::Drawable>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()));
-                non_shareable_registry->removeComponent<ecs::Text>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()));
+    if (non_shareable_registry->getActualScene() == ecs::Scenes::LISTROOM && *actual_scene == ecs::Scenes::LISTROOM) {
+        for (auto &it : non_shareable_registry->getEntities()) {
+            try {
+                if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                    non_shareable_registry->removeComponent<ecs::Drawable>(it);
+                    non_shareable_registry->removeComponent<ecs::CompoScene>(it);
+                    entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
+                    non_shareable_registry->removeComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id));
+                    non_shareable_registry->removeComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id));
+                    non_shareable_registry->removeComponent<ecs::Drawable>(
+                        non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink())
+                    );
+                }
+            } catch (const ecs::Exception &e) {
+                continue;
             }
-        } catch (const ecs::Exception &e) {
-            continue;
         }
-    }
-    for (auto &it : non_shareable_registry->getEntities()) {
-        try {
-            if (tmp_nb_rooms == nb_rooms)
-                break;
-            if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
-                non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
-                msg >> room_scene;
-                non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
-                tmp_nb_rooms++;
-                non_shareable_registry->addComponent<ecs::Drawable>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()), ecs::Drawable());
-                ecs::Text info_text;
-                msg >> info_text;
-                non_shareable_registry->addComponent<ecs::Text>(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()), ecs::Text());
-                non_shareable_registry->getComponents<ecs::Text>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().setText(info_text.getText());
-                graphical->addText(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink()),
-                non_shareable_registry->getComponents<ecs::Text>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getText(),
-                {non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getXRectangle(),
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getYRectangle(),
-                non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink())).value().getWidthRectangle()});
-            }
+        for (auto &it : non_shareable_registry->getEntities()) {
+            try {
+                if (tmp_nb_rooms == nb_rooms)
+                    break;
+                if (non_shareable_registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::ROOM) {
+                    non_shareable_registry->addComponent<ecs::Drawable>(it, ecs::Drawable());
+                    msg >> room_scene;
+                    non_shareable_registry->addComponent<ecs::CompoScene>(it, ecs::CompoScene(room_scene));
+                    entity_link_id = non_shareable_registry->getComponents<ecs::Link>().at(it).value().getLink();
+                    non_shareable_registry->addComponent<ecs::Drawable>(non_shareable_registry->getEntityById(entity_link_id), ecs::Drawable());
+                    ecs::Text info_text;
+                    msg >> info_text;
+                    non_shareable_registry->addComponent<ecs::Text>(non_shareable_registry->getEntityById(entity_link_id), ecs::Text());
+                    non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().setText(info_text.getText());
+                    graphical->addText(entity_link_id, non_shareable_registry->getComponents<ecs::Text>().at(entity_link_id).value().getText(),
+                    {non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getXRectangle(),
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getYRectangle(),
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(entity_link_id).value().getWidthRectangle()});
+                    non_shareable_registry->addComponent<ecs::Drawable>(
+                        non_shareable_registry->getEntityById(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()), ecs::Drawable()
+                    );
+                    bool roommode_id;
+                    msg >> roommode_id;
+                    non_shareable_registry->getComponents<ecs::Type>().at(
+                        non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()
+                    ).value().setEntityID(roommode_id);
+                    rect = sprites_manager->get_Animations_rect(
+                    non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
+                    non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID(), 0);
 
-        } catch (const ecs::Exception &e) {
-            continue;
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setXRectangle(rect.at(0));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setYRectangle(rect.at(1));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setWidthRectangle(rect.at(2));
+                    non_shareable_registry->getComponents<ecs::Rectangle>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().setHeightRectangle(rect.at(3));
+                    graphical->addSprite(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
+                        sprites_manager->get_Spritesheet(
+                            non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityType(),
+                            non_shareable_registry->getComponents<ecs::Type>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getEntityID()),
+                        rect
+                    );
+                    graphical->setSpritePosition(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink(),
+                    non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getXPosition(),
+                    non_shareable_registry->getComponents<ecs::Position>().at(non_shareable_registry->getComponents<ecs::Link>().at(entity_link_id).value().getLink()).value().getYPosition());
+                    tmp_nb_rooms++;
+                }
+
+            } catch (const ecs::Exception &e) {
+                continue;
+            }
         }
     }
-    non_shareable_registry->setActualScene(tmp_scene);
 }
 
 void CustomClient::_setRectAndSpriteComponent()
 {
     std::vector<float> rect;
 
-    for (auto &it : registry->getEntities()) {
+    for (auto &it : _tmp_entities_registry) {
         try {
             rect = sprites_manager->get_Animations_rect(
                 registry->getComponents<ecs::Type>().at(it).value().getEntityType(), registry->getComponents<ecs::Type>().at(it).value().getEntityID(), 0);
@@ -188,7 +339,7 @@ void CustomClient::_setRectAndSpriteComponent()
 
 void CustomClient::_setTextComponent()
 {
-    for (auto &it : registry->getEntities()) {
+    for (auto &it : _tmp_entities_registry) {
         try {
             graphical->addText(it, registry->getComponents<ecs::Text>().at(it).value().getText(),
             {registry->getComponents<ecs::Rectangle>().at(it).value().getXRectangle(),
@@ -200,8 +351,97 @@ void CustomClient::_setTextComponent()
     }
 }
 
+void CustomClient::_setParallax()
+{
+    float x = 0;
+    std::size_t entity_id = 0;
+    for (auto &it : _tmp_entities_registry) {
+        try {
+            if (registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BACKGROUND) {
+                entity_id = registry->getComponents<ecs::Type>().at(it).value().getEntityID();
+                x = registry->getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+            } else if (registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::PARALLAX
+            && registry->getComponents<ecs::Type>().at(it).value().getEntityID() == entity_id)
+                registry->getComponents<ecs::Position>().at(it).value().setXPosition(x);
+        } catch (const ecs::Exception &e) {
+            continue;
+        }
+    }
+}
+
+void CustomClient::_updatePosPlayer(network::Message<network::CustomMessage> &msg)
+{
+    ecs::Position pos;
+    std::size_t entity = 10000;
+    int key;
+    bool pressed;
+    msg >> pos >> entity >> key >> pressed;
+    try {
+        if (pressed == true) {
+            if (key == 0) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(-pos.getYVelocity());
+            }
+            if (key == 1) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(-pos.getXVelocity());
+            }
+            if (key == 2) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(pos.getYVelocity());
+            }
+            if (key == 3) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(pos.getXVelocity());
+            }
+        } else {
+            if (key == 0) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+            }
+            if (key == 1) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+            }
+            if (key == 2) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+            }
+            if (key == 3) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+            }
+        }
+        graphical->setSpritePosition(entity,
+        registry->getComponents<ecs::Position>().at(entity).value().getXPosition(),
+        registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
+    } catch (const ecs::Exception &e) {}
+    catch (const std::out_of_range &e) {}
+}
+
 void CustomClient::_setErrorMessage(std::string msg_error)
 {
     error_msg_server = true;
     txt_error_msg_server = msg_error;
+}
+
+void CustomClient::_killEntities(ecs::Scenes scene)
+{
+    try {
+        registry->setActualScene(scene);
+        graphical->setActualGraphicsEntities(scene);
+        for (auto &it : registry->getEntities())
+            registry->killEntity(it);
+        graphical->getAllSprites().clear();
+        graphical->getAllRectangleShapes().clear();
+        graphical->getAllTexts().clear();
+    } catch (const ecs::Exception &e) {
+        registry->setActualScene(*actual_scene);
+        graphical->setActualGraphicsEntities(*actual_scene);
+    }
+}
+
+void CustomClient::_killOneEntity(std::size_t entity)
+{
+    try {
+        registry->killEntity(registry->getEntityById(entity));
+        graphical->getAllSprites().erase(entity);
+        graphical->getAllRectangleShapes().erase(entity);
+        graphical->getAllTexts().erase(entity);
+    } catch (const ecs::Exception &e) {
+        registry->setActualScene(*actual_scene);
+        graphical->setActualGraphicsEntities(*actual_scene);
+    }
 }

@@ -36,6 +36,12 @@ namespace ecs
              */
             Pressed &operator=(const Pressed &other) = default;
 
+            friend bool operator==(const Pressed &lhs, const Pressed &rhs)
+            {
+                static_cast<void>(lhs);
+                static_cast<void>(rhs);
+                return true;
+            }
         protected:
         private:
     };

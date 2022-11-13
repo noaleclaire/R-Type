@@ -5,7 +5,6 @@
 ** Text
 */
 
-#include <cstring>
 #include <iostream>
 #include "Text.hpp"
 

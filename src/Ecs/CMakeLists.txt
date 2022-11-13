@@ -1,7 +1,7 @@
 set(INCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/Ecs/)
 
-set(SRC)
+set(SRC ${SRCROOT}/Enum.cpp)
 
 add_subdirectory(Systems)
 add_subdirectory(Exceptions)

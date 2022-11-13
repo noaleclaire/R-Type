@@ -19,7 +19,8 @@ LevelManager::LevelManager()
             std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
         {std::make_pair("time", EntityAttributes::spawn_time), std::make_pair("position_x", EntityAttributes::position_x),
             std::make_pair("position_y", EntityAttributes::position_y), std::make_pair("velocity_x", EntityAttributes::velocity_x),
-            std::make_pair("velocity_y", EntityAttributes::velocity_y), std::make_pair("shooter", EntityAttributes::shooter)}};
+            std::make_pair("velocity_y", EntityAttributes::velocity_y), std::make_pair("shooter", EntityAttributes::shooter),
+            std::make_pair("layer", EntityAttributes::layer)}};
 
     initMapFunctionPointer();
 }
@@ -46,6 +47,7 @@ void LevelManager::initMapFunctionPointer()
     _map_fptr.insert("velocity_x", &LevelManager::addEntityAttribute);
     _map_fptr.insert("velocity_y", &LevelManager::addEntityAttribute);
     _map_fptr.insert("shooter", &LevelManager::addEntityAttribute);
+    _map_fptr.insert("layer", &LevelManager::addEntityAttribute);
 }
 
 void LevelManager::executeMapMemberFunctionPointer(std::string &entity_config_word, std::string &value)
@@ -118,9 +120,9 @@ std::string const LevelManager::getEntityAttribute(EntityAttributes entity_attri
     return ("");
 }
 
-int LevelManager::getEntityAttributeValue(std::size_t entity, EntityAttributes entity_attribute) const
+std::vector<LevelManager::EntityData> LevelManager::getEntitiesDatas() const
 {
-    return (_entity_data.at(entity)._attributes.at(entity_attribute).value());
+    return (_entity_data);
 }
 
 std::vector<std::pair<ecs::EntityTypes, std::size_t>> LevelManager::getEntitiesTypeAndId() const
@@ -136,13 +138,14 @@ std::vector<std::pair<ecs::EntityTypes, std::size_t>> LevelManager::getEntitiesT
 void LevelManager::addEntityTypeId(std::string &entity_type, std::string &entity_type_id)
 {
     try {
-        _entity_type_id_tmp = std::stoi(entity_type_id);
-        _entity_type_tmp = getEntityType(entity_type);
-        for (auto &it : _entity_data) {
-            if (it._entity_type_and_id.first == _entity_type_tmp && it._entity_type_and_id.second == _entity_type_id_tmp)
-                throw Exception("the id of this type of entity : " + entity_type + " already exists", "void LevelManager::addEntityTypeId(std::string &entity_type, std::string &entity_type_id)");
-        }
-        _entity_data.push_back({std::make_pair(_entity_type_tmp, _entity_type_id_tmp), std::vector<std::optional<int>>(NB_ENTITY_ATTRIBUTES, std::nullopt)});
+        // _entity_type_id_tmp = std::stoi(entity_type_id);
+        // _entity_type_tmp = getEntityType(entity_type);
+        // for (auto &it : _entity_data) {
+        //     if (it._entity_type_and_id.first == _entity_type_tmp && it._entity_type_and_id.second == _entity_type_id_tmp)
+        //         throw Exception("the id of this type of entity : " + entity_type + " already exists", "void LevelManager::addEntityTypeId(std::string &entity_type, std::string &entity_type_id)");
+        // }
+        _entity_data.push_back({std::make_pair(getEntityType(entity_type), std::stoi(entity_type_id)), std::vector<std::optional<int>>(NB_ENTITY_ATTRIBUTES, std::nullopt)});
+        _tmp_index = _entity_data.size() - 1;
     } catch (const std::invalid_argument &e) {
         throw Exception(
             "the id of the entity type : " + entity_type + " is not an integer", "void LevelManager::addEntityTypeId(std::string &entity_type, std::string &entity_type_id)");
@@ -153,12 +156,7 @@ void LevelManager::addEntityAttribute(std::string &entity_attribute_type, std::s
 {
     try {
         int _entity_attribute_value = std::stoi(entity_attribute_value);
-        for (auto &it : _entity_data) {
-            if (it._entity_type_and_id.first == _entity_type_tmp && it._entity_type_and_id.second == _entity_type_id_tmp) {
-                it._attributes.at(getEntityAttribute(entity_attribute_type)) = _entity_attribute_value;
-                break;
-            }
-        }
+        _entity_data.at(_tmp_index)._attributes.at(getEntityAttribute(entity_attribute_type)) = _entity_attribute_value;
     } catch (const std::invalid_argument &e) {
         throw Exception("the value of the anim attribute is not an integer",
             "void SpritesManager::addSpriteAnimAttributes(std::string &anim_attribute_type, std::string &anim_attribute_value)");

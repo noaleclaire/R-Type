@@ -39,8 +39,8 @@ void executeSystemSetupCmd()
         exit(0);
     std::system("chmod +x setup_server.sh");
     std::system("./setup_server.sh 1");
-    std::cout << std::ifstream("tmp.cache").rdbuf();
-    std::system("rm tmp.cache");
+    // std::cout << std::ifstream("tmp.cache").rdbuf();
+    // std::system("rm tmp.cache");
 }
 
 int main(int ac, char **av)

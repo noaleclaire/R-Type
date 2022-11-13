@@ -16,9 +16,8 @@ namespace ecs
         /**
          * @brief Construct a new Shootable object
          *
-         * @param angle
          */
-        Shootable(int angle = 0);
+        Shootable() = default;
         /**
          * @brief Construct a new Shootable object
          *
@@ -39,22 +38,14 @@ namespace ecs
         Shootable &operator=(const Shootable &other) = default;
 
         /** Getter */
-        /**
-         * @brief Get the Angle object
-         *
-         * @return int
-         */
-        int getAngle() const;
 
         /** Setter */
-        /**
-         * @brief Set the Angle object
-         *
-         * @param angle
-         */
-        void setAngle(int angle);
 
-      private:
-        int _angle;
+        friend bool operator==(const Shootable &lhs, const Shootable &rhs)
+        {
+          static_cast<void>(lhs);
+          static_cast<void>(rhs);
+          return true;
+        }
     };
 } // namespace ecs

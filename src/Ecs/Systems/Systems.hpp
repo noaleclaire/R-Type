@@ -9,6 +9,7 @@
 #include "../../client/Sfml/Graphical.hpp"
 #include "../Component/SparseArray.hpp"
 #include "../Registry.hpp"
+#include "../../client/Network/CustomClient.hpp"
 
 namespace ecs
 {
@@ -103,9 +104,53 @@ namespace ecs
          * @param graphical
          */
         static void Animation(Registry &registry, SpritesManager &sprites_manager, graphics::Graphical &graphical);
+        /**
+         * @brief System handling shots in client side
+         *
+         * @param registry
+         * @param controllable
+         * @param client
+         */
+        static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param collider
+         */
+        static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical);
 
       private:
+        /**
+         * @brief Create a shot
+         *
+         * @param registry
+         * @param entity
+         * @param client
+         */
+        static void _createShot(Registry &registry, std::size_t linked_entity, CustomClient *client);
+        /**
+         * @brief Calcul and return the volume based on two shapes
+         *
+         * @param registry
+         * @param entity
+         * @param graphical
+         */
         static int _changeVolume(Registry &registry, std::size_t entity, graphics::Graphical *graphical);
+        /**
+         * @brief Unselect all textbox in the scene
+         *
+         * @param registry
+         * @param textBox
+         */
         static void _unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox);
+        /**
+         * @brief Unselect all planet in the scene
+         *
+         * @param registry
+         * @param planet
+         * @param graphical
+         */
+        static void _unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical);
     };
 } // namespace ecs

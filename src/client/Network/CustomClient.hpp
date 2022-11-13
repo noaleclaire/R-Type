@@ -11,6 +11,7 @@
 #include "../../Ecs/Registry.hpp"
 #include "../Sfml/Graphical.hpp"
 #include "../Sfml/SpritesManager.hpp"
+#include "../UserInfo.hpp"
 
 class CustomClient : public network::UdpServerClient<network::CustomMessage> {
   public:
@@ -53,8 +54,14 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     /**
      * @brief
      *
+     * @param room
      */
-    void createPublicRoom(char *player_name);
+    void getGame(ecs::Scenes room, std::size_t level_id);
+    /**
+     * @brief
+     *
+     */
+    void createPublicRoom();
     /**
      * @brief
      *
@@ -70,7 +77,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      * @param scene
      */
-    void joinRoom(ecs::Scenes scene);
+    void joinRoom();
     /**
      * @brief
      *
@@ -81,11 +88,73 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      */
+    void quitRoom();
+    /**
+     * @brief
+     *
+     */
+    void createShot(std::size_t linked_entity, ecs::Scenes scene);
+    /**
+     * @brief
+     *
+     */
+    void switchRoomMode();
+    /**
+     * @brief
+     *
+     */
+    void filterByRoomModeVersus();
+    /**
+     * @brief
+     *
+     */
+    void filterByRoomModeCoop();
+    /**
+     * @brief
+     *
+     */
     void clientDisconnect();
+    /**
+     * @brief
+     *
+     * @param key
+     * @param pressed
+     * @param entity
+     * @param compo
+     */
+    void sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect);
+    /**
+     * @brief
+     *
+     * @tparam T
+     * @param registry
+     * @param entity
+     * @param id_msg
+     */
+    template <class T>
+    void sendNetworkComponents(std::size_t entity, T id_msg)
+    {
+        for (std::size_t i = 0; i < registry->getNetMessageCreate().size(); i++) {
+            try {
+                network::Message<T> message = registry->getNetMessageCreate().at(i)(entity, id_msg, i);
+                message << registry->getActualScene();
+                send(message);
+                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+            } catch (const ecs::ExceptionComponentNull &e) {
+                continue;
+            } catch (const ecs::ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
     ecs::Registry *registry;
     ecs::Registry *non_shareable_registry;
     graphics::Graphical *graphical;
     SpritesManager *sprites_manager;
+    UserInfo *user_info;
+    ecs::Scenes *actual_scene;
+    ecs::Scenes game_scene = ecs::Scenes::GAME;
+    bool is_host = false;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
 
@@ -120,4 +189,29 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void _setTextComponent();
+    /**
+     * @brief
+     *
+     */
+    void _setParallax();
+    /**
+     * @brief
+     *
+     * @param msg
+     */
+    void _updatePosPlayer(network::Message<network::CustomMessage> &msg);
+    /**
+     * @brief
+     *
+     * @param scene
+     */
+    void _killEntities(ecs::Scenes scene);
+    /**
+     * @brief
+     *
+     * @param entity
+     */
+    void _killOneEntity(std::size_t entity);
+
+    std::vector<ecs::Entity> _tmp_entities_registry;
 };
