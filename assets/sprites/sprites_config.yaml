@@ -349,7 +349,7 @@ spritesheet: planets/black_hole.png
    rect_x: 0
    rect_y: 0
    rect_width: 218
-   rect_height: 146
+   rect_height: 86
    nb_anim: 30
 
 spritesheet: planets/rock_planet.png
@@ -431,7 +431,8 @@ spritesheet: spaceships/spaceship-1.png
    rect_y: 0
    rect_width: 137
    rect_height: 97
-   nb_anim: 6
+   nb_anim: 5
+   speed_anim: 15
 
 spritesheet: spaceships/spaceship-2.png
  spaceship: 1
@@ -440,7 +441,8 @@ spritesheet: spaceships/spaceship-2.png
    rect_y: 0
    rect_width: 137
    rect_height: 97
-   nb_anim: 6
+   nb_anim: 5
+   speed_anim: 15
 
 spritesheet: spaceships/spaceship-3.png
  spaceship: 2
@@ -449,7 +451,8 @@ spritesheet: spaceships/spaceship-3.png
    rect_y: 0
    rect_width: 137
    rect_height: 97
-   nb_anim: 6
+   nb_anim: 5
+   speed_anim: 15
 
 spritesheet: spaceships/spaceship-4.png
  spaceship: 3
@@ -458,7 +461,8 @@ spritesheet: spaceships/spaceship-4.png
    rect_y: 0
    rect_width: 137
    rect_height: 97
-   nb_anim: 6
+   nb_anim: 5
+   speed_anim: 15
 
 # ------------------------SPACESHIPS------------------------
 #CLASSIC

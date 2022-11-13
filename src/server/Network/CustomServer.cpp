@@ -73,15 +73,18 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
 {
     switch (msg.header.id) {
         case network::CustomMessage::PingServer: {
+            std::cout << "a" << std::endl;
             _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
             std::cout << "["
                       << target_endpoint
                       << "]: Server Ping" << std::endl;
+            
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::PingClient;
             send(message, target_endpoint);
         } break;
         case network::CustomMessage::SendComponent: {
+            std::cout << "b" << std::endl;
             std::scoped_lock guard(_mtx);
             ecs::Scenes scene;
             std::size_t index_component_create = 0;
@@ -96,28 +99,36 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::SwitchToGame: {
+            std::cout << "c" << std::endl;
             ecs::Scenes client_scene;
-            msg >> client_scene;
-            _createGame(client_scene, target_endpoint);
+            std::size_t level_id = 0;
+            msg >> level_id >> client_scene;
+            _createGame(client_scene, level_id, target_endpoint);
         } break;
         case network::CustomMessage::InitGame: {
+            std::cout << "d" << std::endl;
             ecs::Scenes game_scene;
             msg >> game_scene;
             _getGame(game_scene, target_endpoint);
         } break;
         case network::CustomMessage::CreatePublicRoom: {
+            std::cout << "e" << std::endl;
             _createRoom(msg, target_endpoint);
         } break;
         case network::CustomMessage::CreatePrivateRoom: {
+            std::cout << "f" << std::endl;
             _createRoom(msg, target_endpoint, true);
         } break;
         case network::CustomMessage::CreateShot: {
+            std::cout << "g" << std::endl;
             _createShot(msg);
         } break;
         case network::CustomMessage::UpdatePosPlayerServer: {
+            std::cout << "h" << std::endl;
             _updatePosPlayer(target_endpoint, msg);
         } break;
         case network::CustomMessage::InitListRoom: {
+            std::cout << "i" << std::endl;
             std::scoped_lock guard(_mtx);
             int room_filter_mode;
             msg >> room_filter_mode;
@@ -127,18 +138,23 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             send(message, target_endpoint);
         } break;
         case network::CustomMessage::JoinRoom: {
+            std::cout << "j" << std::endl;
             _joinRoom(target_endpoint, msg);
         } break;
         case network::CustomMessage::JoinRoomById: {
+            std::cout << "k" << std::endl;
             _joinRoomById(target_endpoint, msg);
         } break;
         case network::CustomMessage::QuitRoomServer: {
+            std::cout << "l" << std::endl;
             _quitRoom(target_endpoint);
         } break;
         case network::CustomMessage::SwitchRoomMode: {
+            std::cout << "m" << std::endl;
             _updateRoom(target_endpoint, msg);
         } break;
         case network::CustomMessage::RemoveClient: {
+            std::cout << "n" << std::endl;
             _quitRoom(target_endpoint);
             _rooms_filter_mode.erase(target_endpoint);
             _players_names.erase(target_endpoint);
@@ -174,7 +190,7 @@ void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Mess
     }
 }
 
-void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint)
+void CustomServer::_createGame(ecs::Scenes room_scene, std::size_t level_id, udp::endpoint target_endpoint)
 {
     network::Message<network::CustomMessage> message;
     message.header.id = network::CustomMessage::GetScene;
@@ -191,7 +207,7 @@ void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endp
             //     send(message2, target_endpoint);
             //     return;
             // }
-            Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(0));
+            Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(level_id));
             message << std::get<1>(_registries.at(i));
             for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
                 send(message, client_endpoint.first);

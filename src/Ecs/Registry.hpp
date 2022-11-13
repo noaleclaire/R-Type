@@ -53,6 +53,7 @@ namespace ecs
             registerComponents<ecs::Animation>();
             registerComponents<ecs::Pressed>();
             registerComponents<ecs::CompoServer>();
+            registerComponents<ecs::Planet>();
         };
         ~Registry() = default;
         /**

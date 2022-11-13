@@ -64,6 +64,13 @@ namespace ecs
                             case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
                                 break;
+                            case Clickable::Function::SELECTPLANET:
+                                _unselectAllPlanet(registry, registry.getComponents<ecs::Planet>(), graphical);
+                                registry.getComponents<ecs::Planet>().at(it).value().select();
+                                graphical->getAllSprites().at(it).setScale(sf::Vector2f(1.25, 1.25));
+                                registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                                Core::level_id = registry.getComponents<ecs::Planet>().at(it).value().getLevelID() - 1;
+                                break;
                             default: break;
                         }
                         if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BUTTON)
@@ -87,6 +94,24 @@ namespace ecs
             }
         }
     }
+
+    void Systems::_unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                if (planet.at(it).value().isSelected() == true) {
+                    planet.at(it).value().unselect();
+                    graphical->getAllSprites().at(it).setScale(sf::Vector2f(1, 1));
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() + registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
     void Systems::ClickablePressed(Registry &registry, SparseArray<ecs::Clickable> const &clickable, graphics::Graphical *graphical)
     {
         for (auto &it : registry.getEntities()) {

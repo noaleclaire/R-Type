@@ -74,6 +74,7 @@ namespace ecs
             registry.addComponent<ecs::Rectangle>(entity, ecs::Rectangle(0, 0, 0, 0));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2))));
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
+            registry.addComponent<ecs::Animation>(entity, ecs::Animation());
             return (entity);
         }
         /**

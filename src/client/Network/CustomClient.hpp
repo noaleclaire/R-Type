@@ -56,7 +56,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      * @param room
      */
-    void getGame(ecs::Scenes room);
+    void getGame(ecs::Scenes room, std::size_t level_id);
     /**
      * @brief
      *

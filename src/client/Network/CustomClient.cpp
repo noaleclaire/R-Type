@@ -37,11 +37,11 @@ void CustomClient::initGame()
     send(msg);
 }
 
-void CustomClient::getGame(ecs::Scenes room)
+void CustomClient::getGame(ecs::Scenes room, std::size_t level_id)
 {
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::SwitchToGame;
-    msg << room;
+    msg << room << level_id;
     send(msg);
 }
 

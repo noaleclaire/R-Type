@@ -20,6 +20,7 @@
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
+std::size_t Core::level_id = 0;
 int Core::new_music_volume = -1;
 int Core::new_sfx_volume = -1;
 
@@ -164,7 +165,7 @@ void Core::_switchScenes()
     _switchScenesCreateRoom();
 
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
-        _client.getGame(_last_scene);
+        _client.getGame(_last_scene, Core::level_id);
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen

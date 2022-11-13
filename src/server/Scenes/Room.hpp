@@ -70,7 +70,7 @@ class Room : public ScenesInitializer {
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 25, 116, 0, 0, 0, 0, 0, 0, 2, 16);
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //bg planet level info
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 771, 512, 0, 0, 0, 0, 0, 0, 2, 17);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 920, 522, 0, 0, 0, 0, 0, 0, 2, 17);
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
 
             //Buttons
@@ -121,6 +121,42 @@ class Room : public ScenesInitializer {
             registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(2));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMID));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+
+            //Planets
+                //sun
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BACKGROUND, 552, 254, 0, 0, 0, 0, 0, 0, 3, 18);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //black hole
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 430, 205, 0, 0, 0, 0, 16, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SELECTPLANET);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(1, false));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //rock planet
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 600, 485, 0, 0, 0, 0, 17, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SELECTPLANET);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(2, false));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //fire planet
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 738, 168, 0, 0, 0, 0, 18, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SELECTPLANET);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(3, false));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //ice planet
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 776, 365, 0, 0, 0, 0, 19, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SELECTPLANET);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(4, false));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //forest planet
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 446, 375, 0, 0, 0, 0, 20, 3);
+            registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::SELECTPLANET);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            registry.addComponent<ecs::Planet>(registry.getEntityById(entity), ecs::Planet(5, false));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
         }
 };
