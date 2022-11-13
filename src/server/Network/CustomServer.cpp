@@ -71,88 +71,96 @@ void CustomServer::startTimes(ecs::Scenes scene)
 
 void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
-    switch (msg.header.id) {
-        case network::CustomMessage::PingServer: {
-            _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
-            std::cout << "["
-                      << target_endpoint
-                      << "]: Server Ping" << std::endl;
-            network::Message<network::CustomMessage> message;
-            message.header.id = network::CustomMessage::PingClient;
-            send(message, target_endpoint);
-        } break;
-        case network::CustomMessage::SendComponent: {
-            std::scoped_lock guard(_mtx);
-            ecs::Scenes scene;
-            std::size_t index_component_create = 0;
-            std::size_t entity = 10000;
-            msg >> scene;
-            msg >> index_component_create;
-            msg >> entity;
-            try {
-                _getGameRegistry(scene).getNetComponentCreate().at(index_component_create)(msg);
-                _getGameRegistry(scene).getEntityById(entity);
-            } catch (const ecs::Exception &e) {}
-            catch (const std::out_of_range &e) {}
-        } break;
-        case network::CustomMessage::SwitchToGame: {
-            ecs::Scenes client_scene;
-            msg >> client_scene;
-            _createGame(client_scene, target_endpoint);
-        } break;
-        case network::CustomMessage::InitGame: {
-            ecs::Scenes game_scene;
-            msg >> game_scene;
-            _getGame(game_scene, target_endpoint);
-        } break;
-        case network::CustomMessage::CreatePublicRoom: {
-            _createRoom(msg, target_endpoint);
-        } break;
-        case network::CustomMessage::CreatePrivateRoom: {
-            _createRoom(msg, target_endpoint, true);
-        } break;
-        case network::CustomMessage::CreateShot: {
-            _createShot(msg);
-        } break;
-        case network::CustomMessage::UpdatePosPlayerServer: {
-            _updatePosPlayer(target_endpoint, msg);
-        } break;
-        case network::CustomMessage::InitListRoom: {
-            std::scoped_lock guard(_mtx);
-            int room_filter_mode;
-            msg >> room_filter_mode;
-            _rooms_filter_mode.insert_or_assign(target_endpoint, room_filter_mode);
-            network::Message<network::CustomMessage> message;
-            _getInfoForListRoomScene(target_endpoint, message);
-            send(message, target_endpoint);
-        } break;
-        case network::CustomMessage::JoinRoom: {
-            _joinRoom(target_endpoint, msg);
-        } break;
-        case network::CustomMessage::JoinRoomById: {
-            _joinRoomById(target_endpoint, msg);
-        } break;
-        case network::CustomMessage::QuitRoomServer: {
-            _quitRoom(target_endpoint);
-        } break;
-        case network::CustomMessage::SwitchRoomMode: {
-            _updateRoom(target_endpoint, msg);
-        } break;
-        case network::CustomMessage::RemoveClient: {
-            _quitRoom(target_endpoint);
-            _rooms_filter_mode.erase(target_endpoint);
-            _players_names.erase(target_endpoint);
-            for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
-                if (_clients_endpoint.at(i) == target_endpoint)
-                    _clients_endpoint.erase(std::next(_clients_endpoint.begin(), i));
-            }
-            std::cout << "["
-                      << target_endpoint
-                      << "]: Client Remove" << std::endl;
-        } break;
-        default:
-            break;
-    }
+    try {
+        switch (msg.header.id) {
+            case network::CustomMessage::PingServer: {
+                _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
+                std::cout << "["
+                        << target_endpoint
+                        << "]: Server Ping" << std::endl;
+                network::Message<network::CustomMessage> message;
+                message.header.id = network::CustomMessage::PingClient;
+                send(message, target_endpoint);
+            } break;
+            case network::CustomMessage::SendComponent: {
+                ecs::Scenes scene;
+                std::size_t index_component_create = 0;
+                std::size_t entity = 10000;
+                msg >> scene;
+                msg >> index_component_create;
+                msg >> entity;
+                if (entity >= 10000)
+                    return;
+                try {
+                    for (std::size_t i = 0; i < _registries.size(); i++) {
+                        if (std::get<0>(_registries.at(i)) == scene || std::get<1>(_registries.at(i)) == scene) {
+                            std::get<7>(_registries.at(i))->getEntityById(entity);
+                            std::get<7>(_registries.at(i))->getNetComponentCreate().at(index_component_create)(msg);
+                            return;
+                        }
+                    }
+                } catch (const ecs::Exception &e) {}
+                catch (const std::out_of_range &e) {}
+            } break;
+            case network::CustomMessage::SwitchToGame: {
+                ecs::Scenes client_scene;
+                msg >> client_scene;
+                _createGame(client_scene, target_endpoint);
+            } break;
+            case network::CustomMessage::InitGame: {
+                ecs::Scenes game_scene;
+                msg >> game_scene;
+                _getGame(game_scene, target_endpoint);
+            } break;
+            case network::CustomMessage::CreatePublicRoom: {
+                _createRoom(msg, target_endpoint);
+            } break;
+            case network::CustomMessage::CreatePrivateRoom: {
+                _createRoom(msg, target_endpoint, true);
+            } break;
+            case network::CustomMessage::CreateShot: {
+                _createShot(msg);
+            } break;
+            case network::CustomMessage::UpdatePosPlayerServer: {
+                _updatePosPlayer(target_endpoint, msg);
+            } break;
+            case network::CustomMessage::InitListRoom: {
+                std::scoped_lock guard(_mtx);
+                int room_filter_mode;
+                msg >> room_filter_mode;
+                _rooms_filter_mode.insert_or_assign(target_endpoint, room_filter_mode);
+                network::Message<network::CustomMessage> message;
+                _getInfoForListRoomScene(target_endpoint, message);
+                send(message, target_endpoint);
+            } break;
+            case network::CustomMessage::JoinRoom: {
+                _joinRoom(target_endpoint, msg);
+            } break;
+            case network::CustomMessage::JoinRoomById: {
+                _joinRoomById(target_endpoint, msg);
+            } break;
+            case network::CustomMessage::QuitRoomServer: {
+                _quitRoom(target_endpoint);
+            } break;
+            case network::CustomMessage::SwitchRoomMode: {
+                _updateRoom(target_endpoint, msg);
+            } break;
+            case network::CustomMessage::RemoveClient: {
+                _quitRoom(target_endpoint);
+                _rooms_filter_mode.erase(target_endpoint);
+                _players_names.erase(target_endpoint);
+                for (std::size_t i = 0; i < _clients_endpoint.size(); i++) {
+                    if (_clients_endpoint.at(i) == target_endpoint)
+                        _clients_endpoint.erase(std::next(_clients_endpoint.begin(), i));
+                }
+                std::cout << "["
+                        << target_endpoint
+                        << "]: Client Remove" << std::endl;
+            } break;
+            default:
+                break;
+        }
+    } catch (const std::out_of_range &e) {}
 }
 
 void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -162,10 +170,19 @@ void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Mess
     ecs::Rectangle rect;
     std::size_t entity = 10000;
     msg >> scene >> rect >> pos >> entity;
+    if (entity >= 10000)
+        return;
     try {
-        _getGameRegistry(scene).addComponent<ecs::Position>(_getGameRegistry(scene).getEntityById(entity), pos);
-        _getGameRegistry(scene).addComponent<ecs::Rectangle>(_getGameRegistry(scene).getEntityById(entity), rect);
+        for (std::size_t i = 0; i < _registries.size(); i++) {
+            if (std::get<1>(_registries.at(i)) == scene) {
+                std::get<7>(_registries.at(i))->getEntityById(entity);
+                std::get<7>(_registries.at(i))->addComponent<ecs::Position>(std::get<7>(_registries.at(i))->getEntityById(entity), pos);
+                std::get<7>(_registries.at(i))->addComponent<ecs::Rectangle>(std::get<7>(_registries.at(i))->getEntityById(entity), rect);
+                return;
+            }
+        }
     } catch (const ecs::Exception &e) {}
+    catch (const std::out_of_range &e) {}
     msg.header.id = network::CustomMessage::UpdatePosPlayerClient;
     msg << entity << pos;
     for (auto &client_endpoint : _getClientsEndpoint(scene)) {
@@ -222,32 +239,34 @@ void CustomServer::_getGame(ecs::Scenes game_scene, udp::endpoint target_endpoin
 
 void CustomServer::_createShot(network::Message<network::CustomMessage> &msg)
 {
-    std::scoped_lock guard(_mtx);
     std::size_t entity;
     std::size_t linked_entity;
     ecs::Scenes scene;
     msg >> scene >> linked_entity;
 
     std::cout << "scene: " << scene << ", spaceship: " << linked_entity << std::endl;
-    std::cout << "registry scene: " << static_cast<int>(_getGameRegistry(scene).getActualScene()) << std::endl;
-    try {
-        ecs::Ammo::AmmoType ammoType = _getGameRegistry(scene).getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
-        float posX = _getGameRegistry(scene).getComponents<ecs::Position>().at(linked_entity).value().getXPosition() + _getGameRegistry(scene).getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle()/2;
-        float posY = _getGameRegistry(scene).getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + _getGameRegistry(scene).getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
-        int layer = _getGameRegistry(scene).getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
-        entity = ecs::Factory::createEntity(_getGameRegistry(scene), ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
-        std::cout << entity << std::endl;
-        for (auto &client_endpoint : _getClientsEndpoint(scene)) {
-            sendNetworkComponents<network::CustomMessage>(_getGameRegistry(scene), entity, network::CustomMessage::SendComponent, client_endpoint.first);
-            network::Message<network::CustomMessage> message;
-            message.header.id = network::CustomMessage::AllComponentSent;
-            send(message, client_endpoint.first);
-            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+    for (std::size_t i = 0; i < _registries.size(); i++) {
+        if (std::get<1>(_registries.at(i)) == scene) {
+            std::cout << "registry scene: " << static_cast<int>(std::get<7>(_registries.at(i))->getActualScene()) << std::endl;
+            try {
+                std::get<7>(_registries.at(i))->getEntityById(linked_entity);
+                ecs::Ammo::AmmoType ammoType = std::get<7>(_registries.at(i))->getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType();
+                float posX = std::get<7>(_registries.at(i))->getComponents<ecs::Position>().at(linked_entity).value().getXPosition() + std::get<7>(_registries.at(i))->getComponents<ecs::Rectangle>().at(linked_entity).value().getWidthRectangle()/2;
+                float posY = std::get<7>(_registries.at(i))->getComponents<ecs::Position>().at(linked_entity).value().getYPosition() + std::get<7>(_registries.at(i))->getComponents<ecs::Rectangle>().at(linked_entity).value().getHeightRectangle()/2;
+                int layer = std::get<7>(_registries.at(i))->getComponents<ecs::Layer>().at(linked_entity).value().getLayer() - 1;
+                entity = ecs::Factory::createEntity(*std::get<7>(_registries.at(i)), ecs::EntityTypes::SHOT, linked_entity, posX, posY, 0, 0, 0, 0, layer, static_cast<int>(ammoType));
+                for (auto &client_endpoint : _getClientsEndpoint(scene)) {
+                    sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), entity, network::CustomMessage::SendComponent, client_endpoint.first);
+                    network::Message<network::CustomMessage> message;
+                    message.header.id = network::CustomMessage::AllComponentSent;
+                    send(message, client_endpoint.first);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                }
+            } catch (ecs::Exception &e) {
+                return;
+            }
+            return;
         }
-    } catch (ecs::ExceptionComponentNull &e) {
-        return;
-    } catch (ecs::ExceptionIndexComponent &e) {
-        return;
     }
 }
 

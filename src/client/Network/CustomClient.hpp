@@ -197,9 +197,20 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     /**
      * @brief
      *
+     * @param msg
+     */
+    void _updatePosPlayer(network::Message<network::CustomMessage> &msg);
+    /**
+     * @brief
+     *
      * @param scene
      */
     void _killEntities(ecs::Scenes scene);
+    /**
+     * @brief
+     *
+     * @param entity
+     */
     void _killOneEntity(std::size_t entity);
 
     std::vector<ecs::Entity> _tmp_entities_registry;
