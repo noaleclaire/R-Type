@@ -116,6 +116,5 @@ class LevelManager : public AYamlConfig {
     void initMapFunctionPointer();
 
     std::vector<EntityData> _entity_data;
-    ecs::EntityTypes _entity_type_tmp;
-    long unsigned int _entity_type_id_tmp;
+    std::size_t _tmp_index;
 };
