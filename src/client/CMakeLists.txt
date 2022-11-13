@@ -17,6 +17,8 @@ target_link_libraries(${TARGET_NAME} Ecs)
 target_link_libraries(${TARGET_NAME} Utilities)
 target_link_libraries(${TARGET_NAME} ${CONAN_LIBS})
 
+install(TARGETS ${TARGET_NAME} DESTINATION bin)
+
 add_custom_command(
   TARGET ${TARGET_NAME}
   POST_BUILD

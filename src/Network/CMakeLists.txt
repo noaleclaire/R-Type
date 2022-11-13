@@ -6,3 +6,5 @@ set(SRC ${INCROOT}/Message.hpp)
 add_library(Network INTERFACE)
 
 target_include_directories(Network INTERFACE ${INCROOT})
+
+install(TARGETS Network DESTINATION lib)

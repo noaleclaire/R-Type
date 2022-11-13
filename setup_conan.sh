@@ -42,7 +42,7 @@ OS="`uname`"
 case $OS in
   'Linux')
     OS='Linux'
-    rm -d -rf build
+    sudo rm -d -rf build
     mkdir build && cd build
     for (( i = 30; i < 38; i++ ));
         do echo -ne "\033[0;"$i"m \033[1;"$i"m...Entering BUILD directory..."; printf "\r"
@@ -69,7 +69,7 @@ case $OS in
     done
     echo -e "\033[0;"31"m \033[1;"91"m...Updating Profile..."
     sudo dnf install libfontenc-devel libXaw-devel libXcomposite-devel libXdmcp-devel libXtst-devel libxkbfile-devel libXres-devel libXScrnSaver-devel libXvMC-devel xorg-x11-xtrans-devel xcb-util-wm-devel xcb-util-keysyms-devel xcb-util-renderutil-devel libXdamage-devel xcb-util-devel xkeyboard-config-devel
-    conan install .. --build missing
+    conan install .. --build=missing --update
     for (( i = 30; i < 38; i++ ));
         do echo -ne "\033[0;"$i"m \033[1;"$i"m...Installing Useful Tools..."; printf "\r"
         sleep 0.15
