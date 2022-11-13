@@ -237,10 +237,27 @@ namespace ecs
                     if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                         veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
                     }
-                } catch (const ExceptionComponentNull &e) {}
-                catch (const ExceptionIndexComponent &e) {}
-                posX += veloX * graphics::Graphical::world_current_time;
-                posY += veloY * graphics::Graphical::world_current_time;
+                    if (veloX != 0 || veloY != 0)
+                        registry.addComponent<ecs::Animation>(registry.getEntityById(it), ecs::Animation());
+                    else {
+                        registry.removeComponent<ecs::Animation>(registry.getEntityById(it));
+                        auto rect = graphical.sprites_manager->get_Animations_rect(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID());
+                        graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
+                    }
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                    if (posX < 0)
+                        posX = 0;
+                    if (posX > 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
+                        posX = 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+                    if (posY < 0)
+                        posY = 0;
+                    if (posY > 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
+                        posY = 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
+                } catch (const Exception &e) {
+                    posX += veloX * graphics::Graphical::world_current_time;
+                    posY += veloY * graphics::Graphical::world_current_time;
+                }
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 try {
