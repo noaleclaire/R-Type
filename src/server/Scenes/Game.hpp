@@ -136,6 +136,7 @@ class Game : public ScenesInitializer {
                         } catch (const ecs::ExceptionComponentNull &e) {
                         } catch (const ecs::ExceptionIndexComponent &e) {}
                         ecs::SystemsServer::Shot(registry, server, clients_endpoint);
+                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>(), server, clients_endpoint);
                     }
                 } catch (const ecs::Exception &e) {
                     return;

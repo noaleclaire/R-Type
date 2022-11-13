@@ -79,6 +79,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "]: Server Ping" << std::endl;
         } break;
         case network::CustomMessage::SendComponent: {
+            std::scoped_lock guard(_mtx);
             ecs::Scenes scene;
             std::size_t index_component_create = 0;
             std::size_t entity = 10000;

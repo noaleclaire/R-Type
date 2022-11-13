@@ -471,4 +471,41 @@ namespace ecs
             }
         }
     }
+    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (it == it_in)
+                            continue;
+                        if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
+                            if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                            }
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    } catch (const std::out_of_range &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
 } // namespace ecs

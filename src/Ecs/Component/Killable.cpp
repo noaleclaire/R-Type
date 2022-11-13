@@ -23,7 +23,7 @@ namespace ecs
         _life = life;
     }
 
-    void Killable::substractLife(int damage)
+    void Killable::substractLife(std::size_t damage)
     {
         if (damage >= _life)
             _life = 0;
