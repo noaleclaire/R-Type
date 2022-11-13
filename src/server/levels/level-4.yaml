@@ -18,14 +18,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 5500
- position_x: 1300
- position_y: 200
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 5500
+#  position_x: 1300
+#  position_y: 200
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 6000
@@ -36,14 +36,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 6500
- position_x: 1300
- position_y: 400
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 6500
+#  position_x: 1300
+#  position_y: 400
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 7000
@@ -65,14 +65,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 9000
- position_x: 1300
- position_y: 400
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 9000
+#  position_x: 1300
+#  position_y: 400
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 9500
@@ -83,14 +83,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 10000
- position_x: 1300
- position_y: 200
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 10000
+#  position_x: 1300
+#  position_y: 200
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 10500
@@ -121,23 +121,23 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 12500
- position_x: 1300
- position_y: 600
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 12500
+#  position_x: 1300
+#  position_y: 600
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
-monster: 0
- time: 12500
- position_x: 1300
- position_y: 150
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 12500
+#  position_x: 1300
+#  position_y: 150
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 13000
@@ -157,23 +157,23 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 13500
- position_x: 1300
- position_y: 500
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 13500
+#  position_x: 1300
+#  position_y: 500
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
-monster: 0
- time: 13500
- position_x: 1300
- position_y: 250
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 13500
+#  position_x: 1300
+#  position_y: 250
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 14000
@@ -204,14 +204,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 16500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 16500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 17000
@@ -222,14 +222,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 17500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 17500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 18000
@@ -251,14 +251,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 17500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 17500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 18000
@@ -269,14 +269,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 18500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 18500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 19000
@@ -298,14 +298,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 19000
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 19000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 19500
@@ -316,14 +316,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 20000
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 20000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 20500
@@ -345,14 +345,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 21000
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 21000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 21500
@@ -363,14 +363,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 22000
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 22000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 22500
@@ -392,14 +392,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 22000
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 22000
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 22500
@@ -410,14 +410,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 23000
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 23000
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 23500
@@ -439,14 +439,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 23500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 23500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 24000
@@ -457,14 +457,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 24500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 24500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 25000
@@ -486,14 +486,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 27500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 27500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 28000
@@ -504,14 +504,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 28500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 28500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 29000
@@ -533,14 +533,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 28500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 28500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 29000
@@ -551,14 +551,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 29500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 29500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 30000
@@ -580,14 +580,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 27500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 27500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 28000
@@ -598,14 +598,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 28500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 28500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 29000
@@ -634,14 +634,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 32500
- position_x: 1300
- position_y: 200
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 32500
+#  position_x: 1300
+#  position_y: 200
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 33000
@@ -652,14 +652,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 33500
- position_x: 1300
- position_y: 400
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 33500
+#  position_x: 1300
+#  position_y: 400
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 34000
@@ -681,14 +681,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 36000
- position_x: 1300
- position_y: 400
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 36000
+#  position_x: 1300
+#  position_y: 400
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 36500
@@ -699,14 +699,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 37000
- position_x: 1300
- position_y: 200
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 37000
+#  position_x: 1300
+#  position_y: 200
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 37500
@@ -737,23 +737,23 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 39500
- position_x: 1300
- position_y: 600
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 39500
+#  position_x: 1300
+#  position_y: 600
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
-monster: 0
- time: 39500
- position_x: 1300
- position_y: 150
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 39500
+#  position_x: 1300
+#  position_y: 150
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 40000
@@ -773,23 +773,23 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 40500
- position_x: 1300
- position_y: 500
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 40500
+#  position_x: 1300
+#  position_y: 500
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
-monster: 0
- time: 40500
- position_x: 1300
- position_y: 250
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 40500
+#  position_x: 1300
+#  position_y: 250
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 41000
@@ -820,14 +820,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 43000
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 43000
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 43500
@@ -838,14 +838,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 44000
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 44000
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 44500
@@ -867,14 +867,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 44000
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 44000
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 44500
@@ -885,14 +885,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 45000
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 45000
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 45000
@@ -914,14 +914,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 44500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 44500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 45000
@@ -932,14 +932,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 45500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 45500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 46000
@@ -961,14 +961,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 48500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 48500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 49000
@@ -979,14 +979,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 49500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 49500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 50000
@@ -1008,14 +1008,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 49500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 49500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 50000
@@ -1026,14 +1026,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 50500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 50500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 51000
@@ -1055,14 +1055,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 50500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 50500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 51000
@@ -1073,14 +1073,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 51500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 51500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 52000
@@ -1102,14 +1102,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 54500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 54500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 55000
@@ -1120,14 +1120,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 55500
- position_x: 1300
- position_y: 100
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 55500
+#  position_x: 1300
+#  position_y: 100
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 56000
@@ -1149,14 +1149,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 55500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 55500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 56000
@@ -1167,14 +1167,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 56500
- position_x: 1300
- position_y: 360
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 56500
+#  position_x: 1300
+#  position_y: 360
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 57000
@@ -1196,14 +1196,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 54500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 54500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 55000
@@ -1214,14 +1214,14 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 0
- time: 55500
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 0
+#  time: 55500
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
 
 monster: 0
  time: 56000
@@ -1232,11 +1232,11 @@ monster: 0
  shooter: 0
  layer: 1
 
-monster: 3
- time: 60000
- position_x: 1300
- position_y: 620
- velocity_x: -300
- velocity_y: 0
- shooter: 0
- layer: 1
+# monster: 3
+#  time: 60000
+#  position_x: 1300
+#  position_y: 620
+#  velocity_x: -300
+#  velocity_y: 0
+#  shooter: 0
+#  layer: 1
