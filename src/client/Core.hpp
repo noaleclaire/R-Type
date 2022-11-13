@@ -31,6 +31,7 @@ class Core {
   private:
     void _updateUserInfo();
     void _setActualRegistry();
+    void _switchMusic();
     void _switchScenes();
     void _switchScenesCreateRoom();
     void _switchScenesJoinRoom();

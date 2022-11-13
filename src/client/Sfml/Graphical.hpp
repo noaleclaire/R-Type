@@ -156,12 +156,17 @@ namespace graphics
          */
         void setBasicSprite(std::size_t entity);
         /**
-         * @brief Set the Actual Music object
+         * @brief Set the Actual Music
          * 
-         * @param next_scene 
-         * @param prev_scene 
+         * @param music 
+         * @param stop_prev 
          */
-        void setActualMusic(std::string next_scene, std::string prev_scene);
+        void setActualMusic(ecs::Music music, bool stop_prev = true);
+        /**
+         * @brief Get the Actual Music
+         *
+         */
+        sf::Music &getActualMusic();
         /**
          * @brief Set the Texture Rect Sprite
          *
@@ -226,6 +231,7 @@ namespace graphics
         CustomClient *client;
         SpritesManager *sprites_manager;
         ecs::Scenes _actual_scene;
+        ecs::Music prev_music = ecs::Music::CAVE;
 
       protected:
       private:
@@ -238,7 +244,7 @@ namespace graphics
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Sprite>> _sprites_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::RectangleShape>> _rectangleshape_entities;
         std::unordered_map<ecs::Scenes, std::unordered_map<std::size_t, sf::Text>> _text_entities;
-        std::unordered_map<std::string, sf::Music> _music_entities;
+        std::unordered_map<ecs::Music, sf::Music> _music_entities;
 
     };
 } // namespace graphics
