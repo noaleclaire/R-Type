@@ -190,56 +190,46 @@ namespace ecs
 
     void Systems::Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical)
     {
-        // static float update_time_position = 0;
-        // update_time_position += graphics::Graphical::world_current_time;
         for (auto &it : registry.getEntities()) {
             try {
+                float posX = position.at(it).value().getXPosition();
+                float posY = position.at(it).value().getYPosition();
+                float veloX = position.at(it).value().getXVelocity();
+                float veloY = position.at(it).value().getYVelocity();
                 try {
-                    registry.getComponents<ecs::CompoServer>().at(it);
-                } catch (ecs::Exception &err) {
-                    float posX = position.at(it).value().getXPosition();
-                    float posY = position.at(it).value().getYPosition();
-                    float veloX = position.at(it).value().getXVelocity();
-                    float veloY = position.at(it).value().getYVelocity();
-                    try {
-                        registry.getComponents<ecs::Controllable>().at(it);
-                        veloX = 0;
-                        veloY = 0;
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
-                            veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
-                            veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
-                            veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        }
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
-                            veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        }
-                    } catch (const ExceptionComponentNull &e) {}
-                    catch (const ExceptionIndexComponent &e) {}
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
-                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
-                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
-                    // if (update_time_position >= 10 && graphical.client->is_host == true)
-                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
-                    try {
-                        graphical.setSpritePosition(it, posX, posY);
-                    } catch (const std::out_of_range &e) {}
-                    try {
-                        graphical.setRectangleShapePosition(it, posX, posY);
-                    } catch (const std::out_of_range &e) {}
-                }
+                    registry.getComponents<ecs::Controllable>().at(it);
+                    veloX = 0;
+                    veloY = 0;
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
+                        veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
+                        veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
+                        veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
+                    }
+                    if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
+                        veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                    }
+                } catch (const ExceptionComponentNull &e) {}
+                catch (const ExceptionIndexComponent &e) {}
+                posX += veloX * graphics::Graphical::world_current_time;
+                posY += veloY * graphics::Graphical::world_current_time;
+                registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
+                registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+                try {
+                    graphical.setSpritePosition(it, posX, posY);
+                } catch (const std::out_of_range &e) {}
+                try {
+                    graphical.setRectangleShapePosition(it, posX, posY);
+                } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }
-        // if (update_time_position >= 10)
-        //     update_time_position = 0;
     }
     void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical)
     {
@@ -467,6 +457,43 @@ namespace ecs
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             } catch (const ::Exception &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (it == it_in)
+                            continue;
+                        if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
+                            if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                }
+                            }
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    } catch (const std::out_of_range &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }

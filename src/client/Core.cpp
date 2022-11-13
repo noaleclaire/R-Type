@@ -265,6 +265,7 @@ void Core::_gameLoop()
             _graphical.handleEvents(*_actual_registry);
             ecs::Systems::Shot(*_actual_registry, _actual_registry->getComponents<ecs::Controllable>(), &_client);
             ecs::Systems::Position(*_actual_registry, _actual_registry->getComponents<ecs::Position>(), _graphical);
+            ecs::Systems::Collider(*_actual_registry, _actual_registry->getComponents<ecs::Collider>(), _graphical);
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
             _graphical.draw(*_actual_registry);

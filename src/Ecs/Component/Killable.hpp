@@ -55,14 +55,12 @@ namespace ecs
          *
          * @param damage
          */
-        void substractLife(int damage);
+        void substractLife(std::size_t damage);
 
 
         friend bool operator==(const Killable &lhs, const Killable &rhs)
         {
-            static_cast<void>(lhs);
-            static_cast<void>(rhs);
-            return true;
+            return lhs._life == rhs._life;
         }
       private:
         std::size_t _life;

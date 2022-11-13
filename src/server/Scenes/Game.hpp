@@ -116,7 +116,6 @@ class Game : public ScenesInitializer {
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
                                 (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
-                                std::cout << "timepoint" << std::endl;
                                 for (auto &client_endpoint : clients_endpoint) {
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
                                     network::Message<network::CustomMessage> message;
@@ -136,6 +135,7 @@ class Game : public ScenesInitializer {
                         } catch (const ecs::ExceptionComponentNull &e) {
                         } catch (const ecs::ExceptionIndexComponent &e) {}
                         ecs::SystemsServer::Shot(registry, server, clients_endpoint);
+                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>(), server, clients_endpoint);
                     }
                 } catch (const ecs::Exception &e) {
                     return;
