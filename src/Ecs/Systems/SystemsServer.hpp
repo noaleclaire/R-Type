@@ -14,14 +14,6 @@ namespace ecs
     class SystemsServer {
       public:
         /**
-         * @brief
-         *
-         * @param registry
-         * @param position
-         * @param last_time
-         */
-        static void VerifyPosition(Registry &registry, SparseArray<ecs::Position> const &position, float loop_time);
-        /**
          * @brief System handling shots in server side
          *
          * @param registry

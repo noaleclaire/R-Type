@@ -242,8 +242,10 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::QuitRoomClient: {
             ecs::Scenes room_scene;
-            msg >> room_scene;
+            ecs::Scenes scene_game;
+            msg >> room_scene >> scene_game;
             _killEntities(room_scene);
+            _killEntities(scene_game);
             is_host = false;
         } break;
         case network::CustomMessage::IsHost: {
@@ -408,13 +410,18 @@ void CustomClient::_setErrorMessage(std::string msg_error)
 
 void CustomClient::_killEntities(ecs::Scenes scene)
 {
-    registry->setActualScene(scene);
-    graphical->setActualGraphicsEntities(scene);
-    for (auto &it : registry->getEntities())
-        registry->killEntity(it);
-    graphical->getAllSprites().clear();
-    graphical->getAllRectangleShapes().clear();
-    graphical->getAllTexts().clear();
+    try {
+        registry->setActualScene(scene);
+        graphical->setActualGraphicsEntities(scene);
+        for (auto &it : registry->getEntities())
+            registry->killEntity(it);
+        graphical->getAllSprites().clear();
+        graphical->getAllRectangleShapes().clear();
+        graphical->getAllTexts().clear();
+    } catch (const ecs::Exception &e) {
+        registry->setActualScene(*actual_scene);
+        graphical->setActualGraphicsEntities(*actual_scene);
+    }
 }
 
 void CustomClient::_killOneEntity(std::size_t entity)

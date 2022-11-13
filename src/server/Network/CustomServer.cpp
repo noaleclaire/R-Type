@@ -75,7 +75,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::PingServer: {
             _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
             std::cout << "["
-                      << "connection..."
+                      << target_endpoint
                       << "]: Server Ping" << std::endl;
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::PingClient;
@@ -147,7 +147,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                     _clients_endpoint.erase(std::next(_clients_endpoint.begin(), i));
             }
             std::cout << "["
-                      << "disconnected..."
+                      << target_endpoint
                       << "]: Client Remove" << std::endl;
         } break;
         default:
@@ -524,7 +524,7 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 }
                 network::Message<network::CustomMessage> message;
                 message.header.id = network::CustomMessage::QuitRoomClient;
-                message << std::get<0>(_registries.at(i));
+                message << std::get<1>(_registries.at(i)) << std::get<0>(_registries.at(i));
                 send(message, std::get<4>(_registries.at(i)).at(j).first);
                 std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                 std::get<4>(_registries.at(i)).erase(std::next(std::get<4>(_registries.at(i)).begin(), j));
@@ -532,9 +532,14 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                 _rooms_filter_mode.insert_or_assign(target_endpoint, -1);
                 if (std::get<4>(_registries.at(i)).size() == 0) {
                     std::get<2>(_registries.at(i)) = false;
-                    std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
-                    for (auto &it : std::get<7>(_registries.at(i))->getEntities())
-                        std::get<7>(_registries.at(i))->killEntity(it);
+                    try {
+                        std::get<7>(_registries.at(i))->setActualScene(std::get<0>(_registries.at(i)));
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntities())
+                            std::get<7>(_registries.at(i))->killEntity(it);
+                        std::get<7>(_registries.at(i))->setActualScene(std::get<1>(_registries.at(i)));
+                        for (auto &it : std::get<7>(_registries.at(i))->getEntities())
+                            std::get<7>(_registries.at(i))->killEntity(it);
+                    } catch (const ecs::Exception &e) {}
                 }
                 network::Message<network::CustomMessage> message2;
                 for (std::size_t g = 0; g < _clients_endpoint.size(); g++) {
