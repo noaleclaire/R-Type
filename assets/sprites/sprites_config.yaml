@@ -439,6 +439,234 @@ spritesheet: textboxs/textbox_room_id.png
    rect_width: 223
    rect_height: 68
 
+# ------------------------MONSTERS------------------------
+spritesheet: monsters/basic_monster.png
+ basic_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 72
+   rect_height: 79
+   nb_anim: 8
+   speed_anim: 7
+   next_anim: 1
+  anim: 1
+   rect_x: 0
+   rect_y: 79
+   rect_width: 72
+   rect_height: 79
+   nb_anim: 8
+   speed_anim: 7
+   next_anim: 2
+  anim: 2
+   rect_x: 0
+   rect_y: 157
+   rect_width: 72
+   rect_height: 79
+   nb_anim: 8
+   speed_anim: 7
+   next_anim: 0
+
+spritesheet: monsters/dumb_monster_ice.png
+ ice_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 64
+   rect_height: 63
+   nb_anim: 5
+   speed_anim: 7
+
+spritesheet: monsters/dumb_monster_fire.png
+ fire_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 64
+   rect_height: 63
+   nb_anim: 5
+   speed_anim: 7
+
+spritesheet: monsters/dumb_monster_cave.png
+ cave_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 64
+   rect_height: 63
+   nb_anim: 5
+   speed_anim: 7
+
+spritesheet: monsters/dumb_monster_desert.png
+ desert_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 64
+   rect_height: 63
+   nb_anim: 5
+   speed_anim: 7
+
+spritesheet: monsters/dumb_monster_forest.png
+ forest_monster: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 64
+   rect_height: 63
+   nb_anim: 5
+   speed_anim: 7
+
+# ------------------------BOSS------------------------
+
+spritesheet: boss/boss_spaceship.png
+ boss_spaceship: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 495
+   rect_height: 495
+   nb_anim: 0
+   speed_anim: 8
+
+spritesheet: boss/boss_cave.png
+ boss_magician: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 564
+   rect_height: 476
+   nb_anim: 8
+   speed_anim: 8
+
+spritesheet: boss/boss_forest_red.png
+ boss_forest_red: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 271
+   rect_height: 342
+   nb_anim: 8
+   speed_anim: 8
+
+spritesheet: boss/boss_forest_green.png
+ boss_forest_green: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 271
+   rect_height: 342
+   nb_anim: 8
+   speed_anim: 8
+
+spritesheet: boss/boss_forest_blue.png
+ boss_forest_blue: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 271
+   rect_height: 342
+   nb_anim: 8
+   speed_anim: 8
+
+spritesheet: boss/boss_desert.png
+ boss_worms: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 192
+   rect_height: 569
+
+spritesheet: boss/boss_ice.png
+ boss_headestroyer: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 381
+   rect_height: 589
+   nb_anim: 8
+   speed_anim: 8
+   next_anim: 1
+  anim: 1
+   rect_x: 0
+   rect_y: 589
+   rect_width: 381
+   rect_height: 589
+   nb_anim: 8
+   speed_anim: 8
+   next_anim: 0
+
+# ------------------------SHOTS------------------------
+spritesheet: shots/basic_shot.png
+ basic_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 65
+   rect_height: 85
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/red_shot.png
+ red_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 20
+   rect_height: 26
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/green_shot.png
+ green_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 20
+   rect_height: 19
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/blue_shot.png
+ blue_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 20
+   rect_height: 24
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/spaceship_shot.png
+ spaceship_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 24
+   rect_height: 23
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/worms_shot.png
+ worms_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 16
+   rect_height: 19
+   nb_anim: 4
+   speed_anim: 10
+
+spritesheet: shots/head_shot.png
+ head_shot: 0
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 15
+   rect_height: 62
+   nb_anim: 4
+   speed_anim: 10
+
 # ------------------------SPACESHIPS------------------------
 spritesheet: spaceships/spaceship-1.png
  spaceship: 0
@@ -479,22 +707,3 @@ spritesheet: spaceships/spaceship-4.png
    rect_height: 97
    nb_anim: 5
    speed_anim: 15
-
-# ------------------------SHOT------------------------
-#CLASSIC
-spritesheet: filsdechienne
- shot: 0
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 100
-   rect_height: 50
-
-#BEAM
-spritesheet: filsdechienne2
- shot: 1
-  anim: 0
-   rect_x: 0
-   rect_y: 0
-   rect_width: 1280
-   rect_height: 15

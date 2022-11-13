@@ -98,6 +98,31 @@ namespace ecs
          */
         void setYVelocity(float y);
 
+        void setRedStart(bool start);
+        void setGreenStart(bool start);
+        void setBlueStart(bool start);
+        void setChangeTarget(bool changeTarget);
+        void setRedXPos(float pos);
+        void setRedYPos(float pos);
+        void setGreenXPos(float pos);
+        void setGreenYPos(float pos);
+        void setBlueXPos(float pos);
+        void setBlueYPos(float pos);
+
+        float getRedXPos();
+        float getRedYPos();
+        float getGreenXPos();
+        float getGreenYPos();
+        float getBlueXPos();
+        float getBlueYPos();
+
+        bool getRedStart();
+        bool getGreenStart();
+        bool getBlueStart();
+        bool getChangeTarget();
+        bool getAngle();
+        bool getDoneAngle();
+
         friend bool operator==(const Position &lhs, const Position &rhs)
         {
             return lhs._x == rhs._x && lhs._y == rhs._y && lhs._xVelocity == rhs._xVelocity && lhs._yVelocity == rhs._yVelocity;
@@ -107,5 +132,17 @@ namespace ecs
         float _y;
         float _xVelocity;
         float _yVelocity;
+        float _redX;
+        float _redY;
+        float _greenX;
+        float _greenY;
+        float _blueX;
+        float _blueY;
+        bool _redStart = false;
+        bool _greenStart = false;
+        bool _blueStart = false;
+        bool _changeTarget = false;
+        bool _angle = false;
+        bool _doneAngle = false;
     };
 } // namespace ecs

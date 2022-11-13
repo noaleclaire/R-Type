@@ -323,12 +323,19 @@ void CustomClient::_setRectAndSpriteComponent()
 
     for (auto &it : _tmp_entities_registry) {
         try {
+            //std::cout << "laitié" << std::endl;
             rect = sprites_manager->get_Animations_rect(
                 registry->getComponents<ecs::Type>().at(it).value().getEntityType(), registry->getComponents<ecs::Type>().at(it).value().getEntityID(), 0);
             registry->getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(0));
             registry->getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(1));
             registry->getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(2));
             registry->getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(3));
+            // if (registry->getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::BASIC_MONSTER) {
+            //     std::cout << registry->getComponents<ecs::Rectangle>().at(it).value().getXRectangle() << " " <<
+            // registry->getComponents<ecs::Rectangle>().at(it).value().getYRectangle() << " " <<
+            // registry->getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()<< " " <<
+            // registry->getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()<< " " << std::endl;
+            // }
             graphical->addSprite(it,
                 sprites_manager->get_Spritesheet(
                     registry->getComponents<ecs::Type>().at(it).value().getEntityType(), registry->getComponents<ecs::Type>().at(it).value().getEntityID()),
