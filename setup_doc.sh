@@ -1,5 +1,5 @@
 #!/bin/bash
-cd docs
+cd documentation
 rm -rf docs/*
 doxygen doxyfile
 xdg-open docs/html/index.html
