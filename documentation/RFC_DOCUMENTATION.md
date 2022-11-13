@@ -15,6 +15,36 @@ ________________________________________________________________________________
 
 Asynchronous connectionless mode networking is conducted by configuring the endpoint for non-blocking service, and either polling for or receiving asynchronous notification when data might be transferred. If asynchronous notification is used, the actual receipt of data typically takes place within a signal handler.
 
+Senders function :
+       
+
+        void writeHeaderStrand(shared_session const &session) 
+        {
+            _socket.async_send_to(boost::asio::buffer(&session->_send_msg.header, sizeof(Header<T>)), session->_remote_endpoint, _strand.wrap(boost::bind(
+            &UdpSession<T>::handleSentWriteHeader, session, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+        }
+        void writeBodyStrand(shared_session const &session) 
+        {
+            _socket.async_send_to(boost::asio::buffer(session->_send_msg.body.data(), session->_send_msg.body.size()), session->_remote_endpoint, _strand.wrap(boost::bind(&UdpSession<T>::handleSentWriteBody, session, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+        }  
+
+Receiver function :
+
+        void readHeader()
+        {
+            auto session = std::make_shared<UdpSession<T>>(this);
+
+            _socket.async_receive_from(boost::asio::buffer(&session->_recv_msg.header, sizeof(Header<T>)), session->_remote_endpoint,
+                _strand.wrap(boost::bind(
+                    &UdpServerClient::handleReceiveReadHeader, this, session, boost::asio::placeholders::error,             boost::asio::placeholders::bytes_transferred)));
+        }
+        void readBody(shared_session const &session)
+        {
+            _socket.async_receive_from(boost::asio::buffer(session->_recv_msg.body.data(), session->_recv_msg.body.size()), session->_remote_endpoint,
+                _strand.wrap(boost::bind(
+                    &UdpServerClient::handleReceiveReadBody, this, session, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+            readHeader();
+        }
 
 ________________________________________________________________________________  
 
@@ -32,6 +62,17 @@ ________________________________________________________________________________
     Use of serialisation: It lets you take an object or group of objects, put them on a disk or send them through a wire or wireless transport mechanism, then later, perhaps on another computer, reverse the process: resurrect the original object(s). The basic mechanisms are to flatten object(s) into a one-dimensional stream of bits, and to turn that stream of bits back into the original object(s).
 
     Format : Non-human-readable (“binary”) format
+    
+    Enum message:  
+
+    enum CustomMessage : uint32_t { PingServer,
+                                CreatePublicRoom, CreatePrivateRoom, MaxRoomLimit,
+                                GetRoomScene,
+                                InitListRoom, UpdateListRoom,
+                                JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
+                                SendComponent, AllComponentSent,
+                                SwitchToGame,
+                                RemoveClient };
 
 ###   - 1. Communications's basis
     
