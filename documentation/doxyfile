@@ -920,6 +920,7 @@ INPUT                  =   ../src/client \
 >                          ../src/Ecs/Systems \
 >                          ../src/server \
                            ../src/server/Network \
+                           ../
 >                          ./ \
 
 # This tag can be used to specify the character encoding of the source files
