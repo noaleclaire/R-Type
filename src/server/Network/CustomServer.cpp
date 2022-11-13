@@ -141,22 +141,19 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
 void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     ecs::Scenes scene;
-    std::size_t entity;
-    ecs::Position compo;
-    msg >> scene >> entity >> compo;
+    ecs::Position pos;
+    ecs::Rectangle rect;
+    std::size_t entity = 10000;
+    msg >> scene >> rect >> pos >> entity;
     try {
-        compo.setXVelocity(0);
-        compo.setYVelocity(0);
-        _getGameRegistry(scene).addComponent<ecs::Position>(_getGameRegistry(scene).getEntityById(entity), compo);
-    } catch (const ecs::ExceptionEntityUnobtainable &e) {
-        return;
-    }
-    network::Message<network::CustomMessage> message;
-    message.header.id = network::CustomMessage::UpdatePosPlayerClient;
-    message << compo << entity;
+        _getGameRegistry(scene).addComponent<ecs::Position>(_getGameRegistry(scene).getEntityById(entity), pos);
+        _getGameRegistry(scene).addComponent<ecs::Rectangle>(_getGameRegistry(scene).getEntityById(entity), rect);
+    } catch (const ecs::Exception &e) {}
+    msg.header.id = network::CustomMessage::UpdatePosPlayerClient;
+    msg << entity << pos;
     for (auto &client_endpoint : _getClientsEndpoint(scene)) {
         if (client_endpoint.first != target_endpoint)
-            send(message, client_endpoint.first);
+            send(msg, client_endpoint.first);
     }
 }
 

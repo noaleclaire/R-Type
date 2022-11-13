@@ -205,19 +205,15 @@ namespace ecs
                         veloY = 0;
                         if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
                             veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
                         }
                         if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
                             veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
                         }
                         if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
                             veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
                         }
                         if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                             veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                            graphical.client->sendComponentToServer(it, network::CustomMessage::UpdatePosPlayerServer, registry.getComponents<ecs::Position>().at(it).value());
                         }
                     } catch (const ExceptionComponentNull &e) {}
                     catch (const ExceptionIndexComponent &e) {}
@@ -245,28 +241,44 @@ namespace ecs
             try {
                 controllable.at(it);
                 if (graphical->getEvent().type == sf::Event::KeyPressed) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", true);
+                        graphical->client->sendPlayerPos(3, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
                         controllable.at(it).value().setKey("space", true);
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::LShift)
                         controllable.at(it).value().setKey("shift", true);
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", false);
+                        graphical->client->sendPlayerPos(3, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
                         controllable.at(it).value().setKey("space", false);
                 }

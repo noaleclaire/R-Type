@@ -114,6 +114,24 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void clientDisconnect();
+    /**
+     * @brief
+     *
+     * @param key
+     * @param pressed
+     * @param entity
+     * @param compo
+     */
+    void sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect);
+    /**
+     * @brief
+     *
+     * @tparam T
+     * @tparam U
+     * @param entity
+     * @param id_msg
+     * @param compo
+     */
     template <class T, class U>
     void sendComponentToServer(std::size_t entity, T id_msg, U &compo)
     {

@@ -134,6 +134,15 @@ void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
     std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
     send(msg);
 }
+
+void CustomClient::sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::UpdatePosPlayerServer;
+    msg << pressed << key << entity << pos << rect << *actual_scene;
+    send(msg);
+}
+
 void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     static_cast<void>(target_endpoint);
@@ -158,7 +167,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
-            std::size_t entity = 0;
+            std::size_t entity = 10000;
             msg >> index_component_create;
             msg >> entity;
             std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
@@ -167,7 +176,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 registry->getEntityById(entity);
                 if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
                     _tmp_entities_registry.push_back(registry->getEntityById(entity));
-            } catch (const ecs::ExceptionEntityUnobtainable &e) {}
+            } catch (const ecs::Exception &e) {}
             catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::AllComponentSent: {
@@ -182,15 +191,44 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _setupListRoomScene(msg);
         } break;
         case network::CustomMessage::UpdatePosPlayerClient: {
-            std::size_t entity = 0;
-            ecs::Position compo;
-            msg >> entity >> compo;
+            ecs::Position pos;
+            std::size_t entity = 10000;
+            int key;
+            bool pressed;
+            msg >> pos >> entity >> key >> pressed;
             try {
-                registry->addComponent<ecs::Position>(registry->getEntityById(entity), compo);
+                if (pressed == true) {
+                    if (key == 0) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(-pos.getYVelocity());
+                    }
+                    if (key == 1) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(-pos.getXVelocity());
+                    }
+                    if (key == 2) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(pos.getYVelocity());
+                    }
+                    if (key == 3) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(pos.getXVelocity());
+                    }
+                } else {
+                    if (key == 0) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+                    }
+                    if (key == 1) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+                    }
+                    if (key == 2) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+                    }
+                    if (key == 3) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+                    }
+                }
                 graphical->setSpritePosition(entity,
                 registry->getComponents<ecs::Position>().at(entity).value().getXPosition(),
                 registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-            } catch (const ecs::ExceptionEntityUnobtainable &e) {}
+            } catch (const ecs::Exception &e) {}
+            catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::QuitRoomClient: {
             ecs::Scenes room_scene;
@@ -376,7 +414,7 @@ void CustomClient::_killOneEntity(std::size_t entity)
         graphical->getAllSprites().erase(entity);
         graphical->getAllRectangleShapes().erase(entity);
         graphical->getAllTexts().erase(entity);
-    } catch (const ecs::ExceptionEntityUnobtainable &e) {
+    } catch (const ecs::Exception &e) {
         registry->setActualScene(*actual_scene);
         graphical->setActualGraphicsEntities(*actual_scene);
     }
