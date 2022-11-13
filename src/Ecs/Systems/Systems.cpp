@@ -515,14 +515,19 @@ namespace ecs
                             continue;
                         if (graphical.getAllSprites().at(it).getGlobalBounds().intersects(graphical.getAllSprites().at(it_in).getGlobalBounds())) {
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
-                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP ||
+                                    registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
-                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                     graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                                }
+                                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                             }
