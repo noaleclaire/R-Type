@@ -133,7 +133,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
 
   private:
     void _updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg);
-    void _createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint);
+    void _createGame(ecs::Scenes room_scene, std::size_t level_id, udp::endpoint target_endpoint);
     void _getGame(ecs::Scenes game_scene, udp::endpoint target_endpoint);
     void _createRoom(network::Message<network::CustomMessage> &msg, udp::endpoint target_endpoint, bool private_room = false);
     void _createShot(network::Message<network::CustomMessage> &msg);

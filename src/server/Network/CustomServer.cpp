@@ -104,8 +104,9 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             } break;
             case network::CustomMessage::SwitchToGame: {
                 ecs::Scenes client_scene;
-                msg >> client_scene;
-                _createGame(client_scene, target_endpoint);
+                std::size_t level_id = 0;
+                msg >> level_id >> client_scene;
+                _createGame(client_scene, level_id, target_endpoint);
             } break;
             case network::CustomMessage::InitGame: {
                 ecs::Scenes game_scene;
@@ -191,7 +192,7 @@ void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Mess
     }
 }
 
-void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endpoint)
+void CustomServer::_createGame(ecs::Scenes room_scene, std::size_t level_id, udp::endpoint target_endpoint)
 {
     network::Message<network::CustomMessage> message;
     message.header.id = network::CustomMessage::GetScene;
@@ -208,7 +209,7 @@ void CustomServer::_createGame(ecs::Scenes room_scene, udp::endpoint target_endp
             //     send(message2, target_endpoint);
             //     return;
             // }
-            Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(0));
+            Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(level_id));
             message << std::get<1>(_registries.at(i));
             for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
                 send(message, client_endpoint.first);

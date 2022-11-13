@@ -22,6 +22,8 @@ class Core {
     static ecs::Scenes actual_scene;
     static std::string new_pseudo;
     static std::string room_id;
+    static std::size_t level_id;
+    static std::size_t score;
     static int new_music_volume;
     static int new_sfx_volume;
 

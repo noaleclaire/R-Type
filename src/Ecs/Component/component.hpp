@@ -28,3 +28,4 @@
 #include "Animation.hpp"
 #include "Pressed.hpp"
 #include "CompoServer.hpp"
+#include "Planet.hpp"

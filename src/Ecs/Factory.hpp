@@ -74,6 +74,7 @@ namespace ecs
             registry.addComponent<ecs::Rectangle>(entity, ecs::Rectangle(0, 0, 0, 0));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(2))));
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SPACESHIP, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(3))));
+            registry.addComponent<ecs::Animation>(entity, ecs::Animation());
             return (entity);
         }
         /**
@@ -112,7 +113,7 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
-
+            registry.addComponent<ecs::Killable>(entity, ecs::Killable());
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(linked_entity));
             registry.addComponent<ecs::Ammo>(registry.getEntityById(entity), ecs::Ammo(registry.getComponents<ecs::Shooter>().at(linked_entity).value().getAmmoType()));
             registry.addComponent<ecs::Position>(

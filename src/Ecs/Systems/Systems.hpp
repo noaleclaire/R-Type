@@ -144,5 +144,13 @@ namespace ecs
          * @param textBox
          */
         static void _unselectAllTextBoxes(Registry &registry, SparseArray<ecs::TextBox> &textBox);
+        /**
+         * @brief Unselect all planet in the scene
+         *
+         * @param registry
+         * @param planet
+         * @param graphical
+         */
+        static void _unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical);
     };
 } // namespace ecs
