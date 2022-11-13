@@ -62,4 +62,57 @@ namespace ecs
             }
         }
     }
+
+    void SystemsServer::Collider(Registry &registry, SparseArray<ecs::Collider> &collider)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                collider.at(it);
+                for (auto &it_in : registry.getEntities()) {
+                    try {
+                        collider.at(it_in);
+                        if (it == it_in)
+                            continue;
+                        if (_checkCollisionByPosAndRect(registry, it, it_in) == true) {
+                            if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == SPACESHIP && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == MONSTER)
+                                registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                            if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == MONSTER)
+                                registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
+                        }
+                    } catch (const ExceptionComponentNull &e) {
+                        continue;
+                    } catch (const ExceptionIndexComponent &e) {
+                        continue;
+                    }
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+
+    bool SystemsServer::_checkCollisionByPosAndRect(Registry &registry, std::size_t entity, std::size_t entity_in)
+    {
+        int entity_posX = registry.getComponents<ecs::Position>().at(entity).value().getXPosition();
+        int entity_posY = registry.getComponents<ecs::Position>().at(entity).value().getYPosition();
+        int entity_in_posX = registry.getComponents<ecs::Position>().at(entity_in).value().getXPosition();
+        int entity_in_posY = registry.getComponents<ecs::Position>().at(entity_in).value().getYPosition();
+        int entity_width = registry.getComponents<ecs::Rectangle>().at(entity).value().getWidthRectangle();
+        int entity_height = registry.getComponents<ecs::Rectangle>().at(entity).value().getHeightRectangle();
+        int entity_in_width = registry.getComponents<ecs::Rectangle>().at(entity_in).value().getWidthRectangle();
+        int entity_in_height = registry.getComponents<ecs::Rectangle>().at(entity_in).value().getHeightRectangle();
+        bool xCollide = false;
+
+        for (int tmp_x = entity_in_posX; xCollide == false && tmp_x < entity_in_posX + entity_in_width; tmp_x++) {
+            if (tmp_x > entity_posX && tmp_x < entity_posX + entity_width)
+                xCollide = true;
+        }
+        for (int tmp_y = entity_in_posY; xCollide == true && tmp_y < entity_in_posY + entity_in_height; tmp_y++) {
+            if (tmp_y > entity_posY && tmp_y < entity_posY + entity_height)
+                return (true);
+        }
+        return (false);
+    }
 }
