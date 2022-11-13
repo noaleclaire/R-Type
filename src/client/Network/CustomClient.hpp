@@ -154,6 +154,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     UserInfo *user_info;
     ecs::Scenes *actual_scene;
     ecs::Scenes game_scene = ecs::Scenes::GAME;
+    ecs::Scenes tmp_scene = ecs::Scenes::GAME;
     bool is_host = false;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
