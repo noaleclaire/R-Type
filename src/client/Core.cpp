@@ -23,8 +23,8 @@ std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
 std::size_t Core::level_id = 0;
 std::size_t Core::score = 0;
-int Core::new_music_volume = -1;
-int Core::new_sfx_volume = -1;
+int Core::new_music_volume = 10;
+int Core::new_sfx_volume = 10;
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
@@ -191,6 +191,26 @@ void Core::_switchScenes()
         _client.initGame();
         std::this_thread::sleep_for(std::chrono::milliseconds(500)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         _client.game_scene = ecs::Scenes::GAME;
+        switch (Core::level_id)
+        {
+            case 0:
+                _graphical.setActualMusic(ecs::Music::SPACE);
+                break;
+            case 1:
+                _graphical.setActualMusic(ecs::Music::CAVE);
+                break;
+            case 2:
+                _graphical.setActualMusic(ecs::Music::DESERT);
+                break;
+            case 3:
+                _graphical.setActualMusic(ecs::Music::SNOW);
+                break;
+            case 4:
+                _graphical.setActualMusic(ecs::Music::FOREST);
+                break;
+            default:
+                break;
+        }
     }
     if (_client.game_scene == ecs::Scenes::RETURNTOGAME) {
         std::cout << "tes" << _actual_registry->getActualScene() << std::endl;
@@ -214,13 +234,22 @@ void Core::_switchScenes()
         }
     }
 
+    _switchMusic();
     _last_scene = Core::actual_scene;
+}
+
+void Core::_switchMusic()
+{
+    if (Core::actual_scene == ecs::Scenes::MENU && (_last_scene != ecs::Scenes::SETTINGS && _last_scene != ecs::Scenes::LISTROOM &&
+        _last_scene != ecs::Scenes::TYPEPSEUDO && _last_scene != ecs::Scenes::HOWTOPLAY && _last_scene != ecs::Scenes::ACHIEVEMENTS))
+            _graphical.setActualMusic(ecs::Music::MUSICMENU, false);
 }
 
 void Core::_updateUserInfo()
 {
-    if (std::strcmp(_user_info.pseudo, "") == 0 && Core::new_pseudo == "")
+    if (std::strcmp(_user_info.pseudo, "") == 0 && Core::new_pseudo == "") {
         Core::actual_scene = ecs::Scenes::TYPEPSEUDO;
+    }
     if (Core::new_pseudo.size() > 0) {
         std::strcpy(_user_info.pseudo, Core::new_pseudo.c_str());
         Core::new_pseudo = "";
@@ -282,6 +311,8 @@ void Core::_gameLoop()
     _actual_registry->setActualScene(actual_scene);
     // _update_ping_latency = std::thread(&Core::_updatePingLatency, this);
     _update_components_server = std::thread(&Core::_updateComponentsServer, this);
+    _graphical.setActualMusic(ecs::Music::MUSICMENU);
+    _graphical.getActualMusic().setVolume(Core::new_music_volume);
     try {
         while (_graphical.getWindow().isOpen()) {
             // _ping_latency += graphics::Graphical::world_current_time;

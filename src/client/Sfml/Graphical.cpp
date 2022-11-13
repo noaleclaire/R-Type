@@ -22,6 +22,13 @@ namespace graphics
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
         _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf"));
+        _music_entities[ecs::Music::CAVE].openFromFile(std::filesystem::current_path().append("assets/sounds/cave_music.ogg"));
+        _music_entities[ecs::Music::SPACE].openFromFile(std::filesystem::current_path().append("assets/sounds/space_music.ogg"));
+        _music_entities[ecs::Music::DESERT].openFromFile(std::filesystem::current_path().append("assets/sounds/desert_music.ogg"));
+        _music_entities[ecs::Music::SNOW].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg"));
+        _music_entities[ecs::Music::FOREST].openFromFile(std::filesystem::current_path().append("assets/sounds/forest_music.ogg"));
+        _music_entities[ecs::Music::MUSICMENU].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg"));
+        _music_entities[ecs::Music::BOSS].openFromFile(std::filesystem::current_path().append("assets/sounds/boss_music.ogg"));
     }
 
     Graphical::~Graphical()
@@ -85,6 +92,11 @@ namespace graphics
     std::string Graphical::getTextString(std::size_t entity)
     {
         return (_text_entities.at(_actual_scene).at(entity).getString());
+    }
+
+    sf::Music &Graphical::getActualMusic()
+    {
+        return (_music_entities.at(prev_music));
     }
 
     /* Setter */
@@ -218,6 +230,23 @@ namespace graphics
         sf::IntRect rect = _sprites_entities.at(_actual_scene).at(entity).getTextureRect();
 
         _sprites_entities.at(_actual_scene).at(entity).setTextureRect(sf::IntRect(rect.width * 2, rect.top, rect.width, rect.height));
+    }
+
+    void Graphical::setActualMusic(ecs::Music music, bool stop_prev)
+    {
+        try
+        {
+            if (stop_prev)
+                _music_entities.at(prev_music).stop();
+            if (music != prev_music) {
+                _music_entities.at(music).setLoop(true);
+                _music_entities.at(music).play();
+                prev_music = music;
+            }
+        }
+        catch(const std::exception& e)
+        {
+        }
     }
 
     void Graphical::setBasicSprite(std::size_t entity)

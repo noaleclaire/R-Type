@@ -159,7 +159,7 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); break;
+                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->getActualMusic().setVolume(Core::new_music_volume); break;
                             case Clickable::Function::CHANGESFXVOLUME: Core::new_sfx_volume = _changeVolume(registry, it, graphical); break;
                             default: break;
                         }
