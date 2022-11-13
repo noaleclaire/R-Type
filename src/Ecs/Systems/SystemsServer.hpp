@@ -34,9 +34,17 @@ namespace ecs
          *
          * @param registry
          * @param collider
-         * @param graphical
          */
         static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param killable
+         * @param server
+         * @param clients_endpoint
+         */
+        static void Kill(Registry &registry, SparseArray<ecs::Killable> &killable, CustomServer *server,std::vector<std::pair<udp::endpoint, bool>> clients_endpoint);
       private:
         /**
          * @brief 
