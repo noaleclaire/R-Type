@@ -32,6 +32,76 @@ class LobbySelector : public ScenesInitializer {
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
             entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 720, 550, 0, 0, 0, 0, 3, 0);
             registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BASIC_MONSTER);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
             server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, registry.getComponents<ecs::Position>().at(entity).value().getXPosition(), registry.getComponents<ecs::Position>().at(entity).value().getYPosition(), 0, 0, 0, 0, 4, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BASIC_SHOT);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 800, 0, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_FIRE_SPACESHIP);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 30, 0, 0, 0, 0, 5, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_FOREST_RED);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, (registry.getComponents<ecs::Position>().at(entity).value().getXPosition()/2), (registry.getComponents<ecs::Position>().at(entity).value().getYPosition()/2), 0, 0, 0, 0, 4, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::RED_SHOT);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 550, 30, 0, 0, 0, 0, 5, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_FOREST_GREEN);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, (registry.getComponents<ecs::Position>().at(entity).value().getXPosition()/2), (registry.getComponents<ecs::Position>().at(entity).value().getYPosition()/2), 0, 0, 0, 0, 4, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::GREEN_SHOT);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 775, 350, 0, 0, 0, 0, 5, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_FOREST_BLUE);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::SHOT, (registry.getComponents<ecs::Position>().at(entity).value().getXPosition()/2), (registry.getComponents<ecs::Position>().at(entity).value().getYPosition()/2), 0, 0, 0, 0, 4, 0);
+            registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BLUE_SHOT);
+            registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 690, 100, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_CAVERN_MAGICIAN);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 900, 100, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_ICE_HEADESTROYER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 800, 100, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::BOSS_DESERT_WORMS);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 100, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::FIRE_MONSTER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 200, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::ICE_MONSTER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 300, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::CAVE_MONSTER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 400, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::FOREST_MONSTER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
+            // entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::MONSTER, 1000, 500, 0, 0, 0, 0, 5, 0);
+            // registry.getComponents<ecs::Type>().at(entity).value().setEntityType(ecs::EntityTypes::DESERT_MONSTER);
+            // registry.addComponent<ecs::Animation>(registry.getEntityById(entity), ecs::Animation());
+            // server->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent, client_endpoint, true);
         }
 };

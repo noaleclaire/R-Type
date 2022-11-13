@@ -31,8 +31,8 @@ namespace ecs
          */
         static Entity createEntity(Registry &registry, EntityTypes entityType, Params &&...args)
         {
-            MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster}, {EntityTypes::SHOT, &createShot},
-                {EntityTypes::BUTTON, &createButton}, {EntityTypes::ROOM, &createRoom}, {EntityTypes::WALL, &createWall},
+            MapCall creator = {{EntityTypes::SPACESHIP, &createSpaceship}, {EntityTypes::MONSTER, &createMonster}, 
+                {EntityTypes::SHOT, &createShot}, {EntityTypes::BUTTON, &createButton}, {EntityTypes::ROOM, &createRoom}, {EntityTypes::WALL, &createWall},
                 {EntityTypes::BACKGROUND, &createBackground}};
             MapCall::const_iterator call;
 
@@ -114,6 +114,7 @@ namespace ecs
 
             registry.addComponent<ecs::Drawable>(entity, ecs::Drawable());
             registry.addComponent<ecs::Collider>(entity, ecs::Collider());
+            registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
 
             registry.addComponent<ecs::Position>(
                 entity, ecs::Position(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(0)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(1))));
@@ -123,7 +124,7 @@ namespace ecs
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6))));
 
             registry.addComponent<ecs::Shootable>(entity, ecs::Shootable());
-            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT));
+            registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
             return (entity);
         }
         /**

@@ -19,11 +19,29 @@ SpritesManager::SpritesManager()
 {
     _sprites_config_words = {{std::make_pair("spritesheet", std::nullopt)},
         {std::make_pair("spaceship", ecs::EntityTypes::SPACESHIP), std::make_pair("monster", ecs::EntityTypes::MONSTER),
+            std::make_pair("fire_monster", ecs::EntityTypes::FIRE_MONSTER),
+            std::make_pair("ice_monster", ecs::EntityTypes::ICE_MONSTER),
+            std::make_pair("cave_monster", ecs::EntityTypes::CAVE_MONSTER),
+            std::make_pair("forest_monster", ecs::EntityTypes::FOREST_MONSTER),
+            std::make_pair("desert_monster", ecs::EntityTypes::DESERT_MONSTER),
             std::make_pair("basic_monster", ecs::EntityTypes::BASIC_MONSTER), std::make_pair("shot", ecs::EntityTypes::SHOT),
-             std::make_pair("basic_shot", ecs::EntityTypes::BASIC_SHOT), std::make_pair("background", ecs::EntityTypes::BACKGROUND),
-            std::make_pair("button", ecs::EntityTypes::BUTTON), std::make_pair("room", ecs::EntityTypes::ROOM),
-            std::make_pair("wall", ecs::EntityTypes::WALL), std::make_pair("textbox", ecs::EntityTypes::TEXTBOX),
-            std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
+            std::make_pair("boss_spaceship", ecs::EntityTypes::BOSS_FIRE_SPACESHIP),
+            std::make_pair("boss_forest_red", ecs::EntityTypes::BOSS_FOREST_RED),
+            std::make_pair("boss_forest_blue", ecs::EntityTypes::BOSS_FOREST_BLUE),
+            std::make_pair("boss_forest_green", ecs::EntityTypes::BOSS_FOREST_GREEN),
+            std::make_pair("boss_magician", ecs::EntityTypes::BOSS_CAVERN_MAGICIAN),
+            std::make_pair("boss_headestroyer", ecs::EntityTypes::BOSS_ICE_HEADESTROYER),
+            std::make_pair("boss_worms", ecs::EntityTypes::BOSS_DESERT_WORMS),
+            std::make_pair("red_shot", ecs::EntityTypes::RED_SHOT),
+            std::make_pair("green_shot", ecs::EntityTypes::GREEN_SHOT),
+            std::make_pair("blue_shot", ecs::EntityTypes::BLUE_SHOT),
+            std::make_pair("spaceship_shot", ecs::EntityTypes::SPACESHIP_SHOT),
+            std::make_pair("worms_shot", ecs::EntityTypes::WORMS_SHOT),
+            std::make_pair("head_shot", ecs::EntityTypes::HEAD_SHOT),
+            std::make_pair("basic_shot", ecs::EntityTypes::BASIC_SHOT), std::make_pair("background", ecs::EntityTypes::BACKGROUND),
+            std::make_pair("parallax", ecs::EntityTypes::PARALLAX), std::make_pair("button", ecs::EntityTypes::BUTTON),
+            std::make_pair("room", ecs::EntityTypes::ROOM), std::make_pair("wall", ecs::EntityTypes::WALL),
+            std::make_pair("textbox", ecs::EntityTypes::TEXTBOX), std::make_pair("roommode", ecs::EntityTypes::ROOMMODE)},
         {std::make_pair("anim", SpriteTypeAttributes::anim)},
         {std::make_pair("rect_x", SpriteAnimAttributes::rect_x), std::make_pair("rect_y", SpriteAnimAttributes::rect_y),
             std::make_pair("rect_width", SpriteAnimAttributes::rect_width), std::make_pair("rect_height", SpriteAnimAttributes::rect_height),
@@ -42,9 +60,27 @@ void SpritesManager::initMapFunctionPointer()
     _map_fptr.insert("spritesheet", &SpritesManager::addTexturePath);
 
     _map_fptr.insert("spaceship", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("fire_monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("forest_monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("ice_monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("cave_monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("desert_monster", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("monster", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("basic_monster", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_spaceship", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_worms", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_magician", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_forest_red", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_forest_green", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_forest_blue", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("boss_headestroyer", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("red_shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("green_shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("blue_shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("spaceship_shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("worms_shot", &SpritesManager::addSpriteTypeId);
+    _map_fptr.insert("head_shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("basic_shot", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("background", &SpritesManager::addSpriteTypeId);
     _map_fptr.insert("parallax", &SpritesManager::addSpriteTypeId);
@@ -370,6 +406,27 @@ void SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std:
     for (auto &it : _sprites_data) {
         if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
             it._index_current_anim = index;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+float SpritesManager::getLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._last_anim_current_frame);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::getIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._last_anim_current_frame = increm;
             return;
         }
     }

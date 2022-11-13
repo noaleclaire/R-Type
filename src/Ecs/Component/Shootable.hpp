@@ -53,8 +53,15 @@ namespace ecs
          * @param angle
          */
         void setAngle(int angle);
+        bool getShooting() const;
+        void setShooting(bool isShooting);
+        bool getBeenInRange() const;
+        void setBeenInRange(bool beenIn);
 
       private:
         int _angle;
+        bool _shooting = false; // mettre dans le compo basic shot plus tard
+        bool _been_in_range = false;
+
     };
 } // namespace ecs

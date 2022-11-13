@@ -168,6 +168,21 @@ class SpritesManager : public AYamlConfig {
      */
     void setAnimationCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm);
     /**
+     * @brief Get the Animation Current Frame
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return int
+     */
+    float getLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id);
+    /**
+     * @brief Set the Animation Current Frame
+     *
+     * @param entity_type
+     * @param entity_id
+     */
+    void setLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm);
+    /**
      * @brief Get the Index Current Animation
      *
      * @param entity_type
@@ -229,6 +244,7 @@ class SpritesManager : public AYamlConfig {
         std::pair<ecs::EntityTypes, std::size_t> _sprite_type_and_id;
         std::unordered_map<std::size_t, std::vector<std::optional<int>>> _animations;
         float _anim_current_frame = 0;
+        float _last_anim_current_frame = -1;
         int _index_current_anim = 0;
         bool _do_next_anim = false;
     };
