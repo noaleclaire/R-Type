@@ -56,6 +56,15 @@ class Game : public ScenesInitializer {
             }
             server->startTimes(scene);
         }
+        /**
+         * @brief Get the game scene and send it to the clients
+         *
+         * @param server
+         * @param registry
+         * @param scene
+         * @param clients_endpoint
+         * @param target_endpoint
+         */
         static void getScene(CustomServer *server, ecs::Registry &registry, ecs::Scenes scene, std::vector<std::pair<udp::endpoint, bool>> &clients_endpoint, udp::endpoint target_endpoint)
         {
             registry.setActualScene(scene);
@@ -69,8 +78,8 @@ class Game : public ScenesInitializer {
                         registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP &&
                         registry.getComponents<ecs::Type>().at(it).value().getEntityID() == client_id) {
                             registry.addComponent<ecs::Controllable>(it, ecs::Controllable());
-                            registry.getComponents<ecs::Position>().at(it).value().setXVelocity(600);
-                            registry.getComponents<ecs::Position>().at(it).value().setYVelocity(600);
+                            registry.getComponents<ecs::Position>().at(it).value().setXVelocity(SPACESHIP_SPEED);
+                            registry.getComponents<ecs::Position>().at(it).value().setYVelocity(SPACESHIP_SPEED);
                             server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, target_endpoint);
                             break;
                         }
@@ -104,16 +113,20 @@ class Game : public ScenesInitializer {
         static void updateScene(CustomServer *server, ecs::Registry &registry, ecs::Scenes scene, std::vector<std::pair<udp::endpoint, bool>> clients_endpoint)
         {
             std::chrono::time_point<std::chrono::system_clock> t = std::chrono::system_clock::now();
+            bool has_spaceships = true;
 
             registry.setActualScene(scene);
 
-            while (1) {
+            while (has_spaceships) {
+                has_spaceships = false;
                 t = std::chrono::system_clock::now();
                 try {
                     for (auto &it : registry.getEntities()) {
                         if (registry.getActualScene() != scene)
                             registry.setActualScene(scene);
                         try {
+                            if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP)
+                                has_spaceships = true;
                             registry.getComponents<ecs::CompoServer>().at(it);
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
@@ -145,5 +158,6 @@ class Game : public ScenesInitializer {
                 }
                 server->setLastTime(scene, t);
             }
+            server->quitGame(scene);
         }
 };

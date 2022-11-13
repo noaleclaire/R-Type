@@ -119,6 +119,21 @@ namespace ecs
          * @param collider
          */
         static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical);
+        /**
+         * @brief
+         *
+         * @param user_info
+         */
+        static void Achievement(UserInfo *user_info);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param achievement
+         * @param graphical
+         */
+        static void Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical);
+        static void setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info);
 
       private:
         /**

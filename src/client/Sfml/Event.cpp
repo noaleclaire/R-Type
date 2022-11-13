@@ -60,6 +60,8 @@ namespace graphics
 
     void Event::_handleKeyEvents(Graphical *graphical, ecs::Registry &registry)
     {
+        if (registry.getActualScene() == ecs::Scenes::ACHIEVEMENTS)
+            ecs::Systems::Achievement(registry, registry.getComponents<ecs::Achievement>(), *graphical);
         ecs::Systems::Controllable(registry, registry.getComponents<ecs::Controllable>(), graphical);
     }
 } // namespace graphics
