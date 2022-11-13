@@ -16,11 +16,13 @@
 #include "Scenes/ListRoom.hpp"
 #include "Scenes/TypePseudo.hpp"
 #include "Scenes/HowToPlay.hpp"
+#include "Scenes/Achievements.hpp"
 
 ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
 std::size_t Core::level_id = 0;
+std::size_t Core::score = 0;
 int Core::new_music_volume = -1;
 int Core::new_sfx_volume = -1;
 
@@ -42,7 +44,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     Settings::initScene(_unique_registry, _sprites_manager, _graphical);
     ListRoom::initScene(_unique_registry, _sprites_manager, _graphical);
     Menu::initScene(_unique_registry, _sprites_manager, _graphical);
-
+    // Achievements::initScene(_unique_registry, _sprites_manager, _graphical);
 
     _client.registry = &_shared_registry;
     _client.non_shareable_registry = &_unique_registry;
@@ -65,7 +67,7 @@ Core::~Core()
 void Core::_setActualRegistry()
 {
     if (Core::actual_scene == ecs::Scenes::MENU || Core::actual_scene == ecs::Scenes::SETTINGS || Core::actual_scene == ecs::Scenes::LISTROOM ||
-        Core::actual_scene == ecs::Scenes::TYPEPSEUDO || Core::actual_scene == ecs::Scenes::HOWTOPLAY)
+        Core::actual_scene == ecs::Scenes::TYPEPSEUDO || Core::actual_scene == ecs::Scenes::HOWTOPLAY || Core::actual_scene == ecs::Scenes::ACHIEVEMENTS)
         _actual_registry = &_unique_registry;
     else
         _actual_registry = &_shared_registry;
@@ -140,6 +142,8 @@ void Core::_switchScenes()
     if (_last_scene != ecs::Scenes::MENU && Core::actual_scene == ecs::Scenes::MENU)
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::HOWTOPLAY && Core::actual_scene == ecs::Scenes::HOWTOPLAY)
+        _actual_registry->setActualScene(Core::actual_scene);
+    if (_last_scene != ecs::Scenes::ACHIEVEMENTS && Core::actual_scene == ecs::Scenes::ACHIEVEMENTS)
         _actual_registry->setActualScene(Core::actual_scene);
     if (_last_scene != ecs::Scenes::SETTINGS && Core::actual_scene == ecs::Scenes::SETTINGS) {
         _actual_registry->setActualScene(Core::actual_scene);

@@ -202,6 +202,22 @@ spritesheet: planets/sun.png
    rect_height: 244
    nb_anim: 29
 
+spritesheet: backgrounds/locked_achievement.png
+ background: 19
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 860
+   rect_height: 134
+
+spritesheet: backgrounds/achievement.png
+ background: 20
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 860
+   rect_height: 134
+
 # ------------------------BUTTONS------------------------
 spritesheet: buttons/create_private_game_btn.png
  button: 0
