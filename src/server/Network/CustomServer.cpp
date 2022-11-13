@@ -78,6 +78,19 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                       << "connection..."
                       << "]: Server Ping" << std::endl;
         } break;
+        case network::CustomMessage::SendComponent: {
+            ecs::Scenes scene;
+            std::size_t index_component_create = 0;
+            std::size_t entity = 10000;
+            msg >> scene;
+            msg >> index_component_create;
+            msg >> entity;
+            try {
+                _getGameRegistry(scene).getNetComponentCreate().at(index_component_create)(msg);
+                _getGameRegistry(scene).getEntityById(entity);
+            } catch (const ecs::Exception &e) {}
+            catch (const std::out_of_range &e) {}
+        } break;
         case network::CustomMessage::SwitchToGame: {
             ecs::Scenes client_scene;
             msg >> client_scene;
@@ -549,7 +562,6 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
             message << static_cast<std::size_t>(it);
             send(message, target_endpoint);
             std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
-            std::cout << "here22" << std::endl;
             sendNetworkComponents<network::CustomMessage>(registry, it, id_msg, target_endpoint);
             update = true;
         }
@@ -560,7 +572,6 @@ void CustomServer::compareRegistries(udp::endpoint target_endpoint, ecs::Registr
                 if (registry.getComponentsCompare().at(i)(tmp_registry, it)
                 != tmp_registry.getComponentsCompare().at(i)(registry, it)
                 && std::find(tmp_entities.begin(), tmp_entities.end(), it) == tmp_entities.end()) {
-                    std::cout << "here" << std::endl;
                     sendNetworkComponent<network::CustomMessage>(registry, it, id_msg, target_endpoint, i);
                     update = true;
                 }

@@ -190,6 +190,8 @@ namespace ecs
 
     void Systems::Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical)
     {
+        static float update_time_position = 0;
+        update_time_position += graphics::Graphical::world_current_time;
         for (auto &it : registry.getEntities()) {
             try {
                 try {
@@ -221,6 +223,8 @@ namespace ecs
                     posY += veloY * graphics::Graphical::world_current_time;
                     registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                     registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+                    if (update_time_position >= 10 && graphical.client->is_host == true)
+                        graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
                     try {
                         graphical.setSpritePosition(it, posX, posY);
                     } catch (const std::out_of_range &e) {}
@@ -234,6 +238,8 @@ namespace ecs
                 continue;
             }
         }
+        if (update_time_position >= 10)
+            update_time_position = 0;
     }
     void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical)
     {

@@ -127,21 +127,25 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      * @brief
      *
      * @tparam T
-     * @tparam U
+     * @param registry
      * @param entity
      * @param id_msg
-     * @param compo
      */
-    template <class T, class U>
-    void sendComponentToServer(std::size_t entity, T id_msg, U &compo)
+    template <class T>
+    void sendNetworkComponents(std::size_t entity, T id_msg)
     {
-        try {
-            network::Message<T> message;
-            message.header.id = id_msg;
-            message << compo << entity << *actual_scene;
-            send(message);
-        } catch (const ecs::ExceptionComponentNull &e) {}
-        catch (const ecs::ExceptionIndexComponent &e) {}
+        for (std::size_t i = 0; i < registry->getNetMessageCreate().size(); i++) {
+            try {
+                network::Message<T> message = registry->getNetMessageCreate().at(i)(entity, id_msg, i);
+                message << registry->getActualScene();
+                send(message);
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            } catch (const ecs::ExceptionComponentNull &e) {
+                continue;
+            } catch (const ecs::ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
     }
     ecs::Registry *registry;
     ecs::Registry *non_shareable_registry;

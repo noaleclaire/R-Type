@@ -106,6 +106,7 @@ class Game : public ScenesInitializer {
             std::chrono::time_point<std::chrono::system_clock> t = std::chrono::system_clock::now();
 
             registry.setActualScene(scene);
+
             while (1) {
                 t = std::chrono::system_clock::now();
                 try {

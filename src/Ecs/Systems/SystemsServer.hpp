@@ -47,7 +47,7 @@ namespace ecs
         static void Kill(Registry &registry, SparseArray<ecs::Killable> &killable, CustomServer *server,std::vector<std::pair<udp::endpoint, bool>> clients_endpoint);
       private:
         /**
-         * @brief 
+         * @brief
          *
          * @param registry
          * @param entity
