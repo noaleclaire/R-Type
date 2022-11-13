@@ -115,9 +115,9 @@ namespace ecs
                 }
             });
             _net_component_create.push_back([&](network::Message<network::CustomMessage> message) {
+                std::size_t entity;
                 try {
                     _components_arrays.at(std::type_index(typeid(Component)));
-                    std::size_t entity;
                     Component compo;
                     message >> entity;
                     addEntity(entity);
@@ -127,7 +127,11 @@ namespace ecs
                     throw ExceptionSparseArrayUnobtainable("Cannot find the SparseArray of this component type",
                         "_net_component_create -> [&](network::Message<network::CustomMessage> message)");
                 } catch (const std::length_error &e) {
-                    return;
+                    try {
+                        killEntity(getEntityById(entity));
+                    } catch (const ExceptionEntityUnobtainable &err) {
+                        return;
+                    }
                 }
             });
             return (std::any_cast<SparseArray<Component> &>(_components_arrays.at(std::type_index(typeid(Component)))));

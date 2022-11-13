@@ -119,6 +119,8 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
      */
     void compareRegistries(udp::endpoint target_endpoint, ecs::Registry &registry, ecs::Registry &tmp_registry, network::CustomMessage id_msg = network::CustomMessage::SendComponent, bool update_all = true);
 
+    std::mutex _mtx;
+
   protected:
     /**
      * @brief
@@ -163,6 +165,4 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
     std::vector<LevelManager> _levels;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _start_times;
     std::unordered_map<ecs::Scenes, std::chrono::time_point<std::chrono::system_clock>> _last_times;
-
-    std::mutex _mtx;
 };

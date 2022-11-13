@@ -154,8 +154,8 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count()
                 - std::chrono::time_point_cast<std::chrono::microseconds>(ecs::Enum::ping_latency).time_since_epoch().count());
             latency /= 1000;
-            ecs::Enum::ping_latency_ms = std::ceil(latency) + 2;
-            std::cout << "ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
+            ecs::Enum::ping_latency_ms = std::ceil(latency) + 5;
+            std::cout << *actual_scene << "  " << registry->getActualScene() << "  ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
         } break;
         case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
@@ -182,10 +182,14 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             msg >> entity;
             std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
             try {
+                if (entity >= 10000)
+                    return;
                 registry->getNetComponentCreate().at(index_component_create)(msg);
                 registry->getEntityById(entity);
                 if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
                     _tmp_entities_registry.push_back(registry->getEntityById(entity));
+                std::cout << "entity:  " << entity << "  entity type:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityType();
+                std::cout << "  entity id:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityID() << std::endl;
             } catch (const ecs::Exception &e) {}
             catch (const std::out_of_range &e) {}
         } break;
@@ -201,44 +205,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _setupListRoomScene(msg);
         } break;
         case network::CustomMessage::UpdatePosPlayerClient: {
-            ecs::Position pos;
-            std::size_t entity = 10000;
-            int key;
-            bool pressed;
-            msg >> pos >> entity >> key >> pressed;
-            try {
-                if (pressed == true) {
-                    if (key == 0) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(-pos.getYVelocity());
-                    }
-                    if (key == 1) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(-pos.getXVelocity());
-                    }
-                    if (key == 2) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(pos.getYVelocity());
-                    }
-                    if (key == 3) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(pos.getXVelocity());
-                    }
-                } else {
-                    if (key == 0) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
-                    }
-                    if (key == 1) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
-                    }
-                    if (key == 2) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
-                    }
-                    if (key == 3) {
-                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
-                    }
-                }
-                graphical->setSpritePosition(entity,
-                registry->getComponents<ecs::Position>().at(entity).value().getXPosition(),
-                registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
-            } catch (const ecs::Exception &e) {}
-            catch (const std::out_of_range &e) {}
+            _updatePosPlayer(msg);
         } break;
         case network::CustomMessage::QuitRoomClient: {
             ecs::Scenes room_scene;
@@ -400,6 +367,48 @@ void CustomClient::_setParallax()
             continue;
         }
     }
+}
+
+void CustomClient::_updatePosPlayer(network::Message<network::CustomMessage> &msg)
+{
+    ecs::Position pos;
+    std::size_t entity = 10000;
+    int key;
+    bool pressed;
+    msg >> pos >> entity >> key >> pressed;
+    try {
+        if (pressed == true) {
+            if (key == 0) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(-pos.getYVelocity());
+            }
+            if (key == 1) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(-pos.getXVelocity());
+            }
+            if (key == 2) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(pos.getYVelocity());
+            }
+            if (key == 3) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(pos.getXVelocity());
+            }
+        } else {
+            if (key == 0) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+            }
+            if (key == 1) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+            }
+            if (key == 2) {
+                registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+            }
+            if (key == 3) {
+                registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+            }
+        }
+        graphical->setSpritePosition(entity,
+        registry->getComponents<ecs::Position>().at(entity).value().getXPosition(),
+        registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
+    } catch (const ecs::Exception &e) {}
+    catch (const std::out_of_range &e) {}
 }
 
 void CustomClient::_setErrorMessage(std::string msg_error)
