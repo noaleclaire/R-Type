@@ -6,6 +6,7 @@
 */
 
 #include <typeindex>
+#include <algorithm>
 #include "CustomClient.hpp"
 #include "../../Ecs/Exceptions/Exception.hpp"
 #include "../Exceptions/Exception.hpp"
@@ -133,6 +134,15 @@ void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
     std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
     send(msg);
 }
+
+void CustomClient::sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect)
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::UpdatePosPlayerServer;
+    msg << pressed << key << entity << pos << rect << *actual_scene;
+    send(msg);
+}
+
 void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
     static_cast<void>(target_endpoint);
@@ -157,12 +167,17 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
-            std::size_t entity = 0;
+            std::size_t entity = 10000;
             msg >> index_component_create;
             msg >> entity;
             std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
-            registry->getNetComponentCreate().at(index_component_create)(msg);
-            _tmp_entities_registry.push_back(registry->getEntityById(entity));
+            try {
+                registry->getNetComponentCreate().at(index_component_create)(msg);
+                registry->getEntityById(entity);
+                if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
+                    _tmp_entities_registry.push_back(registry->getEntityById(entity));
+            } catch (const ecs::Exception &e) {}
+            catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::AllComponentSent: {
             std::cout << "scene2222: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
@@ -175,10 +190,54 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);
         } break;
+        case network::CustomMessage::UpdatePosPlayerClient: {
+            ecs::Position pos;
+            std::size_t entity = 10000;
+            int key;
+            bool pressed;
+            msg >> pos >> entity >> key >> pressed;
+            try {
+                if (pressed == true) {
+                    if (key == 0) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(-pos.getYVelocity());
+                    }
+                    if (key == 1) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(-pos.getXVelocity());
+                    }
+                    if (key == 2) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(pos.getYVelocity());
+                    }
+                    if (key == 3) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(pos.getXVelocity());
+                    }
+                } else {
+                    if (key == 0) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+                    }
+                    if (key == 1) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+                    }
+                    if (key == 2) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setYVelocity(0);
+                    }
+                    if (key == 3) {
+                        registry->getComponents<ecs::Position>().at(entity).value().setXVelocity(0);
+                    }
+                }
+                graphical->setSpritePosition(entity,
+                registry->getComponents<ecs::Position>().at(entity).value().getXPosition(),
+                registry->getComponents<ecs::Position>().at(entity).value().getYPosition());
+            } catch (const ecs::Exception &e) {}
+            catch (const std::out_of_range &e) {}
+        } break;
         case network::CustomMessage::QuitRoomClient: {
             ecs::Scenes room_scene;
             msg >> room_scene;
             _killEntities(room_scene);
+            is_host = false;
+        } break;
+        case network::CustomMessage::IsHost: {
+            is_host = true;
         } break;
         case network::CustomMessage::MaxRoomLimit: {
             _setErrorMessage("Max Number Of Rooms Were Already Be Created");
@@ -198,9 +257,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
 
 void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> &msg)
 {
-    // ecs::Scenes tmp_scene = non_shareable_registry->getActualScene();
-    // non_shareable_registry->setActualScene(ecs::Scenes::LISTROOM);
-    // graphical->setActualGraphicsEntities(ecs::Scenes::LISTROOM);
     std::size_t nb_rooms = 0;
     std::size_t tmp_nb_rooms = 0;
     ecs::Scenes room_scene;
@@ -275,8 +331,6 @@ void CustomClient::_setupListRoomScene(network::Message<network::CustomMessage> 
             }
         }
     }
-    // non_shareable_registry->setActualScene(tmp_scene);
-    // graphical->setActualGraphicsEntities(*actual_scene);
 }
 
 void CustomClient::_setRectAndSpriteComponent()
@@ -355,8 +409,13 @@ void CustomClient::_killEntities(ecs::Scenes scene)
 
 void CustomClient::_killOneEntity(std::size_t entity)
 {
-    registry->killEntity(registry->getEntityById(entity));
-    graphical->getAllSprites().erase(entity);
-    graphical->getAllRectangleShapes().erase(entity);
-    graphical->getAllTexts().erase(entity);
+    try {
+        registry->killEntity(registry->getEntityById(entity));
+        graphical->getAllSprites().erase(entity);
+        graphical->getAllRectangleShapes().erase(entity);
+        graphical->getAllTexts().erase(entity);
+    } catch (const ecs::Exception &e) {
+        registry->setActualScene(*actual_scene);
+        graphical->setActualGraphicsEntities(*actual_scene);
+    }
 }

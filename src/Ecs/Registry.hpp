@@ -299,6 +299,12 @@ namespace ecs
             }
             throw ExceptionEntityUnobtainable("Cannot find an entity with this id", "Entity &getEntityById(std::size_t id)");
         };
+        /**
+         * @brief Get the Entities Id By Ecs Type
+         *
+         * @param type
+         * @return std::vector<std::size_t>
+         */
         std::vector<std::size_t> getEntitiesIdByEcsType(ecs::EntityTypes type)
         {
             std::vector<std::size_t> tmp_vector;

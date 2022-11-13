@@ -5,13 +5,12 @@
 ** Systems
 */
 
+#include <cmath>
 #include "Systems.hpp"
 #include "../../client/Core.hpp"
 #include "../../client/Exceptions/Exception.hpp"
 #include "../Exceptions/ExceptionComponentNull.hpp"
 #include "../Exceptions/ExceptionIndexComponent.hpp"
-#include <cmath>
-
 #include "../Factory.hpp"
 
 namespace ecs
@@ -191,6 +190,8 @@ namespace ecs
 
     void Systems::Position(Registry &registry, SparseArray<ecs::Position> const &position, graphics::Graphical &graphical)
     {
+        static float update_time_position = 0;
+        update_time_position += graphics::Graphical::world_current_time;
         for (auto &it : registry.getEntities()) {
             try {
                 try {
@@ -204,20 +205,26 @@ namespace ecs
                         registry.getComponents<ecs::Controllable>().at(it);
                         veloX = 0;
                         veloY = 0;
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true)
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("z") == true) {
                             veloY -= registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true)
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("q") == true) {
                             veloX -= registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true)
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("s") == true) {
                             veloY += registry.getComponents<ecs::Position>().at(it).value().getYVelocity();
-                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true)
+                        }
+                        if (registry.getComponents<ecs::Controllable>().at(it).value().getKey("d") == true) {
                             veloX += registry.getComponents<ecs::Position>().at(it).value().getXVelocity();
+                        }
                     } catch (const ExceptionComponentNull &e) {}
                     catch (const ExceptionIndexComponent &e) {}
                     posX += veloX * graphics::Graphical::world_current_time;
                     posY += veloY * graphics::Graphical::world_current_time;
                     registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                     registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
+                    if (update_time_position >= 10 && graphical.client->is_host == true)
+                        graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
                     try {
                         graphical.setSpritePosition(it, posX, posY);
                     } catch (const std::out_of_range &e) {}
@@ -231,6 +238,8 @@ namespace ecs
                 continue;
             }
         }
+        if (update_time_position >= 10)
+            update_time_position = 0;
     }
     void Systems::Controllable(Registry &registry, SparseArray<ecs::Controllable> &controllable, graphics::Graphical *graphical)
     {
@@ -238,28 +247,44 @@ namespace ecs
             try {
                 controllable.at(it);
                 if (graphical->getEvent().type == sf::Event::KeyPressed) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", true);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", true);
+                        graphical->client->sendPlayerPos(3, true, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
                         controllable.at(it).value().setKey("space", true);
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::LShift)
                         controllable.at(it).value().setKey("shift", true);
                 }
                 if (graphical->getEvent().type == sf::Event::KeyReleased) {
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z)
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Z) {
                         controllable.at(it).value().setKey("z", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q)
+                        graphical->client->sendPlayerPos(0, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::Q) {
                         controllable.at(it).value().setKey("q", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S)
+                        graphical->client->sendPlayerPos(1, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::S) {
                         controllable.at(it).value().setKey("s", false);
-                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D)
+                        graphical->client->sendPlayerPos(2, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
+                    if (graphical->getEvent().key.code == sf::Keyboard::Key::D) {
                         controllable.at(it).value().setKey("d", false);
+                        graphical->client->sendPlayerPos(3, false, it, registry.getComponents<ecs::Position>().at(it).value(), registry.getComponents<ecs::Rectangle>().at(it).value());
+                    }
                     if (graphical->getEvent().key.code == sf::Keyboard::Key::Space)
                         controllable.at(it).value().setKey("space", false);
                 }
@@ -442,30 +467,6 @@ namespace ecs
             } catch (const ExceptionIndexComponent &e) {
                 continue;
             } catch (const ::Exception &e) {
-                continue;
-            }
-        }
-    }
-    void Systems::Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical *graphical)
-    {
-        for (auto &it : registry.getEntities()) {
-            try {
-                collider.at(it);
-                for (auto &it_in : registry.getEntities()) {
-                    try {
-                        collider.at(it_in);
-                        if (graphical->getAllSprites().at(it).getGlobalBounds().intersects(graphical->getAllSprites().at(it_in).getGlobalBounds())) {
-                            std::cout << "collision" << std::endl;
-                        }
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
-                    }
-                }
-            } catch (const ExceptionComponentNull &e) {
-                continue;
-            } catch (const ExceptionIndexComponent &e) {
                 continue;
             }
         }

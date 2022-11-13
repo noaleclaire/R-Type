@@ -19,11 +19,12 @@ namespace network
                                 GetScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
-                                SwitchRoomMode,
+                                SwitchRoomMode, IsHost,
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
                                 SwitchToGame, InitGame, KillAnEntity,
-                                RemoveClient, NotEnoughPlayer, CreateShot };
+                                RemoveClient, NotEnoughPlayer, CreateShot,
+                                UpdatePosPlayerServer, UpdatePosPlayerClient };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;

@@ -156,6 +156,8 @@ void Core::_switchScenes()
         _setActualRegistry();
         _actual_registry->setActualScene(Core::actual_scene);
         _graphical.setActualGraphicsEntities(Core::actual_scene);
+        _client.initListRoom();
+        std::this_thread::sleep_for(std::chrono::milliseconds(200)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
     }
 
     _switchScenesJoinRoom();

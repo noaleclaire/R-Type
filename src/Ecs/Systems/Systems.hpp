@@ -112,14 +112,6 @@ namespace ecs
          * @param client
          */
         static void Shot(Registry &registry, SparseArray<ecs::Controllable> &controllable, CustomClient *client);
-        /**
-         * @brief
-         *
-         * @param registry
-         * @param collider
-         * @param graphical
-         */
-        static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical *graphical);
 
       private:
         /**

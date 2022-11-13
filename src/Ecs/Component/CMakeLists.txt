@@ -7,6 +7,7 @@ set(SRC
     ${SRCROOT}/Clickable.cpp
     ${SRCROOT}/Ammo.cpp
     ${SRCROOT}/Controllable.cpp
+    ${SRCROOT}/Killable.cpp
     ${SRCROOT}/Rectangle.cpp
     ${SRCROOT}/Layer.cpp
     ${SRCROOT}/Link.cpp

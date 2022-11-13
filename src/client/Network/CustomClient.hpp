@@ -114,6 +114,39 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      *
      */
     void clientDisconnect();
+    /**
+     * @brief
+     *
+     * @param key
+     * @param pressed
+     * @param entity
+     * @param compo
+     */
+    void sendPlayerPos(int key, bool pressed, std::size_t entity, ecs::Position &pos, ecs::Rectangle &rect);
+    /**
+     * @brief
+     *
+     * @tparam T
+     * @param registry
+     * @param entity
+     * @param id_msg
+     */
+    template <class T>
+    void sendNetworkComponents(std::size_t entity, T id_msg)
+    {
+        for (std::size_t i = 0; i < registry->getNetMessageCreate().size(); i++) {
+            try {
+                network::Message<T> message = registry->getNetMessageCreate().at(i)(entity, id_msg, i);
+                message << registry->getActualScene();
+                send(message);
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
+            } catch (const ecs::ExceptionComponentNull &e) {
+                continue;
+            } catch (const ecs::ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
     ecs::Registry *registry;
     ecs::Registry *non_shareable_registry;
     graphics::Graphical *graphical;
@@ -121,6 +154,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     UserInfo *user_info;
     ecs::Scenes *actual_scene;
     ecs::Scenes game_scene = ecs::Scenes::GAME;
+    bool is_host = false;
     bool error_msg_server = false;
     std::string txt_error_msg_server;
 
