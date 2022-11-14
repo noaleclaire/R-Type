@@ -13,11 +13,13 @@
 namespace graphics
 {
     float Graphical::world_current_time = 0;
+    std::pair<float, float> Graphical::window_factor = {1.0f, 1.0f};
     Graphical::Graphical()
     {
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
+        Graphical::window_factor = {getWindow().getSize().x/1280.0f, getWindow().getSize().y/720.0f};
         _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf").string());
         _music_entities[ecs::Music::CAVE].openFromFile(std::filesystem::current_path().append("assets/sounds/cave_music.ogg").string());
         _music_entities[ecs::Music::SPACE].openFromFile(std::filesystem::current_path().append("assets/sounds/space_music.ogg").string());

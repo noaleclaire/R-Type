@@ -1,4 +1,4 @@
-# monster: 0 -> entity type: id spritesheet
+# monster: 2 -> entity type: id spritesheet
 #   time: 1000 -> spawn time (ms)
 #   position_x: 100 -> spawn x position
 #   position_y: 150 -> spawn y position
@@ -63,7 +63,7 @@ background: 42
 
 # first wave 14 pattern \
 
-monster: 0
+monster: 2
  time: 5000
  position_x: 1300
  position_y: 100
@@ -72,7 +72,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 5500
 #  position_x: 1300
 #  position_y: 200
@@ -81,7 +81,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 6000
  position_x: 1300
  position_y: 300
@@ -90,7 +90,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 6500
 #  position_x: 1300
 #  position_y: 400
@@ -99,7 +99,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 7000
  position_x: 1300
  position_y: 500
@@ -110,7 +110,7 @@ monster: 0
 
 # second wave pattern /
 
-monster: 0
+monster: 2
  time: 8500
  position_x: 1300
  position_y: 500
@@ -119,7 +119,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 9000
 #  position_x: 1300
 #  position_y: 400
@@ -128,7 +128,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 9500
  position_x: 1300
  position_y: 300
@@ -137,7 +137,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 10000
 #  position_x: 1300
 #  position_y: 200
@@ -146,7 +146,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 10500
  position_x: 1300
  position_y: 100
@@ -157,7 +157,7 @@ monster: 0
 
 #  third wave  pattern >
 
-monster: 0
+monster: 2
  time: 12000
  position_x: 1300
  position_y: 650
@@ -166,7 +166,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 12000
  position_x: 1300
  position_y: 100
@@ -175,7 +175,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 12500
 #  position_x: 1300
 #  position_y: 600
@@ -184,7 +184,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 12500
 #  position_x: 1300
 #  position_y: 150
@@ -193,7 +193,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 13000
  position_x: 1300
  position_y: 550
@@ -202,7 +202,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 13000
  position_x: 1300
  position_y: 200
@@ -211,7 +211,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 13500
 #  position_x: 1300
 #  position_y: 500
@@ -220,7 +220,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 13500
 #  position_x: 1300
 #  position_y: 250
@@ -229,7 +229,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 14000
  position_x: 1300
  position_y: 450
@@ -238,7 +238,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 14000
  position_x: 1300
  position_y: 300
@@ -249,7 +249,7 @@ monster: 0
 
 # 4 -1wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 16000
  position_x: 1300
  position_y: 100
@@ -258,7 +258,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 16500
 #  position_x: 1300
 #  position_y: 100
@@ -267,7 +267,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 17000
  position_x: 1300
  position_y: 100
@@ -276,7 +276,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 17500
 #  position_x: 1300
 #  position_y: 100
@@ -285,7 +285,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 18000
  position_x: 1300
  position_y: 100
@@ -296,7 +296,7 @@ monster: 0
 
 # 4 -2wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 17000
  position_x: 1300
  position_y: 360
@@ -305,7 +305,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 17500
 #  position_x: 1300
 #  position_y: 360
@@ -314,7 +314,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 18000
  position_x: 1300
  position_y: 360
@@ -323,7 +323,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 18500
 #  position_x: 1300
 #  position_y: 360
@@ -332,7 +332,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 19000
  position_x: 1300
  position_y: 360
@@ -343,7 +343,7 @@ monster: 0
 
 # 4-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 18500
  position_x: 1300
  position_y: 620
@@ -352,7 +352,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 19000
 #  position_x: 1300
 #  position_y: 620
@@ -361,7 +361,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 19500
  position_x: 1300
  position_y: 620
@@ -370,7 +370,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 20000
 #  position_x: 1300
 #  position_y: 620
@@ -379,7 +379,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 20500
  position_x: 1300
  position_y: 620
@@ -390,7 +390,7 @@ monster: 0
 
 # 5 -1wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 20500
  position_x: 1300
  position_y: 620
@@ -399,7 +399,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 21000
 #  position_x: 1300
 #  position_y: 620
@@ -408,7 +408,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 21500
  position_x: 1300
  position_y: 620
@@ -417,7 +417,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 22000
 #  position_x: 1300
 #  position_y: 620
@@ -426,7 +426,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 22500
  position_x: 1300
  position_y: 620
@@ -437,7 +437,7 @@ monster: 0
 
 # 5 -2wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 21500
  position_x: 1300
  position_y: 360
@@ -446,7 +446,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 22000
 #  position_x: 1300
 #  position_y: 360
@@ -455,7 +455,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 22500
  position_x: 1300
  position_y: 360
@@ -464,7 +464,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 23000
 #  position_x: 1300
 #  position_y: 360
@@ -473,7 +473,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 23500
  position_x: 1300
  position_y: 360
@@ -484,7 +484,7 @@ monster: 0
 
 # 5-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 23000
  position_x: 1300
  position_y: 100
@@ -493,7 +493,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 23500
 #  position_x: 1300
 #  position_y: 100
@@ -502,7 +502,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 24000
  position_x: 1300
  position_y: 100
@@ -511,7 +511,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 24500
 #  position_x: 1300
 #  position_y: 100
@@ -520,7 +520,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 25000
  position_x: 1300
  position_y: 100
@@ -531,7 +531,7 @@ monster: 0
 
 # 6-14 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 27000
  position_x: 1300
  position_y: 100
@@ -540,7 +540,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 27500
 #  position_x: 1300
 #  position_y: 100
@@ -549,7 +549,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 28000
  position_x: 1300
  position_y: 100
@@ -558,7 +558,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 28500
 #  position_x: 1300
 #  position_y: 100
@@ -567,7 +567,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 29000
  position_x: 1300
  position_y: 100
@@ -578,7 +578,7 @@ monster: 0
 
 # 6-2 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 28000
  position_x: 1300
  position_y: 360
@@ -587,7 +587,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 28500
 #  position_x: 1300
 #  position_y: 360
@@ -596,7 +596,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 29000
  position_x: 1300
  position_y: 360
@@ -605,7 +605,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 29500
 #  position_x: 1300
 #  position_y: 360
@@ -614,7 +614,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 30000
  position_x: 1300
  position_y: 360
@@ -625,7 +625,7 @@ monster: 0
 
 # 6-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 27000
  position_x: 1300
  position_y: 620
@@ -634,7 +634,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 27500
 #  position_x: 1300
 #  position_y: 620
@@ -643,7 +643,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 28000
  position_x: 1300
  position_y: 620
@@ -652,7 +652,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 28500
 #  position_x: 1300
 #  position_y: 620
@@ -661,7 +661,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 29000
  position_x: 1300
  position_y: 620
@@ -679,7 +679,7 @@ monster: 0
 #REPEAT
 #REPEAT
 
-monster: 0
+monster: 2
  time: 32000
  position_x: 1300
  position_y: 100
@@ -688,7 +688,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 32500
 #  position_x: 1300
 #  position_y: 200
@@ -697,7 +697,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 33000
  position_x: 1300
  position_y: 300
@@ -706,7 +706,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 33500
 #  position_x: 1300
 #  position_y: 400
@@ -715,7 +715,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 34000
  position_x: 1300
  position_y: 500
@@ -726,7 +726,7 @@ monster: 0
 
 # second wave pattern /
 
-monster: 0
+monster: 2
  time: 35500
  position_x: 1300
  position_y: 500
@@ -735,7 +735,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 36000
 #  position_x: 1300
 #  position_y: 400
@@ -744,7 +744,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 36500
  position_x: 1300
  position_y: 300
@@ -753,7 +753,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 37000
 #  position_x: 1300
 #  position_y: 200
@@ -762,7 +762,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 37500
  position_x: 1300
  position_y: 100
@@ -773,7 +773,7 @@ monster: 0
 
 #  third wave  pattern >
 
-monster: 0
+monster: 2
  time: 39000
  position_x: 1300
  position_y: 650
@@ -782,7 +782,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 39000
  position_x: 1300
  position_y: 100
@@ -791,7 +791,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 39500
 #  position_x: 1300
 #  position_y: 600
@@ -800,7 +800,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 39500
 #  position_x: 1300
 #  position_y: 150
@@ -809,7 +809,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 40000
  position_x: 1300
  position_y: 550
@@ -818,7 +818,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 40000
  position_x: 1300
  position_y: 200
@@ -827,7 +827,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 40500
 #  position_x: 1300
 #  position_y: 500
@@ -836,7 +836,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 40500
 #  position_x: 1300
 #  position_y: 250
@@ -845,7 +845,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 41000
  position_x: 1300
  position_y: 450
@@ -854,7 +854,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-monster: 0
+monster: 2
  time: 41000
  position_x: 1300
  position_y: 300
@@ -865,7 +865,7 @@ monster: 0
 
 # 4 -1wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 42500
  position_x: 1300
  position_y: 100
@@ -874,7 +874,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 43000
 #  position_x: 1300
 #  position_y: 100
@@ -883,7 +883,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 43500
  position_x: 1300
  position_y: 100
@@ -892,7 +892,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 44000
 #  position_x: 1300
 #  position_y: 100
@@ -901,7 +901,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 44500
  position_x: 1300
  position_y: 100
@@ -912,7 +912,7 @@ monster: 0
 
 # 4 -2wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 43500
  position_x: 1300
  position_y: 360
@@ -921,7 +921,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 44000
 #  position_x: 1300
 #  position_y: 360
@@ -930,7 +930,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 44500
  position_x: 1300
  position_y: 360
@@ -939,7 +939,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 45000
 #  position_x: 1300
 #  position_y: 360
@@ -948,7 +948,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 45000
  position_x: 1300
  position_y: 360
@@ -959,7 +959,7 @@ monster: 0
 
 # 4-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 44000
  position_x: 1300
  position_y: 620
@@ -968,7 +968,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 44500
 #  position_x: 1300
 #  position_y: 620
@@ -977,7 +977,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 45000
  position_x: 1300
  position_y: 620
@@ -986,7 +986,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 45500
 #  position_x: 1300
 #  position_y: 620
@@ -995,7 +995,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 46000
  position_x: 1300
  position_y: 620
@@ -1006,7 +1006,7 @@ monster: 0
 
 # 5 -1wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 48000
  position_x: 1300
  position_y: 620
@@ -1015,7 +1015,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 48500
 #  position_x: 1300
 #  position_y: 620
@@ -1024,7 +1024,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 49000
  position_x: 1300
  position_y: 620
@@ -1033,7 +1033,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 49500
 #  position_x: 1300
 #  position_y: 620
@@ -1042,7 +1042,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 50000
  position_x: 1300
  position_y: 620
@@ -1053,7 +1053,7 @@ monster: 0
 
 # 5 -2wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 49000
  position_x: 1300
  position_y: 360
@@ -1062,7 +1062,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 49500
 #  position_x: 1300
 #  position_y: 360
@@ -1071,7 +1071,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 50000
  position_x: 1300
  position_y: 360
@@ -1080,7 +1080,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 50500
 #  position_x: 1300
 #  position_y: 360
@@ -1089,7 +1089,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 51000
  position_x: 1300
  position_y: 360
@@ -1100,7 +1100,7 @@ monster: 0
 
 # 5-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 50000
  position_x: 1300
  position_y: 100
@@ -1109,7 +1109,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 50500
 #  position_x: 1300
 #  position_y: 100
@@ -1118,7 +1118,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 51000
  position_x: 1300
  position_y: 100
@@ -1127,7 +1127,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 51500
 #  position_x: 1300
 #  position_y: 100
@@ -1136,7 +1136,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 52000
  position_x: 1300
  position_y: 100
@@ -1147,7 +1147,7 @@ monster: 0
 
 # 6-14 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 54000
  position_x: 1300
  position_y: 100
@@ -1156,7 +1156,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 54500
 #  position_x: 1300
 #  position_y: 100
@@ -1165,7 +1165,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 55000
  position_x: 1300
  position_y: 100
@@ -1174,7 +1174,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 55500
 #  position_x: 1300
 #  position_y: 100
@@ -1183,7 +1183,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 56000
  position_x: 1300
  position_y: 100
@@ -1194,7 +1194,7 @@ monster: 0
 
 # 6-2 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 55000
  position_x: 1300
  position_y: 360
@@ -1203,7 +1203,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 55500
 #  position_x: 1300
 #  position_y: 360
@@ -1212,7 +1212,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 56000
  position_x: 1300
  position_y: 360
@@ -1221,7 +1221,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 56500
 #  position_x: 1300
 #  position_y: 360
@@ -1230,7 +1230,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 57000
  position_x: 1300
  position_y: 360
@@ -1241,7 +1241,7 @@ monster: 0
 
 # 6-3 wave patter, WALL alternant
 
-monster: 0
+monster: 2
  time: 54000
  position_x: 1300
  position_y: 620
@@ -1250,7 +1250,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 54500
 #  position_x: 1300
 #  position_y: 620
@@ -1259,7 +1259,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 55000
  position_x: 1300
  position_y: 620
@@ -1268,7 +1268,7 @@ monster: 0
  shooter: 0
  layer: 14
 
-# monster: 0
+# monster: 2
 #  time: 55500
 #  position_x: 1300
 #  position_y: 620
@@ -1277,7 +1277,7 @@ monster: 0
 #  shooter: 0
 #  layer: 14
 
-monster: 0
+monster: 2
  time: 56000
  position_x: 1300
  position_y: 620
