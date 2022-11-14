@@ -267,6 +267,9 @@ namespace ecs
                 try {
                     graphical.setRectangleShapePosition(it, posX, posY);
                 } catch (const std::out_of_range &e) {}
+                try {
+                    graphical.getAllTexts().at(it).setPosition(posX, posY);
+                } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -566,35 +569,52 @@ namespace ecs
     }
     void Systems::Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical)
     {
+        // if (graphical.getEvent().type == sf::Event::KeyPressed) {
+        //     if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
+        //         for (auto &it : registry.getEntities()) {
+        //             try {
+        //                 // if (achievement.at(it).value().getID() == ecs::AchievementTypes::MARVIN) {
+        //                 //     if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() <= (1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()))
+        //                 //         break;
+        //                 // }
+        //                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() - 50);
+        //             } catch (const ExceptionComponentNull &e) {
+        //                 continue;
+        //             } catch (const ExceptionIndexComponent &e) {
+        //                 continue;
+        //             }
+        //         }
+        //     }
+        //     if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
+        //         for (auto &it : registry.getEntities()) {
+        //             try {
+        //                 // if (achievement.at(it).value().getID() == ecs::AchievementTypes::MATRIX) {
+        //                 //     if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > 0)
+        //                 //         break;
+        //                 // }
+        //                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() + 50);
+        //             } catch (const ExceptionComponentNull &e) {
+        //                 continue;
+        //             } catch (const ExceptionIndexComponent &e) {
+        //                 continue;
+        //             }
+        //         }
+        //     }
+        // }
         if (graphical.getEvent().type == sf::Event::KeyPressed) {
-            if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
-                for (auto &it : registry.getEntities()) {
-                    try {
-                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MARVIN) {
-                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() <= (1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()))
-                                break;
-                        }
+            for (auto &it : registry.getEntities()) {
+                try {
+                    achievement.at(it);
+                    if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
                         registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() - 50);
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
                     }
-                }
-            }
-            if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
-                for (auto &it : registry.getEntities()) {
-                    try {
-                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MATRIX) {
-                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > 0)
-                                break;
-                        }
+                    if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
                         registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() + 50);
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
                     }
+                } catch (const ExceptionComponentNull &e) {
+                    continue;
+                } catch (const ExceptionIndexComponent &e) {
+                    continue;
                 }
             }
         }
