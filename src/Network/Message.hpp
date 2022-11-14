@@ -25,7 +25,7 @@ namespace network
                                 SwitchToGame, InitGame, KillAnEntity,
                                 RemoveClient, NotEnoughPlayer, CreateShot,
                                 UpdatePosPlayerServer, UpdatePosPlayerClient,
-                                QuitGameClient };
+                                QuitGameClient, GetRoomMode, SendRoomMode };
     template <class T> struct Header {
         T id;
         uint32_t size = 0;

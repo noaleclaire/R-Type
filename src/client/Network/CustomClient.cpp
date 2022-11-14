@@ -175,6 +175,16 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             msg >> entity;
             _killOneEntity(entity);
         } break;
+        case network::CustomMessage::SendRoomMode: {
+            bool mode = false;
+            msg >> mode;
+            if (mode == false) {
+                user_info->coop_high_score;
+            }
+            if (mode == true) {
+                user_info->versus_high_score;
+            }
+        } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
             std::size_t entity = 10000;

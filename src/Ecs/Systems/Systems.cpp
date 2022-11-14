@@ -542,8 +542,16 @@ namespace ecs
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
-                                    registry.killEntity(registry.getEntityById(it));
-                                    registry.killEntity(registry.getEntityById(it_in));
+                                    try {
+                                        registry.getComponents<ecs::Controllable>().at(registry.getComponents<ecs::Link>().at(it).value().getLink());
+                                        registry.killEntity(registry.getEntityById(it));
+                                        registry.killEntity(registry.getEntityById(it_in));
+                                        Core::score += 10;
+                                    } catch (Exception &err) {
+                                        registry.killEntity(registry.getEntityById(it));
+                                        registry.killEntity(registry.getEntityById(it_in));
+                                        continue;
+                                    }
                                     // registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
                                     // if (graphical.client->is_host == true) {
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
@@ -575,8 +583,16 @@ namespace ecs
     }
     void Systems::Achievement(UserInfo *user_info)
     {
+        if (Core::kill_all_monster == "yes" && user_info->achievements.at(ecs::AchievementTypes::RAMPAGE) == false)
+            user_info->achievements.at(ecs::AchievementTypes::RAMPAGE) = static_cast<int>(true);
         if (Core::xiting_times >= 50)
             user_info->achievements.at(ecs::AchievementTypes::XITING) = static_cast<int>(true);
+        for (auto &it : user_info->coop_high_score) {
+            if (it > 0)
+                user_info->achievements.at(ecs::AchievementTypes::BFF) = static_cast<int>(true);
+            else
+                user_info->achievements.at(ecs::AchievementTypes::BFF) = static_cast<int>(false);
+        }
         if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
             user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
     }
@@ -622,6 +638,8 @@ namespace ecs
     {
         if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
             registry.killEntity(registry.getEntityById(entity));
+            if (type == ecs::EntityTypes::MONSTER)
+                Core::kill_all_monster = "no";
             // registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
             // if (graphical.client->is_host == true)
             //     graphical.client->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent);
@@ -671,6 +689,22 @@ namespace ecs
                 } catch (const ExceptionIndexComponent &err) {
                     continue;
                 }
+            }
+        }
+    }
+    void Systems::updateScoreDisplay(Registry &registry, SparseArray<ecs::Text> &text, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                text.at(it);
+                if (registry.getActualScene() == ecs::Scenes::GAME1 || registry.getActualScene() == ecs::Scenes::GAME2 || registry.getActualScene() == ecs::Scenes::GAME3) {
+                    text.at(it).value().setText(const_cast<char *>(std::string("Score: ").append(std::to_string(Core::score)).c_str()));
+                    graphical.setTextString(it, std::string("Score: ").append(std::to_string(Core::score)));
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
             }
         }
     }

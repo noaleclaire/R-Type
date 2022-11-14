@@ -24,6 +24,8 @@ class Core {
     static std::string room_id;
     static std::size_t level_id;
     static std::size_t xiting_times;
+    static std::string kill_all_monster;
+    static std::size_t score;
     static int new_music_volume;
     static int new_sfx_volume;
 

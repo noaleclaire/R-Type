@@ -149,6 +149,7 @@ namespace ecs
          */
         static void setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info);
         static void updateWindowSize(Registry &registry, std::pair<float, float> new_factor);
+        static void updateScoreDisplay(Registry &registry, SparseArray<ecs::Text> &text, graphics::Graphical &graphical);
 
       private:
         /**

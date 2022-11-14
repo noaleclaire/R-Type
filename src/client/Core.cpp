@@ -23,8 +23,10 @@ std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
 std::size_t Core::level_id = 0;
 std::size_t Core::xiting_times = 0;
+std::size_t Core::score = 0;
 int Core::new_music_volume = 10;
 int Core::new_sfx_volume = 10;
+std::string Core::kill_all_monster = "maybe";
 
 Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short server_port) : _io_context(io_context), _client(io_context, host, server_port)
 {
@@ -54,6 +56,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.sprites_manager = &_sprites_manager;
     _client.user_info = &_user_info;
     _client.actual_scene = &Core::actual_scene;
+    _client.score = &Core::score;
 
     _graphical.client = &_client;
 
@@ -219,6 +222,10 @@ void Core::_switchScenes()
     }
     if (_client.game_scene == ecs::Scenes::RETURNTOGAME) {
         try {
+            network::Message<network::CustomMessage> message;
+            message.header.id = network::CustomMessage::GetRoomMode;
+            _client.send(message);
+            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
             for (auto &it : _actual_registry->getEntities())
                 _actual_registry->killEntity(it);
             _graphical.getAllSprites().clear();
@@ -299,6 +306,7 @@ void Core::_gameLoop()
             ecs::Systems::Parallaxe(*_actual_registry, _actual_registry->getComponents<ecs::Type>());
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
             ecs::Systems::Achievement(&_user_info);
+            ecs::Systems::updateScoreDisplay(*_actual_registry, _actual_registry->getComponents<ecs::Text>(), _graphical);
             _graphical.draw(*_actual_registry);
             // ecs::Systems::updateWindowSize(*_actual_registry, {_graphical.getWindow().getSize().x/1280.0f, _graphical.getWindow().getSize().y/720.0f});
         }
