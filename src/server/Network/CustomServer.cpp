@@ -161,7 +161,8 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             default:
                 break;
         }
-    } catch (const std::out_of_range &e) {}
+    } catch (const std::out_of_range &e) {
+    } catch (const ecs::Exception &e) {}
 }
 
 void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -551,7 +552,6 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
                         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
-                        std::cout << std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT).size() << std::endl;
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT)) {
                             Room::setTextToStartGame(*std::get<7>(_registries.at(i)), it);
                             sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);
