@@ -245,19 +245,18 @@ namespace ecs
                         auto rect = graphical.sprites_manager->get_Animations_rect(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID());
                         graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
                     }
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
+                } catch (const Exception &e) {}
+                posX += veloX * graphics::Graphical::world_current_time;
+                posY += veloY * graphics::Graphical::world_current_time;
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
                     if (posX < 0)
                         posX = 0;
-                    if (posX > 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
-                        posX = 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+                    if (posX > graphical.getWindow().getSize().x - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
+                        posX = graphical.getWindow().getSize().x - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
                     if (posY < 0)
                         posY = 0;
-                    if (posY > 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
-                        posY = 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
-                } catch (const Exception &e) {
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
+                    if (posY > graphical.getWindow().getSize().y - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
+                        posY = graphical.getWindow().getSize().y - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
                 }
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
