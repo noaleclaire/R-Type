@@ -347,12 +347,11 @@ namespace ecs
                 if (controllable.at(it).value().getKey("shift") == true) {
                     controllable.at(it).value().setKey("shift", false);
                     if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
-                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::BEAM);
-                        std::cout << "BEAM" << std::endl;
-                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::BEAM) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC2);
+                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC2) {
                         registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC);
-                        std::cout << "CLASSIC" << std::endl;
                     }
+                    client->sendNetworkComponents(it, network::CustomMessage::SendComponent);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;

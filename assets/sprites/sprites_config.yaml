@@ -682,6 +682,16 @@ spritesheet: monsters/forest_monster.png
    nb_anim: 4
    speed_anim: 5
 
+# spritesheet: monsters/boss_spaceship.png
+#  boss_spaceship: 0
+#   anim: 0
+#    rect_x: 0
+#    rect_y: 0
+#    rect_width: 495
+#    rect_height: 495
+#    nb_anim: 0
+#    speed_anim: 8
+
 # ------------------------SPACESHIPS------------------------
 spritesheet: spaceships/spaceship-1.png
  spaceship: 0
@@ -735,11 +745,13 @@ spritesheet: shots/spaceship_shot.png
    nb_anim: 3
    speed_anim: 10
 
-#BEAM
-spritesheet: filsdechienne2
+#CLASSIC2
+spritesheet: shots/boss_spaceship_shot.png
  shot: 1
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 1280
-   rect_height: 15
+   rect_width: 20
+   rect_height: 20
+   nb_anim: 3
+   speed_anim: 5

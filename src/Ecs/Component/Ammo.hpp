@@ -15,7 +15,7 @@ namespace ecs
 {
     class Ammo : public AComponent {
       public:
-        enum AmmoType { CLASSIC, BEAM };
+        enum AmmoType { CLASSIC, CLASSIC2 };
         struct AmmoAttributes {
             int die_time = -1;//time after the shot died (if needed)
             int damage = 0;//damage dealt by the shot
