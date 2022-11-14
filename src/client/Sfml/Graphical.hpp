@@ -21,6 +21,7 @@ namespace graphics
     class Graphical {
       public:
         static float world_current_time;
+        static std::pair<float, float> window_factor;
 
         Graphical();
         ~Graphical();

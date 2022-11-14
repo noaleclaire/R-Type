@@ -300,6 +300,7 @@ void Core::_gameLoop()
             ecs::Systems::Animation(*_actual_registry, _sprites_manager, _graphical);
             ecs::Systems::Achievement(&_user_info);
             _graphical.draw(*_actual_registry);
+            // ecs::Systems::updateWindowSize(*_actual_registry, {_graphical.getWindow().getSize().x/1280.0f, _graphical.getWindow().getSize().y/720.0f});
         }
     } catch (const Exception &e) {
         _gameStop();

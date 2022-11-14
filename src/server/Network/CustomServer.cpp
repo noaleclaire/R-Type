@@ -205,12 +205,12 @@ void CustomServer::_createGame(ecs::Scenes room_scene, std::size_t level_id, udp
                 if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second != true)
                     return;
             }
-            if (std::get<4>(_registries.at(i)).size() < 2) {
-                network::Message<network::CustomMessage> message2;
-                message2.header.id = network::CustomMessage::NotEnoughPlayer;
-                send(message2, target_endpoint);
-                return;
-            }
+            // if (std::get<4>(_registries.at(i)).size() < 2) {
+            //     network::Message<network::CustomMessage> message2;
+            //     message2.header.id = network::CustomMessage::NotEnoughPlayer;
+            //     send(message2, target_endpoint);
+            //     return;
+            // }
             Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(level_id));
             message << std::get<1>(_registries.at(i));
             for (auto &client_endpoint : std::get<4>(_registries.at(i))) {

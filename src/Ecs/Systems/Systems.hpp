@@ -148,6 +148,7 @@ namespace ecs
          * @param user_info
          */
         static void setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info);
+        static void updateWindowSize(Registry &registry, std::pair<float, float> new_factor);
 
       private:
         /**

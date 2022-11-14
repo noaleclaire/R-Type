@@ -11,7 +11,7 @@
 
 namespace ecs
 {
-    std::unordered_map<Ammo::AmmoType, Ammo::AmmoAttributes> Ammo::ammoAttributesByType = {{Ammo::AmmoType::CLASSIC, {-1, 10, 500, 1000, 0, true}},
+    std::unordered_map<Ammo::AmmoType, Ammo::AmmoAttributes> Ammo::ammoAttributesByType = {{Ammo::AmmoType::CLASSIC, {-1, 10, 350, 1000, 0, true}},
                                                                                             {Ammo::AmmoType::BEAM, {3000, 1, 5000, 0, 0, false}}};
 
     Ammo::Ammo(Ammo::AmmoType type) : _type(type), _spawn(std::chrono::system_clock::now())

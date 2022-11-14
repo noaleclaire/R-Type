@@ -249,6 +249,8 @@ namespace ecs
                         graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
                     }
                 } catch (const Exception &e) {}
+                // posX += veloX * graphics::Graphical::world_current_time * graphics::Graphical::window_factor.first;
+                // posY += veloY * graphics::Graphical::world_current_time * graphics::Graphical::window_factor.second;
                 posX += veloX * graphics::Graphical::world_current_time;
                 posY += veloY * graphics::Graphical::world_current_time;
                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
@@ -265,12 +267,15 @@ namespace ecs
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 try {
                     graphical.setSpritePosition(it, posX, posY);
+                    // graphical.getAllSprites().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
                 try {
                     graphical.setRectangleShapePosition(it, posX, posY);
+                    // graphical.getAllRectangleShapes().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
                 try {
                     graphical.getAllTexts().at(it).setPosition(posX, posY);
+                    // graphical.getAllTexts().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -645,6 +650,28 @@ namespace ecs
                 continue;
             } catch (const ExceptionIndexComponent &e) {
                 continue;
+            }
+        }
+    }
+    void Systems::updateWindowSize(Registry &registry, std::pair<float, float> new_factor)
+    {
+        graphics::Graphical::window_factor = new_factor;
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::WindowSized>().at(it);
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                try {
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() * graphics::Graphical::window_factor.first);
+                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() * graphics::Graphical::window_factor.second);
+                    registry.addComponent<ecs::WindowSized>(registry.getEntityById(it), ecs::WindowSized());
+                    continue;
+                } catch (const ExceptionComponentNull &err) {
+                    continue;
+                } catch (const ExceptionIndexComponent &err) {
+                    continue;
+                }
             }
         }
     }

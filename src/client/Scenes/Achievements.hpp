@@ -60,7 +60,7 @@ class Achievements : public ScenesInitializer {
                 y += 10 + rect.at(3);
                 layer++;
                     //Text in
-                rect = {(1280 - rect.at(2))/2 + rect.at(2)/6 , tmp_y + rect.at(3)/2 - 35, 50};
+                rect = {(1280 - rect.at(2))/2 + rect.at(2)/6, tmp_y + rect.at(3)/2 - 35, 50};
                 entity = registry.getComponents<ecs::Link>().at(entity).value().getLink();
                 registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(rect.at(0), rect.at(1), 0, 0));
                 registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(layer));

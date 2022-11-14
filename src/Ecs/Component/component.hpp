@@ -30,3 +30,4 @@
 #include "CompoServer.hpp"
 #include "Planet.hpp"
 #include "Achievement.hpp"
+#include "WindowSized.hpp"
