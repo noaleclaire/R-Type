@@ -25,7 +25,7 @@
 #include "../Network/Message.hpp"
 
 //convert to milliseconds with std::chrono::milliseconds() operator
-#define TRANSFER_TIME_COMPONENT 5
+#define TRANSFER_TIME_COMPONENT 10
 
 namespace ecs
 {
