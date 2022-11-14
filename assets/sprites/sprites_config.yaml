@@ -49,6 +49,7 @@ spritesheet: backgrounds/background.jpg
    rect_y: 0
    rect_width: 1327
    rect_height: 720
+
 spritesheet: backgrounds/background.jpg
  parallax: 0
   anim: 0
@@ -201,6 +202,7 @@ spritesheet: planets/sun.png
    rect_width: 244
    rect_height: 244
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: backgrounds/locked_achievement.png
  background: 19
@@ -218,7 +220,200 @@ spritesheet: backgrounds/achievement.png
    rect_width: 860
    rect_height: 134
 
+spritesheet: backgrounds/cave/7.jpg
+ background: 30
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/6.png
+ background: 31
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/5.png
+ background: 32
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/4.png
+ background: 33
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/3.png
+ background: 34
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/2.png
+ background: 35
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/cave/1.png
+ background: 36
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/desert/1.jpg
+ background: 40
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/desert/2.png
+ background: 41
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/desert/3.png
+ background: 42
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/1.jpg
+ background: 50
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/2.png
+ background: 51
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/3.png
+ background: 52
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/4.png
+ background: 53
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/5.png
+ background: 54
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/forest/6.png
+ background: 55
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/ice/1.jpg
+ background: 60
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/ice/2.png
+ background: 61
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/ice/3.png
+ background: 62
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/ice/4.png
+ background: 63
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/ice/5.png
+ background: 64
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/space/1.jpg
+ background: 70
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/space/2.png
+ background: 71
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
+spritesheet: backgrounds/space/3.png
+ background: 72
+  anim: 0
+   rect_x: 0
+   rect_y: 0
+   rect_width: 1280
+   rect_height: 720
+
 # ------------------------BUTTONS------------------------
+
 spritesheet: buttons/create_private_game_btn.png
  button: 0
   anim: 0
@@ -304,8 +499,8 @@ spritesheet: buttons/coop_btn.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 215
-   rect_height: 89
+   rect_width: 267
+   rect_height: 166
    nb_anim: 3
 
 spritesheet: buttons/achievement_btn.png
@@ -367,6 +562,7 @@ spritesheet: planets/black_hole.png
    rect_width: 218
    rect_height: 86
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/rock_planet.png
  button: 17
@@ -376,6 +572,7 @@ spritesheet: planets/rock_planet.png
    rect_width: 218
    rect_height: 146
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/fire_planet.png
  button: 18
@@ -385,6 +582,7 @@ spritesheet: planets/fire_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/ice_planet.png
  button: 19
@@ -394,6 +592,7 @@ spritesheet: planets/ice_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 spritesheet: planets/forest_planet.png
  button: 20
@@ -403,6 +602,7 @@ spritesheet: planets/forest_planet.png
    rect_width: 129
    rect_height: 129
    nb_anim: 29
+   speed_anim: 8
 
 # ------------------------ROOMS------------------------
 spritesheet: rooms/public_game_select_room.png

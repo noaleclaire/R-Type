@@ -94,10 +94,9 @@ class TypePseudo : public ScenesInitializer {
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
                 //confirm pseudo -> duplicata of pseudo but non drawable
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 11, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 231 + tmp_width + 5, 358, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 11, 4);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 231 + tmp_width + 5, 358, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 11, 0);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::CONFIRMPSEUDO);
             registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(tmp_entity));
-            registry.removeComponent<ecs::Drawable>(registry.getEntityById(entity));
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 11), rect);
             //     //exit
             // rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 3, 0);

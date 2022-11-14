@@ -161,7 +161,8 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             default:
                 break;
         }
-    } catch (const std::out_of_range &e) {}
+    } catch (const std::out_of_range &e) {
+    } catch (const ecs::Exception &e) {}
 }
 
 void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
@@ -194,21 +195,21 @@ void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Mess
 
 void CustomServer::_createGame(ecs::Scenes room_scene, std::size_t level_id, udp::endpoint target_endpoint)
 {
+    std::scoped_lock guard(_mtx);
     network::Message<network::CustomMessage> message;
     message.header.id = network::CustomMessage::GetScene;
     for (std::size_t i = 0; i < _registries.size(); i++) {
         if (std::get<0>(_registries.at(i)) == room_scene) {
-            std::scoped_lock guard(_mtx);
             for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
                 if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint && std::get<4>(_registries.at(i)).at(j).second != true)
                     return;
             }
-            // if (std::get<4>(_registries.at(i)).size() < 2) {
-            //     network::Message<network::CustomMessage> message2;
-            //     message2.header.id = network::CustomMessage::NotEnoughPlayer;
-            //     send(message2, target_endpoint);
-            //     return;
-            // }
+            if (std::get<4>(_registries.at(i)).size() < 2) {
+                network::Message<network::CustomMessage> message2;
+                message2.header.id = network::CustomMessage::NotEnoughPlayer;
+                send(message2, target_endpoint);
+                return;
+            }
             Game::initScene(this, *std::get<7>(_registries.at(i)), std::get<1>(_registries.at(i)), std::get<4>(_registries.at(i)), _levels.at(level_id));
             message << std::get<1>(_registries.at(i));
             for (auto &client_endpoint : std::get<4>(_registries.at(i))) {
@@ -551,7 +552,6 @@ void CustomServer::_quitRoom(udp::endpoint target_endpoint)
                         message3.header.id = network::CustomMessage::IsHost;
                         send(message3, target_endpoint);
                         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
-                        std::cout << std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT).size() << std::endl;
                         for (auto &it : std::get<7>(_registries.at(i))->getEntitiesIdByEcsType(ecs::EntityTypes::TEXT)) {
                             Room::setTextToStartGame(*std::get<7>(_registries.at(i)), it);
                             sendNetworkComponents<network::CustomMessage>(*std::get<7>(_registries.at(i)), it, network::CustomMessage::SendComponent, std::get<4>(_registries.at(i)).at(j+1).first);

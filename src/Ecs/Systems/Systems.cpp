@@ -84,6 +84,9 @@ namespace ecs
                             case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
                                 break;
+                            case Clickable::Function::XITING:
+                                Core::xiting_times++;
+                                break;
                             default: break;
                         }
                     }
@@ -159,7 +162,7 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); break;
+                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->getActualMusic().setVolume(Core::new_music_volume); break;
                             case Clickable::Function::CHANGESFXVOLUME: Core::new_sfx_volume = _changeVolume(registry, it, graphical); break;
                             default: break;
                         }
@@ -245,19 +248,18 @@ namespace ecs
                         auto rect = graphical.sprites_manager->get_Animations_rect(registry.getComponents<ecs::Type>().at(it).value().getEntityType(), registry.getComponents<ecs::Type>().at(it).value().getEntityID());
                         graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
                     }
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
+                } catch (const Exception &e) {}
+                posX += veloX * graphics::Graphical::world_current_time;
+                posY += veloY * graphics::Graphical::world_current_time;
+                if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
                     if (posX < 0)
                         posX = 0;
-                    if (posX > 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
-                        posX = 1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
+                    if (posX > graphical.getWindow().getSize().x - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle())
+                        posX = graphical.getWindow().getSize().x - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle();
                     if (posY < 0)
                         posY = 0;
-                    if (posY > 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
-                        posY = 720 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
-                } catch (const Exception &e) {
-                    posX += veloX * graphics::Graphical::world_current_time;
-                    posY += veloY * graphics::Graphical::world_current_time;
+                    if (posY > graphical.getWindow().getSize().y - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle())
+                        posY = graphical.getWindow().getSize().y - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle();
                 }
                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(posX);
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
@@ -266,6 +268,9 @@ namespace ecs
                 } catch (const std::out_of_range &e) {}
                 try {
                     graphical.setRectangleShapePosition(it, posX, posY);
+                } catch (const std::out_of_range &e) {}
+                try {
+                    graphical.getAllTexts().at(it).setPosition(posX, posY);
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -466,35 +471,42 @@ namespace ecs
                 entity_type = registry.getComponents<ecs::Type>().at(it).value().getEntityType();
                 entity_id = registry.getComponents<ecs::Type>().at(it).value().getEntityID();
 
-                sprites_manager.setAnimationCurrentFrame(entity_type, entity_id,
-                    sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) +
-                    graphics::Graphical::world_current_time *
-                    sprites_manager.getSpeedAnimation(entity_type, entity_id,
-                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))
-                );
+                if (registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() != 0 && registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle() != 0) {
+                    sprites_manager.setAnimationCurrentFrame(entity_type, entity_id,
+                        sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) +
+                        graphics::Graphical::world_current_time *
+                        sprites_manager.getSpeedAnimation(entity_type, entity_id,
+                            sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))
+                    );
 
-                registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(
-                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
-                    static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
-                );
-                if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
-                sprites_manager.getNbAnimation(entity_type, entity_id,
-                sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
-                    if (sprites_manager.getNextAnimation(entity_type, entity_id,
-                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1) {
-                        sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
-                        sprites_manager.getNextAnimation(entity_type, entity_id,
-                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
-                        rect = sprites_manager.get_Animations_rect(entity_type, entity_id, sprites_manager.getIndexCurrentAnimation(entity_type, entity_id));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(rect_x));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(rect_y));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(rect_width));
-                        registry.getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(rect_height));
+                    if (sprites_manager.getAnimationCurrentFrame(entity_type, entity_id) >=
+                    sprites_manager.getNbAnimation(entity_type, entity_id,
+                    sprites_manager.getIndexCurrentAnimation(entity_type, entity_id))) {
+                        if (sprites_manager.getNextAnimation(entity_type, entity_id,
+                        sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)) != -1) {
+                            sprites_manager.setIndexCurrentAnimation(entity_type, entity_id,
+                            sprites_manager.getNextAnimation(entity_type, entity_id,
+                            sprites_manager.getIndexCurrentAnimation(entity_type, entity_id)));
+                            rect = sprites_manager.get_Animations_rect(entity_type, entity_id, sprites_manager.getIndexCurrentAnimation(entity_type, entity_id));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(rect.at(rect_x));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setYRectangle(rect.at(rect_y));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setWidthRectangle(rect.at(rect_width));
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setHeightRectangle(rect.at(rect_height));
+                            sprites_manager.setDoNextAnimation(entity_type, entity_id, false);
+                        }
+                        sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
+                        sprites_manager.setLastCurrentFrame(entity_type, entity_id, -1);
                     }
-                    sprites_manager.setAnimationCurrentFrame(entity_type, entity_id, 0);
+                    if (std::floor(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id)) != sprites_manager.getLastCurrentFrame(entity_type, entity_id)) {
+                            registry.getComponents<ecs::Rectangle>().at(it).value().setXRectangle(
+                                registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle() *
+                                static_cast<int>(sprites_manager.getAnimationCurrentFrame(entity_type, entity_id))
+                            );
+                            graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
+                                registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle());
+                            sprites_manager.setLastCurrentFrame(entity_type, entity_id, sprites_manager.getLastCurrentFrame(entity_type, entity_id) + 1);
+                    }
                 }
-                graphical.setTextureRectSprite(it, registry.getComponents<ecs::Rectangle>().at(it).value().getXRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getYRectangle(),
-                    registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle(), registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle());
             } catch (const ExceptionComponentNull &e) {
                 continue;
             } catch (const ExceptionIndexComponent &e) {
@@ -518,18 +530,29 @@ namespace ecs
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
                                 if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
                                     (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
+                                    registry.killEntity(registry.getEntityById(it_in));
+                                    std::cout << "kill1" << std::endl;
                                     registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
-                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    if (graphical.client->is_host == true)
+                                        graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
-                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
-                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
-                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                                    registry.killEntity(registry.getEntityById(it));
+                                    registry.killEntity(registry.getEntityById(it_in));
+                                    std::cout << "kill2" << std::endl;
+                                    // registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                                    // if (graphical.client->is_host == true) {
+                                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
+                                    // }
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
-                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
-                                    graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    registry.killEntity(registry.getEntityById(it_in));
+                                    std::cout << "kill3" << std::endl;
+                                    // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    // if (graphical.client->is_host == true)
+                                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                             }
                         }
@@ -550,40 +573,27 @@ namespace ecs
     }
     void Systems::Achievement(UserInfo *user_info)
     {
+        if (Core::xiting_times >= 50)
+            user_info->achievements.at(ecs::AchievementTypes::XITING) = static_cast<int>(true);
         if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
             user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
     }
     void Systems::Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical)
     {
         if (graphical.getEvent().type == sf::Event::KeyPressed) {
-            if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
-                for (auto &it : registry.getEntities()) {
-                    try {
-                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MARVIN) {
-                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() <= (1280 - registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()))
-                                break;
-                        }
+            for (auto &it : registry.getEntities()) {
+                try {
+                    achievement.at(it);
+                    if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
                         registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() - 50);
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
                     }
-                }
-            }
-            if (graphical.getEvent().key.code == sf::Keyboard::Key::Down) {
-                for (auto &it : registry.getEntities()) {
-                    try {
-                        if (achievement.at(it).value().getID() == ecs::AchievementTypes::MATRIX) {
-                            if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > 0)
-                                break;
-                        }
+                    if (graphical.getEvent().key.code == sf::Keyboard::Key::Up) {
                         registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() + 50);
-                    } catch (const ExceptionComponentNull &e) {
-                        continue;
-                    } catch (const ExceptionIndexComponent &e) {
-                        continue;
                     }
+                } catch (const ExceptionComponentNull &e) {
+                    continue;
+                } catch (const ExceptionIndexComponent &e) {
+                    continue;
                 }
             }
         }
@@ -598,6 +608,41 @@ namespace ecs
                     auto rect = graphical.sprites_manager->get_Animations_rect(ecs::EntityTypes::BACKGROUND, 20, 0);
                     registry.getComponents<ecs::Type>().at(it).value().setEntityID(20);
                     graphical.addSprite(it, graphical.sprites_manager->get_Spritesheet(ecs::EntityTypes::BACKGROUND, 20), rect);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
+    {
+        if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
+            std::cout << "kill" << std::endl;
+            registry.killEntity(registry.getEntityById(entity));
+            // registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
+            // if (graphical.client->is_host == true)
+            //     graphical.client->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent);
+        }
+    }
+    void Systems::Killable(ecs::Registry &registry, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::Killable>().at(it);
+                if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::MONSTER);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() > graphical.getWindow().getSize().x) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > graphical.getWindow().getSize().y) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;
