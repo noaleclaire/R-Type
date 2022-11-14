@@ -140,7 +140,6 @@ void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreateShot;
     msg << linked_entity << scene;
-    std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
     send(msg);
 }
 
@@ -162,7 +161,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 - std::chrono::time_point_cast<std::chrono::microseconds>(ecs::Enum::ping_latency).time_since_epoch().count());
             latency /= 1000;
             ecs::Enum::ping_latency_ms = std::ceil(latency) + 10;
-            std::cout << *actual_scene << "  " << registry->getActualScene() << "  ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
         } break;
         case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
@@ -171,10 +169,8 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             && scene != ecs::Scenes::GAME3 && scene != ecs::Scenes::RETURNTOGAME) {
                 registry->setActualScene(scene);
                 graphical->setActualGraphicsEntities(scene);
-                std::cout << "scene: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             } else {
                 game_scene = scene;
-                std::cout << "game_scene: " << game_scene << std::endl;
             }
         } break;
         case network::CustomMessage::KillAnEntity: {
@@ -199,7 +195,6 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             std::size_t entity = 10000;
             msg >> index_component_create;
             msg >> entity;
-            // std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
             try {
                 if (entity >= 10000)
                     return;
@@ -207,18 +202,14 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 registry->getEntityById(entity);
                 if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
                     _tmp_entities_registry.push_back(registry->getEntityById(entity));
-                // std::cout << "entity:  " << entity << "  entity type:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityType();
-                // std::cout << "  entity id:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityID() << std::endl;
             } catch (const ecs::Exception &e) {}
             catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::AllComponentSent: {
-            // std::cout << "scene2222: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             _setRectAndSpriteComponent();
             _setTextComponent();
             _setParallax();
             _tmp_entities_registry.clear();
-            // std::cout << "AllComponentSent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);

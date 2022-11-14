@@ -16,7 +16,6 @@ namespace ecs
             try {
                 killable.at(it);
                 if (killable.at(it).value().getLife() == 0) {
-                    std::cout << "kill" << std::endl;
                     registry.killEntity(it);
                 }
             } catch (const Exception &e) {
