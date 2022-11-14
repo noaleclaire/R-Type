@@ -100,6 +100,11 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
      */
     void switchRoomMode();
     /**
+     * @brief Get the Planet Info
+     *
+     */
+    void getPlanetInfo();
+    /**
      * @brief
      *
      */
@@ -154,6 +159,7 @@ class CustomClient : public network::UdpServerClient<network::CustomMessage> {
     UserInfo *user_info;
     std::size_t *score;
     ecs::Scenes *actual_scene;
+    std::size_t *current_level_id;
     ecs::Scenes game_scene = ecs::Scenes::GAME;
     ecs::Scenes tmp_scene = ecs::Scenes::GAME;
     bool is_host = false;

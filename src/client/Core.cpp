@@ -57,6 +57,7 @@ Core::Core(boost::asio::io_context &io_context, std::string host, unsigned short
     _client.user_info = &_user_info;
     _client.actual_scene = &Core::actual_scene;
     _client.score = &Core::score;
+    _client.current_level_id = &Core::level_id;
 
     _graphical.client = &_client;
 

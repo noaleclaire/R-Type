@@ -71,6 +71,7 @@ namespace ecs
                                 graphical->getAllSprites().at(it).setScale(sf::Vector2f(1.25, 1.25));
                                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
                                 Core::level_id = registry.getComponents<ecs::Planet>().at(it).value().getLevelID() - 1;
+                                graphical->client->getPlanetInfo();
                                 break;
                             default: break;
                         }
