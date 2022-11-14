@@ -151,7 +151,7 @@ class Game : public ScenesInitializer {
                                 ecs::Registry tmp_registry = registry;
                             }
                         } catch (const ecs::Exception &e) {}
-                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>(), server);
+                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>());
                     }
                 } catch (const ecs::Exception &e) {
                     return;

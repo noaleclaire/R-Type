@@ -190,6 +190,6 @@ namespace ecs
          * @param entity
          * @param graphical
          */
-        static void _sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type);
+        static void _sendKillEntity(Registry &registry, std::size_t entity, ecs::EntityTypes type);
     };
 } // namespace ecs

@@ -635,7 +635,7 @@ namespace ecs
             }
         }
     }
-    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
+    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, ecs::EntityTypes type)
     {
         if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
             registry.killEntity(registry.getEntityById(entity));
@@ -652,17 +652,17 @@ namespace ecs
             try {
                 registry.getComponents<ecs::Killable>().at(it);
                 if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::MONSTER);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::MONSTER);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() > graphical.getWindow().getSize().x) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > graphical.getWindow().getSize().y) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;

@@ -21,7 +21,7 @@ namespace ecs
          * @param server
          * @param clients_endpoint
          */
-        static void Kill(Registry &registry, SparseArray<ecs::Killable> &killable, CustomServer *server);
+        static void Kill(Registry &registry, SparseArray<ecs::Killable> &killable);
       private:
     };
 }
