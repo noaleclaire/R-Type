@@ -499,8 +499,8 @@ spritesheet: buttons/coop_btn.png
   anim: 0
    rect_x: 0
    rect_y: 0
-   rect_width: 215
-   rect_height: 89
+   rect_width: 267
+   rect_height: 166
    nb_anim: 3
 
 spritesheet: buttons/achievement_btn.png

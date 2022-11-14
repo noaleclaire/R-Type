@@ -167,6 +167,7 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
 
 void CustomServer::_updatePosPlayer(udp::endpoint target_endpoint, network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     ecs::Scenes scene;
     ecs::Position pos;
     ecs::Rectangle rect;
@@ -241,6 +242,7 @@ void CustomServer::_getGame(ecs::Scenes game_scene, udp::endpoint target_endpoin
 
 void CustomServer::_createShot(network::Message<network::CustomMessage> &msg)
 {
+    std::scoped_lock guard(_mtx);
     std::size_t entity;
     std::size_t linked_entity;
     ecs::Scenes scene;

@@ -528,20 +528,27 @@ namespace ecs
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
                                 if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
                                     (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
-                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    registry.killEntity(registry.getEntityById(it));
+                                    std::cout << "kill1" << std::endl;
+                                    // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     // if (graphical.client->is_host == true)
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
-                                    registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
+                                    registry.killEntity(registry.getEntityById(it));
+                                    registry.killEntity(registry.getEntityById(it_in));
+                                    std::cout << "kill2" << std::endl;
+                                    // registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
                                     // if (graphical.client->is_host == true) {
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it, network::CustomMessage::SendComponent);
                                     // }
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
-                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    registry.killEntity(registry.getEntityById(it_in));
+                                    std::cout << "kill3" << std::endl;
+                                    // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     // if (graphical.client->is_host == true)
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
@@ -608,7 +615,9 @@ namespace ecs
     void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
     {
         if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
-            registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
+            std::cout << "kill" << std::endl;
+            registry.killEntity(registry.getEntityById(entity));
+            // registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
             // if (graphical.client->is_host == true)
             //     graphical.client->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent);
         }
