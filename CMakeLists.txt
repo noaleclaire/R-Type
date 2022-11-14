@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 3.17.0)
 
 project(R-Type LANGUAGES CXX)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-add_compile_options("-Wall" "-pedantic" "$<$<CONFIG:RELEASE>:-O3;>"
-                    "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>")
+include(${PROJECT_SOURCE_DIR}/build/conanbuildinfo.cmake)
+conan_basic_setup()
+
+add_compile_options("-Wall" "-pedantic" "$<$<CONFIG:RELEASE>:-O3;-lsfml-graphics -lsfml-window -lsfml-system>"
+                    "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb;-lsfml-graphics -lsfml-window -lsfml-system>")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
