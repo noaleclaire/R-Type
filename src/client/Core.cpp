@@ -76,8 +76,6 @@ void Core::_setActualRegistry()
 void Core::_switchScenesCreateRoom()
 {
     if (_last_scene != ecs::Scenes::PUBLICROOM && Core::actual_scene == ecs::Scenes::PUBLICROOM) {
-        _client.pingServer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _client.createPublicRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(200 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
@@ -91,8 +89,6 @@ void Core::_switchScenesCreateRoom()
             Core::actual_scene = _actual_registry->getActualScene();
     }
     if (_last_scene != ecs::Scenes::PRIVATEROOM && Core::actual_scene == ecs::Scenes::PRIVATEROOM) {
-        _client.pingServer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _client.createPrivateRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(200 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
@@ -160,8 +156,6 @@ void Core::_switchScenes()
         ecs::Systems::setUserInfoInSettings(*_actual_registry, _graphical, _user_info.pseudo, _user_info.music_volume, _user_info.sfx_volume);
     }
     if (_last_scene != ecs::Scenes::LISTROOM && Core::actual_scene == ecs::Scenes::LISTROOM) {
-        _client.pingServer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _actual_registry->setActualScene(Core::actual_scene);
         _client.initListRoom();
         std::this_thread::sleep_for(std::chrono::milliseconds(200 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
@@ -183,8 +177,6 @@ void Core::_switchScenes()
     _switchScenesCreateRoom();
 
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
-        _client.pingServer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _client.getGame(_last_scene, Core::level_id);
         std::this_thread::sleep_for(std::chrono::milliseconds(200 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
@@ -198,8 +190,6 @@ void Core::_switchScenes()
     }
     if (_client.game_scene == ecs::Scenes::GAME1 || _client.game_scene == ecs::Scenes::GAME2
     || _client.game_scene == ecs::Scenes::GAME3) {
-        _client.pingServer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         Core::actual_scene = _client.game_scene;
         _actual_registry->setActualScene(Core::actual_scene);
         _graphical.setActualGraphicsEntities(Core::actual_scene);
@@ -293,7 +283,7 @@ void Core::_gameLoop()
     _graphical.getWindow().setFramerateLimit(60);
     _actual_registry->setActualScene(actual_scene);
     _graphical.setActualMusic(ecs::Music::MUSICMENU);
-    _graphical.getActualMusic().setVolume(Core::new_music_volume);
+    _graphical.setVolumeOfAllMusicEntities(static_cast<float>(Core::new_music_volume));
     try {
         while (_graphical.getWindow().isOpen()) {
             _updateUserInfo();

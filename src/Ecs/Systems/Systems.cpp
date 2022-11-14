@@ -162,7 +162,7 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->getActualMusic().setVolume(Core::new_music_volume); break;
+                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->setVolumeOfAllMusicEntities(static_cast<float>(Core::new_music_volume)); break;
                             case Clickable::Function::CHANGESFXVOLUME: Core::new_sfx_volume = _changeVolume(registry, it, graphical); break;
                             default: break;
                         }
@@ -530,17 +530,16 @@ namespace ecs
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
                                 if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
                                     (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
-                                    registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill1" << std::endl;
                                     registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
-                                    if (graphical.client->is_host == true)
+                                    if (graphical.client->is_host == true) {
                                         graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    }
+                                    registry.killEntity(registry.getEntityById(it_in));
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
                                     registry.killEntity(registry.getEntityById(it));
                                     registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill2" << std::endl;
                                     // registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
                                     // if (graphical.client->is_host == true) {
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
@@ -549,7 +548,6 @@ namespace ecs
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
                                     registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill3" << std::endl;
                                     // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     // if (graphical.client->is_host == true)
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
@@ -619,7 +617,6 @@ namespace ecs
     void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
     {
         if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
-            std::cout << "kill" << std::endl;
             registry.killEntity(registry.getEntityById(entity));
             // registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
             // if (graphical.client->is_host == true)

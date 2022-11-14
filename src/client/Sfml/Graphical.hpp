@@ -156,6 +156,12 @@ namespace graphics
          */
         void setBasicSprite(std::size_t entity);
         /**
+         * @brief Set the Volume Of All Music Entities
+         *
+         * @param volume
+         */
+        void setVolumeOfAllMusicEntities(float volume);
+        /**
          * @brief Set the Actual Music
          * 
          * @param music 

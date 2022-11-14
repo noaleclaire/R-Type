@@ -229,6 +229,12 @@ namespace graphics
         _sprites_entities.at(_actual_scene).at(entity).setTextureRect(sf::IntRect(rect.width * 2, rect.top, rect.width, rect.height));
     }
 
+    void Graphical::setVolumeOfAllMusicEntities(float volume)
+    {
+        for (auto &it : _music_entities)
+            it.second.setVolume(volume);
+    }
+
     void Graphical::setActualMusic(ecs::Music music)
     {
         try
