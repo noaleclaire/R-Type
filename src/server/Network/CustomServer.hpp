@@ -56,7 +56,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
                 else if (!all_clients) {
                     send(message, client_endpoint);
                 }
-                std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
             } catch (const ecs::ExceptionComponentNull &e) {
                 continue;
             } catch (const ecs::ExceptionIndexComponent &e) {
@@ -76,7 +76,7 @@ class CustomServer : public network::UdpServerClient<network::CustomMessage> {
                 sendToAllClientsExceptOne(message, client_endpoint);
             else if (!all_clients)
                 send(message, client_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
         } catch (const ecs::ExceptionComponentNull &e) {}
         catch (const ecs::ExceptionIndexComponent &e) {}
     }

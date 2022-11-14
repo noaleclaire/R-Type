@@ -148,6 +148,8 @@ namespace ecs
          * @param user_info
          */
         static void setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info);
+        static void updateWindowSize(Registry &registry, std::pair<float, float> new_factor);
+        static void updateScoreDisplay(Registry &registry, SparseArray<ecs::Text> &text, graphics::Graphical &graphical);
 
       private:
         /**
@@ -188,6 +190,6 @@ namespace ecs
          * @param entity
          * @param graphical
          */
-        static void _sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type);
+        static void _sendKillEntity(Registry &registry, std::size_t entity, ecs::EntityTypes type);
     };
 } // namespace ecs

@@ -47,6 +47,12 @@ class Game : public ScenesInitializer {
             for (std::size_t client_id = 0; client_id < clients_endpoint.size(); client_id++) {
                 ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * (client_id + 1), 13, client_id);
             }
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("0")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(10, 10, 40, 0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(15));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::TEXT));
             for (auto &it : level.getEntitiesDatas()) {
                 entity = ecs::Factory::createEntity(registry, it._entity_type_and_id.first, it._attributes.at(EntityAttributes::position_x).value(), it._attributes.at(EntityAttributes::position_y).value(),
                     it._attributes.at(EntityAttributes::velocity_x).value(), it._attributes.at(EntityAttributes::velocity_y).value(), 0, 0, 0, 0, it._attributes.at(EntityAttributes::layer).value(), it._entity_type_and_id.second);
@@ -100,7 +106,7 @@ class Game : public ScenesInitializer {
             network::Message<network::CustomMessage> message;
             message.header.id = network::CustomMessage::AllComponentSent;
             server->send(message, target_endpoint);
-            std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+            std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
         }
         /**
          * @brief Update the scene with the clock
@@ -137,7 +143,7 @@ class Game : public ScenesInitializer {
                                     network::Message<network::CustomMessage> message;
                                     message.header.id = network::CustomMessage::AllComponentSent;
                                     server->send(message, client_endpoint.first);
-                                    std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
+                                    std::this_thread::sleep_for(std::chrono::milliseconds(TRANSFER_TIME_COMPONENT));
                                 }
                                 // server->_mtx.unlock();
                             }
@@ -145,7 +151,7 @@ class Game : public ScenesInitializer {
                                 ecs::Registry tmp_registry = registry;
                             }
                         } catch (const ecs::Exception &e) {}
-                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>(), server);
+                        ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>());
                     }
                 } catch (const ecs::Exception &e) {
                     return;

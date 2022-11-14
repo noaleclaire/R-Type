@@ -9,9 +9,9 @@
 
 namespace ecs
 {
-    void SystemsServer::Kill(Registry &registry, SparseArray<ecs::Killable> &killable, CustomServer *server)
+    void SystemsServer::Kill(Registry &registry, SparseArray<ecs::Killable> &killable)
     {
-        server->_mtx.lock();
+        // server->_mtx.lock();
         for (auto &it : registry.getEntities()) {
             try {
                 killable.at(it);
@@ -22,6 +22,6 @@ namespace ecs
                 continue;
             }
         }
-        server->_mtx.unlock();
+        // server->_mtx.unlock();
     }
 }

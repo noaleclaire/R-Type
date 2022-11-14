@@ -71,6 +71,7 @@ namespace ecs
                                 graphical->getAllSprites().at(it).setScale(sf::Vector2f(1.25, 1.25));
                                 registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() - registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()/5);
                                 Core::level_id = registry.getComponents<ecs::Planet>().at(it).value().getLevelID() - 1;
+                                graphical->client->getPlanetInfo();
                                 break;
                             default: break;
                         }
@@ -162,7 +163,7 @@ namespace ecs
                 try {
                     if (graphical->getAllRectangleShapes().at(it).getGlobalBounds().contains(graphical->getEvent().mouseMove.x, graphical->getEvent().mouseMove.y)) {
                         switch (clickable.at(it).value().getFunction()) {
-                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->getActualMusic().setVolume(Core::new_music_volume); break;
+                            case Clickable::Function::CHANGEMUSICVOLUME: Core::new_music_volume = _changeVolume(registry, it, graphical); graphical->setVolumeOfAllMusicEntities(static_cast<float>(Core::new_music_volume)); break;
                             case Clickable::Function::CHANGESFXVOLUME: Core::new_sfx_volume = _changeVolume(registry, it, graphical); break;
                             default: break;
                         }
@@ -249,6 +250,8 @@ namespace ecs
                         graphical.setTextureRectSprite(it, rect.at(0), rect.at(1), rect.at(2), rect.at(3));
                     }
                 } catch (const Exception &e) {}
+                // posX += veloX * graphics::Graphical::world_current_time * graphics::Graphical::window_factor.first;
+                // posY += veloY * graphics::Graphical::world_current_time * graphics::Graphical::window_factor.second;
                 posX += veloX * graphics::Graphical::world_current_time;
                 posY += veloY * graphics::Graphical::world_current_time;
                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SPACESHIP) {
@@ -265,12 +268,15 @@ namespace ecs
                 registry.getComponents<ecs::Position>().at(it).value().setYPosition(posY);
                 try {
                     graphical.setSpritePosition(it, posX, posY);
+                    // graphical.getAllSprites().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
                 try {
                     graphical.setRectangleShapePosition(it, posX, posY);
+                    // graphical.getAllRectangleShapes().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
                 try {
                     graphical.getAllTexts().at(it).setPosition(posX, posY);
+                    // graphical.getAllTexts().at(it).setScale(graphics::Graphical::window_factor.first, graphics::Graphical::window_factor.second);
                 } catch (const std::out_of_range &e) {}
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -342,12 +348,11 @@ namespace ecs
                 if (controllable.at(it).value().getKey("shift") == true) {
                     controllable.at(it).value().setKey("shift", false);
                     if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC) {
-                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::BEAM);
-                        std::cout << "BEAM" << std::endl;
-                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::BEAM) {
+                        registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC2);
+                    } else if (registry.getComponents<ecs::Shooter>().at(it).value().getAmmoType() == ecs::Ammo::AmmoType::CLASSIC2) {
                         registry.getComponents<ecs::Shooter>().at(it).value().setAmmoType(ecs::Ammo::AmmoType::CLASSIC);
-                        std::cout << "CLASSIC" << std::endl;
                     }
+                    client->sendNetworkComponents(it, network::CustomMessage::SendComponent);
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;
@@ -530,17 +535,24 @@ namespace ecs
                             if (registry.getComponents<ecs::Killable>().at(it_in).value().getLife() > 0) {
                                 if ((registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::MONSTER && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP) ||
                                     (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
-                                    registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill1" << std::endl;
                                     registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
-                                    if (graphical.client->is_host == true)
+                                    if (graphical.client->is_host == true) {
                                         graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    }
+                                    registry.killEntity(registry.getEntityById(it_in));
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
-                                    registry.killEntity(registry.getEntityById(it));
-                                    registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill2" << std::endl;
+                                    try {
+                                        registry.getComponents<ecs::Controllable>().at(registry.getComponents<ecs::Link>().at(it).value().getLink());
+                                        registry.killEntity(registry.getEntityById(it));
+                                        registry.killEntity(registry.getEntityById(it_in));
+                                        Core::score += 10;
+                                    } catch (Exception &err) {
+                                        registry.killEntity(registry.getEntityById(it));
+                                        registry.killEntity(registry.getEntityById(it_in));
+                                        continue;
+                                    }
                                     // registry.getComponents<ecs::Killable>().at(it).value().setLife(0);
                                     // if (graphical.client->is_host == true) {
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
@@ -549,7 +561,6 @@ namespace ecs
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SHOT) {
                                     registry.killEntity(registry.getEntityById(it_in));
-                                    std::cout << "kill3" << std::endl;
                                     // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
                                     // if (graphical.client->is_host == true)
                                     //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
@@ -573,8 +584,16 @@ namespace ecs
     }
     void Systems::Achievement(UserInfo *user_info)
     {
+        if (Core::kill_all_monster == "yes" && user_info->achievements.at(ecs::AchievementTypes::RAMPAGE) == false)
+            user_info->achievements.at(ecs::AchievementTypes::RAMPAGE) = static_cast<int>(true);
         if (Core::xiting_times >= 50)
             user_info->achievements.at(ecs::AchievementTypes::XITING) = static_cast<int>(true);
+        for (auto &it : user_info->coop_high_score) {
+            if (it > 0)
+                user_info->achievements.at(ecs::AchievementTypes::BFF) = static_cast<int>(true);
+            else
+                user_info->achievements.at(ecs::AchievementTypes::BFF) = static_cast<int>(false);
+        }
         if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
             user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
     }
@@ -616,11 +635,12 @@ namespace ecs
             }
         }
     }
-    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
+    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, ecs::EntityTypes type)
     {
         if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
-            std::cout << "kill" << std::endl;
             registry.killEntity(registry.getEntityById(entity));
+            if (type == ecs::EntityTypes::MONSTER)
+                Core::kill_all_monster = "no";
             // registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
             // if (graphical.client->is_host == true)
             //     graphical.client->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent);
@@ -632,17 +652,55 @@ namespace ecs
             try {
                 registry.getComponents<ecs::Killable>().at(it);
                 if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::MONSTER);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::MONSTER);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() > graphical.getWindow().getSize().x) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
                 }
                 if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > graphical.getWindow().getSize().y) {
-                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, ecs::EntityTypes::SHOT);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
+    void Systems::updateWindowSize(Registry &registry, std::pair<float, float> new_factor)
+    {
+        graphics::Graphical::window_factor = new_factor;
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::WindowSized>().at(it);
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                try {
+                    registry.getComponents<ecs::Position>().at(it).value().setXPosition(registry.getComponents<ecs::Position>().at(it).value().getXPosition() * graphics::Graphical::window_factor.first);
+                    registry.getComponents<ecs::Position>().at(it).value().setYPosition(registry.getComponents<ecs::Position>().at(it).value().getYPosition() * graphics::Graphical::window_factor.second);
+                    registry.addComponent<ecs::WindowSized>(registry.getEntityById(it), ecs::WindowSized());
+                    continue;
+                } catch (const ExceptionComponentNull &err) {
+                    continue;
+                } catch (const ExceptionIndexComponent &err) {
+                    continue;
+                }
+            }
+        }
+    }
+    void Systems::updateScoreDisplay(Registry &registry, SparseArray<ecs::Text> &text, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                text.at(it);
+                if (registry.getActualScene() == ecs::Scenes::GAME1 || registry.getActualScene() == ecs::Scenes::GAME2 || registry.getActualScene() == ecs::Scenes::GAME3) {
+                    text.at(it).value().setText(const_cast<char *>(std::string("Score: ").append(std::to_string(Core::score)).c_str()));
+                    graphical.setTextString(it, std::string("Score: ").append(std::to_string(Core::score)));
                 }
             } catch (const ExceptionComponentNull &e) {
                 continue;

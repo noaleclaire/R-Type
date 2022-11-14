@@ -105,6 +105,13 @@ void CustomClient::switchRoomMode()
     send(msg);
 }
 
+void CustomClient::getPlanetInfo()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::GetPlanetInfo;
+    send(msg);
+}
+
 void CustomClient::filterByRoomModeVersus()
 {
     network::Message<network::CustomMessage> msg;
@@ -133,7 +140,6 @@ void CustomClient::createShot(std::size_t linked_entity, ecs::Scenes scene)
     network::Message<network::CustomMessage> msg;
     msg.header.id = network::CustomMessage::CreateShot;
     msg << linked_entity << scene;
-    std::cout << "entity: " << linked_entity << ", scene: " << scene << std::endl;
     send(msg);
 }
 
@@ -154,8 +160,7 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()).time_since_epoch().count()
                 - std::chrono::time_point_cast<std::chrono::microseconds>(ecs::Enum::ping_latency).time_since_epoch().count());
             latency /= 1000;
-            ecs::Enum::ping_latency_ms = std::ceil(latency) + 5;
-            std::cout << *actual_scene << "  " << registry->getActualScene() << "  ping_latency" << ecs::Enum::ping_latency_ms << std::endl;
+            ecs::Enum::ping_latency_ms = std::ceil(latency) + 10;
         } break;
         case network::CustomMessage::GetScene: {
             ecs::Scenes scene;
@@ -164,10 +169,8 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             && scene != ecs::Scenes::GAME3 && scene != ecs::Scenes::RETURNTOGAME) {
                 registry->setActualScene(scene);
                 graphical->setActualGraphicsEntities(scene);
-                std::cout << "scene: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             } else {
                 game_scene = scene;
-                std::cout << "game_scene: " << game_scene << std::endl;
             }
         } break;
         case network::CustomMessage::KillAnEntity: {
@@ -175,12 +178,23 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             msg >> entity;
             _killOneEntity(entity);
         } break;
+        case network::CustomMessage::SendRoomMode: {
+            try {
+                bool mode = false;
+                if (mode == false) {
+                    if (*score > user_info->coop_high_score.at(*current_level_id - 1))
+                        user_info->coop_high_score.at(*current_level_id - 1) = *score;
+                } else {
+                    if (*score > user_info->versus_high_score.at(*current_level_id - 1))
+                        user_info->versus_high_score.at(*current_level_id - 1) = *score;
+                }
+            } catch (std::exception &e) {}
+        } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
             std::size_t entity = 10000;
             msg >> index_component_create;
             msg >> entity;
-            std::cout << "SendComponent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
             try {
                 if (entity >= 10000)
                     return;
@@ -188,18 +202,14 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
                 registry->getEntityById(entity);
                 if (std::find(_tmp_entities_registry.begin(), _tmp_entities_registry.end(), registry->getEntityById(entity)) == _tmp_entities_registry.end())
                     _tmp_entities_registry.push_back(registry->getEntityById(entity));
-                std::cout << "entity:  " << entity << "  entity type:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityType();
-                std::cout << "  entity id:  " << registry->getComponents<ecs::Type>().at(entity).value().getEntityID() << std::endl;
             } catch (const ecs::Exception &e) {}
             catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::AllComponentSent: {
-            std::cout << "scene2222: " << registry->getActualScene() << " : : " << graphical->_actual_scene << std::endl;
             _setRectAndSpriteComponent();
             _setTextComponent();
             _setParallax();
             _tmp_entities_registry.clear();
-            std::cout << "AllComponentSent}scene: " << registry->getActualScene() << " / " << graphical->_actual_scene << std::endl;
         } break;
         case network::CustomMessage::UpdateListRoom: {
             _setupListRoomScene(msg);
@@ -214,11 +224,36 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _killEntities(room_scene);
             _killEntities(scene_game);
             is_host = false;
-            std::cout << "lll" << std::endl;
         } break;
         case network::CustomMessage::QuitGameClient: {
             game_scene = ecs::Scenes::RETURNTOGAME;
             msg >> tmp_scene;
+        } break;
+        case network::CustomMessage::SendPlanetInfo: {
+            bool info;
+            msg >> info;
+            try {
+                for (auto &it : registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO))
+                    registry->removeComponent<ecs::Drawable>(registry->getEntityById(it));
+                for (auto &it : registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE))
+                    registry->removeComponent<ecs::Drawable>(registry->getEntityById(it));
+                if (info == false) {
+                    registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id))
+                    .value().setText(const_cast<char *>(std::to_string(user_info->coop_high_score.at(*current_level_id)).c_str()));
+                    graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id), std::to_string(user_info->coop_high_score.at(*current_level_id)));
+                } else {
+                    registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id))
+                    .value().setText(const_cast<char *>(std::to_string(user_info->coop_high_score.at(*current_level_id)).c_str()));
+                    graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id), std::to_string(user_info->versus_high_score.at(*current_level_id)));
+                }
+                registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id))
+                .value().setText(const_cast<char *>(registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)).value().getText()));
+                registry->addComponent<ecs::Drawable>(registry->getEntityById(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)), ecs::Drawable());
+                registry->addComponent<ecs::Drawable>(registry->getEntityById(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id)), ecs::Drawable());
+                graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id),
+                registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)).value().getText());
+            } catch (const ecs::Exception &e) {
+            } catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::IsHost: {
             is_host = true;

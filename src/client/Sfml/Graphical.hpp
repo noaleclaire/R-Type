@@ -21,6 +21,7 @@ namespace graphics
     class Graphical {
       public:
         static float world_current_time;
+        static std::pair<float, float> window_factor;
 
         Graphical();
         ~Graphical();
@@ -155,6 +156,12 @@ namespace graphics
          * @param entity
          */
         void setBasicSprite(std::size_t entity);
+        /**
+         * @brief Set the Volume Of All Music Entities
+         *
+         * @param volume
+         */
+        void setVolumeOfAllMusicEntities(float volume);
         /**
          * @brief Set the Actual Music
          * 

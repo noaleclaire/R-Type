@@ -98,6 +98,7 @@ namespace ecs
                     UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(6)), UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::MONSTER, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(9))));
+            registry.addComponent<ecs::Animation>(entity, ecs::Animation());
             return (entity);
         }
         /**
@@ -125,6 +126,7 @@ namespace ecs
             registry.addComponent<ecs::Layer>(entity, ecs::Layer(UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(7))));
 
             registry.addComponent<ecs::Type>(entity, ecs::Type(ecs::EntityTypes::SHOT, UnpackVariadic::getArgNb(UnpackVariadic::unpack.at(8))));
+            registry.addComponent<ecs::Animation>(entity, ecs::Animation());
             return (entity);
         }
         /**
