@@ -16,31 +16,55 @@
 void signalHandler(int signum)
 {
     static_cast<void>(signum);
-    std::system("./setup_server.sh 0 > tmp.cache");
-    std::cout << std::endl;
-    std::cout << std::ifstream("tmp.cache").rdbuf();
-    std::system("rm tmp.cache");
-    exit(0);
+    #if OS_Windows
+        std::system("Start-Process .\setup_server.bat 0 -Verb runAs");
+        std::system("rm tmp.cache");
+        exit(0);
+    #else
+        std::system("./setup_server.sh 0");
+        std::system("rm tmp.cache");
+        exit(0);
+    #endif
 }
 
 void executeSystemSetupCmd()
 {
-    if (!std::filesystem::is_regular_file(std::filesystem::current_path().append("setup_server.sh")))
-        throw ExceptionFileNotFound("setup_server.sh not found in : " + std::filesystem::current_path().string(), "void executeSystemSetupCmd()");
-    std::string validation;
-    std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
-    std::cin >> validation;
-    while (validation.compare("yes") != 0 && validation.compare("no") != 0) {
+    #if OS_Windows
+        if (!std::filesystem::is_regular_file(std::filesystem::current_path().append("setup_server.bat")))
+            throw ExceptionFileNotFound("setup_server.bat not found in : " + std::filesystem::current_path().string(), "void executeSystemSetupCmd()");
+        std::string validation;
         std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
-        std::cout << validation << std::endl;
         std::cin >> validation;
-    }
-    if (validation.compare("no") == 0)
-        exit(0);
-    std::system("chmod +x setup_server.sh");
-    std::system("./setup_server.sh 1");
-    // std::cout << std::ifstream("tmp.cache").rdbuf();
-    // std::system("rm tmp.cache");
+        while (validation.compare("yes") != 0 && validation.compare("no") != 0) {
+            std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
+            std::cout << validation << std::endl;
+            std::cin >> validation;
+        }
+        if (validation.compare("no") == 0)
+            exit(0);
+        std::system("Start-Process .\setup_server.bat 1 -Verb runAs");
+        std::cout << std::ifstream("tmp.cache").rdbuf();
+        std::cout.flush();
+        std::system("rm .\tmp.cache");
+    #else
+        if (!std::filesystem::is_regular_file(std::filesystem::current_path().append("setup_server.sh")))
+            throw ExceptionFileNotFound("setup_server.sh not found in : " + std::filesystem::current_path().string(), "void executeSystemSetupCmd()");
+        std::string validation;
+        std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
+        std::cin >> validation;
+        while (validation.compare("yes") != 0 && validation.compare("no") != 0) {
+            std::cout << "You are about to stop your Firewall, continue? (yes/no):" << std::endl;
+            std::cout << validation << std::endl;
+            std::cin >> validation;
+        }
+        if (validation.compare("no") == 0)
+            exit(0);
+        std::system("chmod +x setup_server.sh");
+        std::system("./setup_server.sh 1");
+        std::cout << std::ifstream("tmp.cache").rdbuf();
+        std::cout.flush();
+        std::system("rm tmp.cache");
+    #endif
 }
 
 int main(int ac, char **av)
@@ -54,13 +78,13 @@ int main(int ac, char **av)
         std::signal(SIGSEGV, signalHandler);
         std::signal(SIGABRT, signalHandler);
         std::signal(SIGTERM, signalHandler);
-        executeSystemSetupCmd();
         if (ac == 2) {
             std::size_t pos{};
             port = static_cast<unsigned short>(std::stoi(std::string(av[1]), &pos));
         }
-        CustomServer server(io_context, port);
+        executeSystemSetupCmd();
         std::cout << "Server port : " << port << std::endl;
+        CustomServer server(io_context, port);
         std::vector<std::thread> thread_group;
         for (std::size_t i = 0; i < std::thread::hardware_concurrency(); i++)
             thread_group.push_back(std::thread(bind(&boost::asio::io_context::run, boost::ref(io_context))));

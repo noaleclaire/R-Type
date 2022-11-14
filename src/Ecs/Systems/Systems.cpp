@@ -537,9 +537,9 @@ namespace ecs
                                     (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::WALL && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::SPACESHIP)) {
                                     registry.killEntity(registry.getEntityById(it_in));
                                     std::cout << "kill1" << std::endl;
-                                    // registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
-                                    // if (graphical.client->is_host == true)
-                                    //     graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
+                                    registry.getComponents<ecs::Killable>().at(it_in).value().setLife(0);
+                                    if (graphical.client->is_host == true)
+                                        graphical.client->sendNetworkComponents<network::CustomMessage>(it_in, network::CustomMessage::SendComponent);
                                 }
                                 if (registry.getComponents<ecs::Type>().at(it).value().getEntityType() == ecs::EntityTypes::SHOT && registry.getComponents<ecs::Type>().at(it_in).value().getEntityType() == ecs::EntityTypes::MONSTER) {
                                     registry.getComponents<ecs::Killable>().at(it_in).value().substractLife(registry.getComponents<ecs::Ammo>().at(it).value().getDamage());
