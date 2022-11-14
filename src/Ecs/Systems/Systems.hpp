@@ -116,6 +116,13 @@ namespace ecs
          * @brief
          *
          * @param registry
+         * @param graphical
+         */
+        static void Killable(Registry &registry, graphics::Graphical &graphical);
+        /**
+         * @brief
+         *
+         * @param registry
          * @param collider
          */
         static void Collider(Registry &registry, SparseArray<ecs::Collider> &collider, graphics::Graphical &graphical);
@@ -133,6 +140,13 @@ namespace ecs
          * @param graphical
          */
         static void Achievement(Registry &registry, SparseArray<ecs::Achievement> &achievement, graphics::Graphical &graphical);
+        /**
+         * @brief Set the User Info In Achievements
+         *
+         * @param registry
+         * @param graphical
+         * @param user_info
+         */
         static void setUserInfoInAchievements(Registry &registry, graphics::Graphical &graphical, UserInfo *user_info);
 
       private:
@@ -167,5 +181,13 @@ namespace ecs
          * @param graphical
          */
         static void _unselectAllPlanet(Registry &registry, SparseArray<ecs::Planet> &planet, graphics::Graphical *graphical);
+        /**
+         * @brief
+         *
+         * @param registry
+         * @param entity
+         * @param graphical
+         */
+        static void _sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type);
     };
 } // namespace ecs

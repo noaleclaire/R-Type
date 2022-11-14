@@ -18,7 +18,7 @@ conan_basic_setup()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=c++2a -Wextra -Wshadow -Wpointer-arith -lpthread -lsfml-graphics -lsfml-window -lsfml-system"
+      "${CMAKE_CXX_FLAGS} -std=c++2a -Wextra -Wshadow -Wpointer-arith -lpthread -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio"
   )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 

@@ -95,5 +95,17 @@ class Menu : public ScenesInitializer {
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::TOACHIEVEMENTS);
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 10), rect);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
+
+            rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BACKGROUND, 1, 0);
+            rect.at(2) = 480;
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(rect.at(0), rect.at(1), rect.at(2), rect.at(3)));
+            registry.addComponent<ecs::Position>(registry.getEntityById(entity), ecs::Position(100, 75, 0, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(0));
+            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Clickable>(registry.getEntityById(entity), ecs::Clickable(ecs::Clickable::Function::XITING));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::SHAPE));
+            registry.addComponent<ecs::Link>(registry.getEntityById(entity), ecs::Link(registry.spawnEntity()));
+            graphical.addRectangleShape(entity, rect, sf::Color::Red);
         };
 };

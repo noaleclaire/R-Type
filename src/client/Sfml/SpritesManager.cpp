@@ -373,6 +373,48 @@ void SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std:
     throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
 }
 
+float SpritesManager::getLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._last_anim_current_frame);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::getIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setLastCurrentFrame(ecs::EntityTypes entity_type, std::size_t entity_id, float increm)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._last_anim_current_frame = increm;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+bool SpritesManager::doNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            return (it._do_next_anim);
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
+void SpritesManager::setDoNextAnimation(ecs::EntityTypes entity_type, std::size_t entity_id, bool do_next_anim)
+{
+    for (auto &it : _sprites_data) {
+        if (it._sprite_type_and_id.first == entity_type && it._sprite_type_and_id.second == entity_id) {
+            it._do_next_anim = do_next_anim;
+            return;
+        }
+    }
+    throw ExceptionSpriteIdDoesntExists("sprites_config.yaml contain a wrong id for a sprite", "std::string SpritesManager::setIndexCurrentAnimation(ecs::EntityTypes entity_type, std::size_t entity_id)");
+}
+
 std::string SpritesManager::get_Spritesheet(ecs::EntityTypes entity_type, std::size_t entity_id)
 {
     for (auto &it : _sprites_data) {

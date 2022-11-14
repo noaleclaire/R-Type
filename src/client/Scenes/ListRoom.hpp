@@ -116,7 +116,7 @@ class ListRoom : public ScenesInitializer {
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 8), rect);
                 //coop button
             rect = sprites_manager.get_Animations_rect(ecs::EntityTypes::BUTTON, 9, 0);
-            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 1052, 52, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 9, 2);
+            entity = ecs::Factory::createEntity(registry, ecs::EntityTypes::BUTTON, 972, 22, rect.at(0), rect.at(1), rect.at(2), rect.at(3), 9, 2);
             registry.getComponents<ecs::Clickable>().at(entity).value().setFunction(ecs::Clickable::Function::FILTERBYROOMMODECOOP);
             registry.addComponent<ecs::Hover>(registry.getEntityById(entity), ecs::Hover());
             graphical.addSprite(entity, sprites_manager.get_Spritesheet(ecs::EntityTypes::BUTTON, 9), rect);

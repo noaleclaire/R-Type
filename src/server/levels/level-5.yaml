@@ -7,6 +7,114 @@
 #   shooter: 0 -> 0: false, 14:true
 #   layer: 0
 
+background: 50
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -120
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+background: 51
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -100
+ velocity_y: 0
+ shooter: 0
+ layer: 2
+
+background: 52
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -90
+ velocity_y: 0
+ shooter: 0
+ layer: 3
+
+background: 53
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -80
+ velocity_y: 0
+ shooter: 0
+ layer: 4
+
+background: 54
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -70
+ velocity_y: 0
+ shooter: 0
+ layer: 5
+
+background: 55
+ time: 0
+ position_x: 0
+ position_y: 0
+ velocity_x: -60
+ velocity_y: 0
+ shooter: 0
+ layer: 6
+
+background: 50
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -120
+ velocity_y: 0
+ shooter: 0
+ layer: 1
+
+background: 51
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -100
+ velocity_y: 0
+ shooter: 0
+ layer: 2
+
+background: 52
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -90
+ velocity_y: 0
+ shooter: 0
+ layer: 3
+
+background: 53
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -80
+ velocity_y: 0
+ shooter: 0
+ layer: 4
+
+background: 54
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -70
+ velocity_y: 0
+ shooter: 0
+ layer: 5
+
+background: 55
+ time: 0
+ position_x: 1280
+ position_y: 0
+ velocity_x: -60
+ velocity_y: 0
+ shooter: 0
+ layer: 6
+
 # first wave 14 pattern \
 
 monster: 0
