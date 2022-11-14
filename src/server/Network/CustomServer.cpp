@@ -148,11 +148,17 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
                 _updateRoom(target_endpoint, msg);
             } break;
             case network::CustomMessage::GetPlanetInfo: {
-                // for (std::size_t i = 0; i < 0)
-                network::Message<network::CustomMessage> message;
-                message.header.id = network::CustomMessage::SendPlanetInfo;
-                // message << std::get<6>(_registries.at(i));
-                send(message, target_endpoint);
+                for (std::size_t i = 0; i < _registries.size(); i++) {
+                    for (std::size_t j = 0; j < std::get<4>(_registries.at(i)).size(); j++) {
+                        if (std::get<4>(_registries.at(i)).at(j).first == target_endpoint) {
+                            network::Message<network::CustomMessage> message;
+                            message.header.id = network::CustomMessage::SendPlanetInfo;
+                            message << std::get<6>(_registries.at(i));
+                            send(message, target_endpoint);
+                            return;
+                        }
+                    }
+                }
             } break;
             case network::CustomMessage::RemoveClient: {
                 _quitRoom(target_endpoint);

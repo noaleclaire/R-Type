@@ -105,6 +105,13 @@ void CustomClient::switchRoomMode()
     send(msg);
 }
 
+void CustomClient::getPlanetInfo()
+{
+    network::Message<network::CustomMessage> msg;
+    msg.header.id = network::CustomMessage::GetPlanetInfo;
+    send(msg);
+}
+
 void CustomClient::filterByRoomModeVersus()
 {
     network::Message<network::CustomMessage> msg;
@@ -218,6 +225,32 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
         case network::CustomMessage::QuitGameClient: {
             game_scene = ecs::Scenes::RETURNTOGAME;
             msg >> tmp_scene;
+        } break;
+        case network::CustomMessage::SendPlanetInfo: {
+            bool info;
+            msg >> info;
+            try {
+                for (auto &it : registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO))
+                    registry->removeComponent<ecs::Drawable>(registry->getEntityById(it));
+                for (auto &it : registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE))
+                    registry->removeComponent<ecs::Drawable>(registry->getEntityById(it));
+                if (info == false) {
+                    registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id))
+                    .value().setText(const_cast<char *>(std::to_string(user_info->coop_high_score.at(*current_level_id)).c_str()));
+                    graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id), std::to_string(user_info->coop_high_score.at(*current_level_id)));
+                } else {
+                    registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id))
+                    .value().setText(const_cast<char *>(std::to_string(user_info->coop_high_score.at(*current_level_id)).c_str()));
+                    graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id), std::to_string(user_info->versus_high_score.at(*current_level_id)));
+                }
+                registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id))
+                .value().setText(const_cast<char *>(registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)).value().getText()));
+                registry->addComponent<ecs::Drawable>(registry->getEntityById(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)), ecs::Drawable());
+                registry->addComponent<ecs::Drawable>(registry->getEntityById(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMHIGHSCORE).at(*current_level_id)), ecs::Drawable());
+                graphical->setTextString(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id),
+                registry->getComponents<ecs::Text>().at(registry->getEntitiesIdByEcsType(ecs::EntityTypes::ROOMPLANETINFO).at(*current_level_id)).value().getText());
+            } catch (const ecs::Exception &e) {
+            } catch (const std::out_of_range &e) {}
         } break;
         case network::CustomMessage::IsHost: {
             is_host = true;

@@ -168,43 +168,73 @@ class Room : public ScenesInitializer {
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //info black hole
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(1000, 500, 60, 0));
-            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("Black Hole")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 550, 50, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLANETINFO));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //info rock planet
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(1000, 500, 60, 0));
-            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("Dark Cave")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 550, 50, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLANETINFO));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //info fire planet
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(1000, 500, 60, 0));
-            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("Desert Eagle")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 550, 50, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLANETINFO));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //info ice planet
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(1000, 500, 60, 0));
-            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("Ice Edge")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 550, 50, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLANETINFO));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
                 //info forest planet
             entity = registry.spawnEntity();
-            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
-            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(1000, 500, 60, 0));
-            registry.addComponent<ecs::Drawable>(registry.getEntityById(entity), ecs::Drawable());
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("Magic Forest")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 550, 50, 0));
             registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
             registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMPLANETINFO));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //highscore black hole
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 610, 50, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMHIGHSCORE));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //highscore rock planet
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 610, 50, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMHIGHSCORE));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //highscore fire planet
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 610, 50, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMHIGHSCORE));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //highscore ice planet
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 610, 50, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMHIGHSCORE));
+            server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
+                //highscore forest planet
+            entity = registry.spawnEntity();
+            registry.addComponent<ecs::Text>(registry.getEntityById(entity), ecs::Text(const_cast<char *>("")));
+            registry.addComponent<ecs::Rectangle>(registry.getEntityById(entity), ecs::Rectangle(980, 610, 50, 0));
+            registry.addComponent<ecs::Layer>(registry.getEntityById(entity), ecs::Layer(3));
+            registry.addComponent<ecs::Type>(registry.getEntityById(entity), ecs::Type(ecs::EntityTypes::ROOMHIGHSCORE));
             server->sendNetworkComponents<network::CustomMessage>(registry, entity, network::CustomMessage::SendComponent, client_endpoint);
 
             //Planets
