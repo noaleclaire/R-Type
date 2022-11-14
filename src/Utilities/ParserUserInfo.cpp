@@ -20,7 +20,7 @@ void ParserUserInfo::getUserInfo(UserInfo &obj)
     std::strcpy(obj.pseudo, "");
     obj.music_volume = 10;
     obj.sfx_volume = 10;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 9; i++)
         obj.achievements.push_back(static_cast<int>(false));
     // Opening file in append mode
     file_obj.open(std::filesystem::current_path() / "user.cache", std::ios::in | std::ios::binary);
@@ -29,7 +29,7 @@ void ParserUserInfo::getUserInfo(UserInfo &obj)
     if (file_obj.is_open()) {
         file_obj >> obj.pseudo >> obj.music_volume >> obj.sfx_volume >> obj.achievements.at(0)
         >> obj.achievements.at(1) >> obj.achievements.at(2) >> obj.achievements.at(3) >> obj.achievements.at(4)
-        >> obj.achievements.at(5) >> obj.achievements.at(6) >> obj.achievements.at(7);
+        >> obj.achievements.at(5) >> obj.achievements.at(6) >> obj.achievements.at(7) >> obj.achievements.at(8);
     }
 
     if (file_obj.is_open())
@@ -48,7 +48,7 @@ void ParserUserInfo::saveUserInfo(UserInfo &obj)
     if (file_obj.is_open()) {
         file_obj << obj.pseudo << ' ' << obj.music_volume << ' ' << obj.sfx_volume << ' ' << obj.achievements.at(0)
         << ' ' << obj.achievements.at(1) << ' ' << obj.achievements.at(2) << ' ' << obj.achievements.at(3) << ' ' << obj.achievements.at(4)
-        << ' ' << obj.achievements.at(5) << ' ' << obj.achievements.at(6) << ' ' << obj.achievements.at(7);
+        << ' ' << obj.achievements.at(5) << ' ' << obj.achievements.at(6) << ' ' << obj.achievements.at(7) << ' ' << obj.achievements.at(8);
     }
 
     if (file_obj.is_open())

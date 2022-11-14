@@ -84,6 +84,9 @@ namespace ecs
                             case Clickable::Function::SELECTTEXTBOX:
                                 registry.getComponents<ecs::TextBox>().at(it).value().select();
                                 break;
+                            case Clickable::Function::XITING:
+                                Core::xiting_times++;
+                                break;
                             default: break;
                         }
                     }
@@ -570,6 +573,8 @@ namespace ecs
     }
     void Systems::Achievement(UserInfo *user_info)
     {
+        if (Core::xiting_times >= 50)
+            user_info->achievements.at(ecs::AchievementTypes::XITING) = static_cast<int>(true);
         if (std::strcmp("FuckMarvin", user_info->pseudo) == 0)
             user_info->achievements.at(ecs::AchievementTypes::MARVIN) = static_cast<int>(true);
     }

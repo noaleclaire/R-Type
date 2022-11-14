@@ -22,7 +22,7 @@ ecs::Scenes Core::actual_scene = ecs::Scenes::MENU;
 std::string Core::new_pseudo = "";
 std::string Core::room_id = "";
 std::size_t Core::level_id = 0;
-std::size_t Core::score = 0;
+std::size_t Core::xiting_times = 0;
 int Core::new_music_volume = 10;
 int Core::new_sfx_volume = 10;
 

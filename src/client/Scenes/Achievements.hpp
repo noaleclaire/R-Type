@@ -34,7 +34,7 @@ class Achievements : public ScenesInitializer {
             std::size_t y = 50;
             std::size_t tmp_y;
             std::size_t layer = 0;
-            std::vector<std::string> achievements = {"Matrixed", "RAMPAGE!!!", "Mind HACKER!", "Nemesis", "BFF",
+            std::vector<std::string> achievements = {"Matrixed", "RAMPAGE!!!", "Xiting", "Mind HACKER!", "Nemesis", "BFF",
                                                     "World Warrior", "Is it what pain feels?", "Well said!"};
 
             registry.setActualScene(ecs::Scenes::ACHIEVEMENTS);
