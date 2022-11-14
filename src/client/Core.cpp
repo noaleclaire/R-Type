@@ -81,7 +81,7 @@ void Core::_switchScenesCreateRoom()
 {
     if (_last_scene != ecs::Scenes::PUBLICROOM && Core::actual_scene == ecs::Scenes::PUBLICROOM) {
         _client.createPublicRoom();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -94,7 +94,7 @@ void Core::_switchScenesCreateRoom()
     }
     if (_last_scene != ecs::Scenes::PRIVATEROOM && Core::actual_scene == ecs::Scenes::PRIVATEROOM) {
         _client.createPrivateRoom();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -116,7 +116,7 @@ void Core::_switchScenesJoinRoom()
         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _actual_registry->setActualScene(Core::actual_scene);
         _client.joinRoom();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -130,7 +130,7 @@ void Core::_switchScenesJoinRoom()
         _client.pingServer();
         std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
         _client.joinRoomById(std::stoi(Core::room_id));
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -182,7 +182,7 @@ void Core::_switchScenes()
 
     if (_last_scene != ecs::Scenes::GAME && Core::actual_scene == ecs::Scenes::GAME) {
         _client.getGame(_last_scene, Core::level_id);
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         if (_client.error_msg_server) {
             std::cout << _client.txt_error_msg_server << std::endl; // handle this text message to print it on the screen
             _client.error_msg_server = false;
@@ -198,7 +198,7 @@ void Core::_switchScenes()
         _actual_registry->setActualScene(Core::actual_scene);
         _graphical.setActualGraphicsEntities(Core::actual_scene);
         _client.initGame();
-        std::this_thread::sleep_for(std::chrono::milliseconds(300 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500 + ecs::Enum::ping_latency_ms)); // do calc (TRANSFER_TIME_COMPONENT * nb_components in current scene) + 50 (ms)
         _client.game_scene = ecs::Scenes::GAME;
         switch (Core::level_id)
         {
