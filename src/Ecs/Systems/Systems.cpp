@@ -633,4 +633,36 @@ namespace ecs
             }
         }
     }
+    void Systems::_sendKillEntity(Registry &registry, std::size_t entity, graphics::Graphical &graphical, ecs::EntityTypes type)
+    {
+        if (registry.getComponents<ecs::Type>().at(entity).value().getEntityType() == type) {
+            registry.getComponents<ecs::Killable>().at(entity).value().setLife(0);
+            graphical.client->sendNetworkComponents<network::CustomMessage>(entity, network::CustomMessage::SendComponent);
+        }
+    }
+    void Systems::Killable(ecs::Registry &registry, graphics::Graphical &graphical)
+    {
+        for (auto &it : registry.getEntities()) {
+            try {
+                registry.getComponents<ecs::Killable>().at(it);
+                if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getWidthRectangle()) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::MONSTER);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getXPosition() > graphical.getWindow().getSize().x) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() < -registry.getComponents<ecs::Rectangle>().at(it).value().getHeightRectangle()) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                }
+                if (registry.getComponents<ecs::Position>().at(it).value().getYPosition() > graphical.getWindow().getSize().y) {
+                    _sendKillEntity(registry, it, graphical, ecs::EntityTypes::SHOT);
+                }
+            } catch (const ExceptionComponentNull &e) {
+                continue;
+            } catch (const ExceptionIndexComponent &e) {
+                continue;
+            }
+        }
+    }
 } // namespace ecs

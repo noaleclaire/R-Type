@@ -15,20 +15,17 @@ namespace graphics
     float Graphical::world_current_time = 0;
     Graphical::Graphical()
     {
-        // _actual_sprites_entities = &_unique_sprites_entities;
-        // _actual_text_entities = &_text_entities;
-        // _actual_rectangleshape_entities = &_rectangleshape_entities;
         // remettre ça mais rescale les sprites donc d'abord faire avec une fenêtre fix
         // setVideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
         setVideoMode(1280, 720);
-        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf"));
-        _music_entities[ecs::Music::CAVE].openFromFile(std::filesystem::current_path().append("assets/sounds/cave_music.ogg"));
-        _music_entities[ecs::Music::SPACE].openFromFile(std::filesystem::current_path().append("assets/sounds/space_music.ogg"));
-        _music_entities[ecs::Music::DESERT].openFromFile(std::filesystem::current_path().append("assets/sounds/desert_music.ogg"));
-        _music_entities[ecs::Music::SNOW].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg"));
-        _music_entities[ecs::Music::FOREST].openFromFile(std::filesystem::current_path().append("assets/sounds/forest_music.ogg"));
-        _music_entities[ecs::Music::MUSICMENU].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg"));
-        _music_entities[ecs::Music::BOSS].openFromFile(std::filesystem::current_path().append("assets/sounds/boss_music.ogg"));
+        _font.loadFromFile(std::filesystem::current_path().append("assets/fonts/VT323-Regular.ttf").string());
+        _music_entities[ecs::Music::CAVE].openFromFile(std::filesystem::current_path().append("assets/sounds/cave_music.ogg").string());
+        _music_entities[ecs::Music::SPACE].openFromFile(std::filesystem::current_path().append("assets/sounds/space_music.ogg").string());
+        _music_entities[ecs::Music::DESERT].openFromFile(std::filesystem::current_path().append("assets/sounds/desert_music.ogg").string());
+        _music_entities[ecs::Music::SNOW].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg").string());
+        _music_entities[ecs::Music::FOREST].openFromFile(std::filesystem::current_path().append("assets/sounds/forest_music.ogg").string());
+        _music_entities[ecs::Music::MUSICMENU].openFromFile(std::filesystem::current_path().append("assets/sounds/snow_music.ogg").string());
+        _music_entities[ecs::Music::BOSS].openFromFile(std::filesystem::current_path().append("assets/sounds/boss_music.ogg").string());
     }
 
     Graphical::~Graphical()

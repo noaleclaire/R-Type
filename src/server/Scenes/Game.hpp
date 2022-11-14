@@ -45,7 +45,7 @@ class Game : public ScenesInitializer {
             registry.setActualScene(scene);
 
             for (std::size_t client_id = 0; client_id < clients_endpoint.size(); client_id++) {
-                ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * (client_id + 1), 1, client_id);
+                ecs::Factory::createEntity(registry, ecs::EntityTypes::SPACESHIP, 100, 120 * (client_id + 1), 13, client_id);
             }
             for (auto &it : level.getEntitiesDatas()) {
                 entity = ecs::Factory::createEntity(registry, it._entity_type_and_id.first, it._attributes.at(EntityAttributes::position_x).value(), it._attributes.at(EntityAttributes::position_y).value(),
@@ -131,7 +131,7 @@ class Game : public ScenesInitializer {
                             if ((std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) > server->getLastTime(scene) - server->getStartTime(scene) &&
                                 std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) <= t - server->getStartTime(scene)) ||
                                 (registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime() == 0 && server->getLastTime(scene) - server->getStartTime(scene) == std::chrono::milliseconds(0))) {
-                                server->_mtx.lock();
+                                // server->_mtx.lock();
                                 for (auto &client_endpoint : clients_endpoint) {
                                     server->sendNetworkComponents<network::CustomMessage>(registry, it, network::CustomMessage::SendComponent, client_endpoint.first);
                                     network::Message<network::CustomMessage> message;
@@ -139,18 +139,12 @@ class Game : public ScenesInitializer {
                                     server->send(message, client_endpoint.first);
                                     std::this_thread::sleep_for(std::chrono::milliseconds(ecs::Enum::ping_latency_ms));
                                 }
-                                server->_mtx.unlock();
+                                // server->_mtx.unlock();
                             }
                             if (std::chrono::milliseconds(registry.getComponents<ecs::CompoServer>().at(it).value().getSpawnTime()) < t - server->getStartTime(scene)) {
                                 ecs::Registry tmp_registry = registry;
-
-                                // ecs::SystemsServer::Shot(registry, server, clients_endpoint);
-                                // for (auto &client_endpoint : clients_endpoint) {
-                                //     server->compareRegistries(client_endpoint.first, registry, tmp_registry);
-                                // }
                             }
                         } catch (const ecs::Exception &e) {}
-                        ecs::SystemsServer::Shot(registry, server, clients_endpoint);
                         ecs::SystemsServer::Kill(registry, registry.getComponents<ecs::Killable>(), server, clients_endpoint);
                     }
                 } catch (const ecs::Exception &e) {
