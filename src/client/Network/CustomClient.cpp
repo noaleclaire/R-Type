@@ -183,14 +183,16 @@ void CustomClient::onMessage(udp::endpoint target_endpoint, network::Message<net
             _killOneEntity(entity);
         } break;
         case network::CustomMessage::SendRoomMode: {
-            bool mode = false;
-            msg >> mode;
-            if (mode == false) {
-                user_info->coop_high_score;
-            }
-            if (mode == true) {
-                user_info->versus_high_score;
-            }
+            try {
+                bool mode = false;
+                if (mode == false) {
+                    if (*score > user_info->coop_high_score.at(*current_level_id - 1))
+                        user_info->coop_high_score.at(*current_level_id - 1) = *score;
+                } else {
+                    if (*score > user_info->versus_high_score.at(*current_level_id - 1))
+                        user_info->versus_high_score.at(*current_level_id - 1) = *score;
+                }
+            } catch (std::exception &e) {}
         } break;
         case network::CustomMessage::SendComponent: {
             std::size_t index_component_create = 0;
