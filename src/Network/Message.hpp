@@ -19,7 +19,7 @@ namespace network
                                 GetScene,
                                 InitListRoom, UpdateListRoom,
                                 JoinRoom, JoinRoomById, MaxPlayersInRoom, RoomDoesntExists,
-                                SwitchRoomMode, IsHost,
+                                SwitchRoomMode, GetPlanetInfo, SendPlanetInfo, IsHost,
                                 QuitRoomServer, QuitRoomClient,
                                 SendComponent, AllComponentSent,
                                 SwitchToGame, InitGame, KillAnEntity,

@@ -147,6 +147,13 @@ void CustomServer::onMessage(udp::endpoint target_endpoint, network::Message<net
             case network::CustomMessage::SwitchRoomMode: {
                 _updateRoom(target_endpoint, msg);
             } break;
+            case network::CustomMessage::GetPlanetInfo: {
+                // for (std::size_t i = 0; i < 0)
+                network::Message<network::CustomMessage> message;
+                message.header.id = network::CustomMessage::SendPlanetInfo;
+                // message << std::get<6>(_registries.at(i));
+                send(message, target_endpoint);
+            } break;
             case network::CustomMessage::RemoveClient: {
                 _quitRoom(target_endpoint);
                 _rooms_filter_mode.erase(target_endpoint);
@@ -313,21 +320,21 @@ void CustomServer::_getInfoForListRoomScene(udp::endpoint target_endpoint, netwo
         if (std::get<2>(_registries.at(i)) == true && std::get<3>(_registries.at(i)) == false) {
             if (_rooms_filter_mode.at(target_endpoint) == 0 && std::get<6>(_registries.at(i)) == false) {
                 message << std::get<6>(_registries.at(i));
-                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+                rooms_text = std::get<5>(_registries.at(i)) + "    " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
                 message << std::get<0>(_registries.at(i));
                 nb_rooms++;
             } else if (_rooms_filter_mode.at(target_endpoint) == 1 && std::get<6>(_registries.at(i)) == true) {
                 message << std::get<6>(_registries.at(i));
-                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+                rooms_text = std::get<5>(_registries.at(i)) + "    " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
                 message << std::get<0>(_registries.at(i));
                 nb_rooms++;
             } else if (_rooms_filter_mode.at(target_endpoint) == -1)  {
                 message << std::get<6>(_registries.at(i));
-                rooms_text = std::get<5>(_registries.at(i)) + "         " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
+                rooms_text = std::get<5>(_registries.at(i)) + "    " + std::to_string(std::get<4>(_registries.at(i)).size()) + "/" + std::to_string(NB_MAX_PLAYERS_PER_ROOM);
                 ecs::Text player_name_class(const_cast<char *>(rooms_text.c_str()));
                 message << player_name_class;
                 message << std::get<0>(_registries.at(i));
